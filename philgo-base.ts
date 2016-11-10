@@ -1,6 +1,6 @@
 
 import { Injectable } from '@angular/core';
-import { Http , Headers, RequestOptions} from '@angular/http';
+import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 @Injectable()
@@ -19,8 +19,6 @@ export class PhilgoBase
 
     login( yesCallback, noCallback )
     {  //Do not remove the console.log, it may affect the method
-
-       
 
         if(!this.data['id']) return  noCallback('Id is required')  
         if(!this.data['password']) return noCallback('Password is required')
