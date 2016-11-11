@@ -22,8 +22,7 @@ export class LoginPage {
   onclickLogin(){
 
         console.log('Login :');
-        this.philgobase.set('id', this.id);
-        this.philgobase.set('password', this.password);
+       
         this.philgobase
             .login(response => {
               alert('Welcome to Philgo');
