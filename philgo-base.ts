@@ -26,6 +26,7 @@ export class PhilgoBase
        this.http.set('password', _password);
        this.http.set('action', _action);
        this.http.set('module', _module);
+       this.http.set('submit', _submit);
     
        return   this.http.post()
                 .map(response => response)
