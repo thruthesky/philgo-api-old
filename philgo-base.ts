@@ -1,46 +1,38 @@
 
 import { Injectable } from '@angular/core';
-import { Http , Headers, RequestOptions} from '@angular/http';
+//import { Http , Headers, RequestOptions} from '@angular/http';
 import 'rxjs/add/operator/map';
-
-
-export interface USER_DATA {
-  email: string;
-  password?: string;
-  id?: string;
-  sessionId : string;
-};
+import { Query } from './query';
 
 
 @Injectable()
 export class PhilgoBase
  {
-
-     url = "http://www.philgo.com"  
-
-    constructor(private http: Http) { }
+     id:string;
+     password:string;
+   
+    constructor(private http: Query) { }
   
     login( yesCallback, noCallback )
     {  
-          let headers  = new Headers({'Content-Type': 'application / x-www-form-urlencoded'}); // ... Set content type to JSON
-          let options  = new RequestOptions({ headers: headers }); // Create a request option
-          let body = 'module=ajax&action=post-list&submit=1&post_id=qna';
-            
+
+       let _id = this.id;
+       let _password = this.password;
+       let _submit = '1';
+       let _action = 'login';
+       let _module = 'ajax';
+
+       this.http.set('id', _id);
+       this.http.set('password', _password);
+       this.http.set('action', _action);
+       this.http.set('module', _module);
     
-
-            console.log(body);
-
-                  
-         return this.http.post(this.url,
-                     body,
-                     options)
-                    .map(response => response)
-                    .subscribe(  response => {  
-                       //   let str = JSON.parse( response['_body']);
-                                 
-                    yesCallback(response);
+       return   this.http.post()
+                .map(response => response)
+                .subscribe(  response => {  
+                   yesCallback(response);
                 }, e =>
-                    noCallback('Error: ' +  e)   
+                   noCallback('Error: ' +  e)   
                 ); 
      }
 }
