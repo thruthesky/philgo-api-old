@@ -36,4 +36,25 @@ export class PhilgoBase
                    noCallback('Error: ' +  e)   
                 ); 
      }
+
+
+     register(successCallBack, failureCallBack){
+       
+         this.http.set('id', '');
+         this.http.set('password', '');
+         this.http.set('action', '');
+         this.http.set('module', '');
+         this.http.set('submit', '');
+
+
+         return   this.http.post()
+                .map(response => response)
+                .subscribe(  response => {  
+                   successCallBack(response);
+                }, e =>
+                   failureCallBack('Error: ' +  e)   
+                ); 
+
+
+     }
 }

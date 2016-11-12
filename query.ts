@@ -9,10 +9,10 @@ export class Query  {
    
     private data = {};
     private url = "http://www.philgo.com"; 
-    private body = '';
-    
-    headers  = new Headers({'Content-Type':'application / x-www-form-urlencoded', "Accept" : "application/json"});  
-    options  = new RequestOptions({ headers: this.headers });   
+    private body = ''; 
+    private headers  = new Headers({'Content-Type':'application / x-www-form-urlencoded', "Accept" : "application/json"});  
+    private options  = new RequestOptions({ headers: this.headers });   
+
 
     constructor(private http : Http){}
     
