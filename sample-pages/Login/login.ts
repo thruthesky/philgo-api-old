@@ -30,9 +30,9 @@ export class LoginPage {
         if(!this.id)  return alert('Id is required');
         if(!this.password)  return alert('Password is required');
 
-        this.member.id = this.id;
-        this.member.password = this.password;
-
+        
+        this.member.set('id', this.id);
+        this.member.set('password', this.password)
         this.member
             .login(response => {  
               console.log(response)

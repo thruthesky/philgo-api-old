@@ -9,10 +9,7 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class Member extends PhilgoBase
  {
-     id:string;
-     password:string;
-
-
+   
     constructor(private child_http : Http){
         super(child_http);
     }
@@ -21,12 +18,10 @@ export class Member extends PhilgoBase
     login( yesCallback, noCallback? )
     {  
      
+           /**These are important when envoking method post to Philgo server for login*/
             this.set('module','ajax');
             this.set('action','login');
-            this.set('submit','1');       
-            this.set('id', this.id);
-            this.set('password', this.password);
-        
+            this.set('submit','1');    
          
             this.methodPost( response =>{
                 yesCallback(response);    
@@ -41,18 +36,12 @@ export class Member extends PhilgoBase
 
      create(successCallBack, failureCallBack?){
        
-        
-
-       
-
-       
-            /**These are important for posting to register on Philgo server */
+           /**These are important when envoking method post to Philgo server for registration*/
             this.set('module','ajax');
             this.set('action','member_register_submit');
             this.set('submit','1');       
           
-          
-        
+         
              this.methodPost( response =>{
                 successCallBack(response);    
             }, e =>{
