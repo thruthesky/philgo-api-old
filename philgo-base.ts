@@ -1,8 +1,8 @@
 
 import { Injectable } from '@angular/core';
-//import { Http , Headers, RequestOptions} from '@angular/http';
+import { Http , Headers, RequestOptions} from '@angular/http';
 import 'rxjs/add/operator/map';
-import { Query } from './query';
+
 
 
 @Injectable()
@@ -10,55 +10,57 @@ export class PhilgoBase
  {
      id:string;
      password:string;
+
+
+     private data = {};
+     private url = "http://www.philgo.com"; 
+     private headers  = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
+     private options  = new RequestOptions({ headers: this.headers });   
+
+
    
-    constructor(private http: Query) { }
-  
-    login( yesCallback, noCallback )
-    {  
-
-
-
-       let _id = this.id;
-       let _password = this.password;
-       let _submit = '1';
-       let _action = 'login';
-       let _module = 'ajax';
-
-       this.http.set('id', _id);
-       this.http.set('password', _password);
-       this.http.set('action', _action);
-       this.http.set('module', _module);
-       this.http.set('submit', _submit);
+    constructor(private http: Http) {}
 
     
-       return   this.http.post()
-                .map(response => response)
-                .subscribe(  response => {                
-                    console.log(this.http.getBody()); 
-                   yesCallback(response);
-                }, e =>
-                   noCallback('Error: ' +  e)   
-                ); 
+    set( key, value ){
+        this.data[key] = value;
+    }  
+
+
+    login( yesCallback?, noCallback? )
+    {  
+ 
+        let id = "user1401";
+        let pw = "abcd9999";  
+      
+            this.set('module','ajax');
+            this.set('action','login');
+            this.set('submit','1');       
+            this.set('id', this.id);
+            this.set('password', this.password);
+        
+            let body = Object.keys(this.data).map( (e) => e + '=' + this.data[e] ).join('&');
+                this.data = {};
+                this.http.post( this.url, body, this.options )
+                    .map(response => response.json())
+                    .subscribe( re => {                 
+                        yesCallback(re);
+                    },e =>{
+                        noCallback(e);
+                    }); 
+  
      }
 
 
      register(successCallBack, failureCallBack){
        
-         this.http.set('id', '');
-         this.http.set('password', '');
-         this.http.set('action', '');
-         this.http.set('module', 'ajax');
-         this.http.set('submit', '1');
+       
 
-
-         return   this.http.get()
-                .map(response => response)
-                .subscribe(  response => {  
-                   successCallBack(response);
-                }, e =>
-                   failureCallBack('Error: ' +  e)   
-                ); 
+     
 
 
      }
+
+
+
 }

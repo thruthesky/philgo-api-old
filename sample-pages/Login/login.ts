@@ -32,13 +32,10 @@ export class LoginPage {
         this.philgobase.password = this.password;
 
         this.philgobase
-            .login(response => {
-              alert('Welcome to Philgo');
+            .login(response => {  
               console.log(response)
-              Log.isloggedIn = true;
-              this.navCtrl.setRoot(HomePage);         
-            }, e => {
-               
+              alert('Welcome to Philgo');
+            }, e => {            
               console.error(e)
             });    
   }
