@@ -16,7 +16,7 @@ export class HomePage {
   password : string;
   constructor(public navCtrl: NavController,
               private philgobase : PhilgoBase) { 
-                alert(Log.isloggedIn)
+               
                 if(!Log.isloggedIn){ this.navCtrl.setRoot(LoginPage)}
               }
 
