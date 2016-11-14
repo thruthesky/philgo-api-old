@@ -17,6 +17,10 @@ export class Query  {
     constructor(private http : Http){}
     
     
+    getBody(){
+        return this.body;
+    }
+
     setUrl(url){
         this.url = url;     
     }
@@ -25,17 +29,23 @@ export class Query  {
         this.data[key] = value;
     }
 
-    post(){
-         Object.keys(this.data).map( (e) => e + '=' + this.data[e] ).join('&');
+
+    post(){         
+         this.body =  Object.keys(this.data).map( (e) => e + '=' + this.data[e] ).join('&');
+         this.data = {};
          return this.http.post( this.url, this.body, this.options)
     }
 
-    get(){
-        if(this.body){
-          Object.keys(this.data).map( (e) => e + '=' + this.data[e] ).join('&');
+
+  
+
+    get(){       
+        this.body = Object.keys(this.data).map( (e) => e + '=' + this.data[e] ).join('&');  
+        this.data = {};     
+        if(this.body){  
           return this.http.get( this.url +'?' + this.body);   
         } 
-        return this.http.get( this.url + this.body);
+        return this.http.get( this.url);
     }
 
 

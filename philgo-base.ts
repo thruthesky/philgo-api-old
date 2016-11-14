@@ -30,7 +30,8 @@ export class PhilgoBase
     
        return   this.http.post()
                 .map(response => response)
-                .subscribe(  response => {  
+                .subscribe(  response => {                
+                    console.log(this.http.getBody()); 
                    yesCallback(response);
                 }, e =>
                    noCallback('Error: ' +  e)   
@@ -43,11 +44,11 @@ export class PhilgoBase
          this.http.set('id', '');
          this.http.set('password', '');
          this.http.set('action', '');
-         this.http.set('module', '');
-         this.http.set('submit', '');
+         this.http.set('module', 'ajax');
+         this.http.set('submit', '1');
 
 
-         return   this.http.post()
+         return   this.http.get()
                 .map(response => response)
                 .subscribe(  response => {  
                    successCallBack(response);
