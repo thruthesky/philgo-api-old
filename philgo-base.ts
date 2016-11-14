@@ -24,7 +24,10 @@ export class PhilgoBase
     {  
           let headers  = new Headers({'Content-Type': 'application / x-www-form-urlencoded'}); // ... Set content type to JSON
           let options  = new RequestOptions({ headers: headers }); // Create a request option
-          let body = 'module=ajax&action=post-list&submit=1&post_id=qna';
+          let body = 'module=' + encodeURIComponent('ajax');
+              body +='&action=' + encodeURIComponent('post-list');
+              body +='&submit'+ encodeURIComponent('1');
+              body +='&post_id' + encodeURIComponent('qna');
             
     
 
