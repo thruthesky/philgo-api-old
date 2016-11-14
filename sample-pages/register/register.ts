@@ -1,8 +1,20 @@
 import { Component } from '@angular/core';
 
 import { NavController } from 'ionic-angular';
-import { PhilgoBase } from '../../philgo-base';
+import { Member } from '../../member';
 
+
+
+export class User_Data{
+  id : string;
+  nickname : string;
+  password : string;
+  name : string;
+  email: string;
+  mobile : string;
+  gender : 'M';
+  birth_year = '1916';
+}
 
 @Component({
   selector: 'page-register',
@@ -10,18 +22,30 @@ import { PhilgoBase } from '../../philgo-base';
 })
 
 
+
+
 export class RegisterPage {
+   userData = <User_Data>{}
 
+ 
   constructor(public navCtrl: NavController,
-              private philgobase : PhilgoBase) { }
+              private member : Member) { }
 
 
 
-  onClickSave(){
+  
+    onClickRegister(){
 
-       
-  }
-
+         this.member.sets(this.userData);
+         this.member.create(re=> {
+           alert('You are now register');
+           console.log(re);
+         },
+         e =>{
+           console.log(e);
+         })
+        
+    }
 
  
 

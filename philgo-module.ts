@@ -5,7 +5,7 @@ import { IonicModule } from 'ionic-angular';
 import { HttpModule, JsonpModule } from '@angular/http';
 import { HomePage } from './sample-pages/home/home';
 import { LoginPage } from './sample-pages/login/login';
-import { PhilgoBase } from './philgo-base';
+import { Member } from './member';
 import { RegisterPage } from './sample-pages/register/register';
 import { Query } from './query';
 
@@ -27,7 +27,7 @@ import { Query } from './query';
    RegisterPage
   ],
   providers : [ 
-    PhilgoBase,
+    Member,
     Query
      ]
 })

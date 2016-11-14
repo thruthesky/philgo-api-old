@@ -11,7 +11,7 @@ import { LoginPage } from '../login/login';
 
 
 export class HomePage {
-  constructor(public navCtrl: NavController, private philgobase : PhilgoBase) {
+  constructor(public navCtrl: NavController) {
      navCtrl.setRoot(LoginPage);
   }
 }

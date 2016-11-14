@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 
 import { NavController } from 'ionic-angular';
-import { PhilgoBase } from '../../philgo-base';
-import { HomePage } from '../home/home';
-import { RegisterPage } from '../register/register';
+import { Member } from '../../member';
+import  {RegisterPage} from '../../sample-pages/register/register'
 
-import { Log } from './log';
+
+
+
+
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html'
@@ -17,7 +19,7 @@ export class LoginPage {
   id : string;
   password : string;
   constructor(public navCtrl: NavController,
-              private philgobase : PhilgoBase) { }
+              private member : Member) { }
 
 
 
@@ -28,10 +30,10 @@ export class LoginPage {
         if(!this.id)  return alert('Id is required');
         if(!this.password)  return alert('Password is required');
 
-        this.philgobase.id = this.id;
-        this.philgobase.password = this.password;
+        this.member.id = this.id;
+        this.member.password = this.password;
 
-        this.philgobase
+        this.member
             .login(response => {  
               console.log(response)
               alert('Welcome to Philgo');
