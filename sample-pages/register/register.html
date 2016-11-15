@@ -1,7 +1,12 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Register
+      <div *ngIf=" login ">
+        Update Profile
+      </div>
+      <div *ngIf=" ! login ">
+        Register
+      </div>
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -20,30 +25,49 @@
         <input *ngIf=" !cordova " type="file" (change)="onChangeFile($event)">
        
       </ion-item>
-      <ion-item>
+
+
+
+      <ion-item *ngIf=" ! login ">
         <ion-label floating>User Id</ion-label>
         <ion-input type='text' [(ngModel)]="userData.id" ></ion-input>
       </ion-item>
-      <ion-item>
+      
+      <ion-item *ngIf=" ! login ">
          <ion-label floating>Password</ion-label>
          <ion-input type = 'password' [(ngModel)]="userData.password"></ion-input>
       </ion-item>
+
        <ion-item>
         <ion-label floating>Name</ion-label>
         <ion-input type='text' [(ngModel)]="userData.name" ></ion-input>
       </ion-item>
-       <ion-item>
+
+       <ion-item *ngIf=" ! login ">
         <ion-label floating>Nickname</ion-label>
         <ion-input type='text' [(ngModel)]="userData.nickname" ></ion-input>
       </ion-item>
+
        <ion-item>
         <ion-label floating>Email</ion-label>
         <ion-input type='text' [(ngModel)]="userData.email" ></ion-input>
       </ion-item>
+
        <ion-item>
         <ion-label floating>Mobile</ion-label>
         <ion-input type='text' [(ngModel)]="userData.mobile" ></ion-input>
       </ion-item>
+
+       <ion-item>
+        <ion-label floating>Gender</ion-label>
+        <ion-input type='text' [(ngModel)]="userData.gender" ></ion-input>
+      </ion-item>
+
+       <ion-item>
+        <ion-label floating>Birth Day</ion-label>
+        <ion-input type='date' [(ngModel)]="userData.birthday" ></ion-input>
+      </ion-item>
+
     </ion-list>
 
 
@@ -54,7 +78,9 @@
       {{ process.error }}
     </div>
   
-      <button ion-button (click)="onClickRegister()">Register</button>
+      <button *ngIf=" ! login " ion-button (click)="onClickRegister()">Register</button>
+      <button *ngIf=" login " ion-button (click)="onClickUpdate()">UPDATE</button>
+
       <button ion-button (click)="onClickBack()">Back</button>
      
   

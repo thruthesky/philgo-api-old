@@ -7,15 +7,13 @@ import { SampleRegisterPage } from '../register/register'
   templateUrl: 'home.html'
 })
 
-
-
 export class SampleHomePage {
   login: USER_LOGIN_DATA = <USER_LOGIN_DATA> {};
   constructor( public navCtrl: NavController, private member: Member ) {
     console.log(member);
     member.version( v => console.log('version: ', v) );
-    //navCtrl.setRoot(LoginPage);
-    // this.navCtrl.setRoot( SampleRegisterPage );
+     this.navCtrl.setRoot( SampleRegisterPage );
+    // this.navCtrl.setRoot(SampleLoginPage);
     this.checkLogin();
   }
 
@@ -27,8 +25,15 @@ export class SampleHomePage {
     this.navCtrl.setRoot( SampleRegisterPage );
   }
 
+  onClickLogin() {
+    this.navCtrl.setRoot( SampleLoginPage );
+  }
+
   onClickLogout() {
     this.member.logout( () => this.checkLogin() );
+  }
+  onClickProfile() {
+    this.navCtrl.setRoot( SampleRegisterPage );
   }
 
 }

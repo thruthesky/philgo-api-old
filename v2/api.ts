@@ -54,7 +54,7 @@ export class Api {
  * 
  * 
  */
-    version( successCallback, errorCallback? ) {
+    version( successCallback: (version:string) => void, errorCallback?: (error: string) => void ) {
         let url = this.getUrl('version');
         this.http.get( url )
             .subscribe( re => {
@@ -67,6 +67,14 @@ export class Api {
                     errorCallback('json-parse-error');
                 }
             });
+    }
+
+
+
+
+    isRequestError( data ) : boolean {
+        if ( data['code'] && parseInt( data['code'] ) != 0 ) return true;
+        else return false;
     }
 
 }
