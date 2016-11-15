@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Ionic Blank
+      Register
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -45,6 +45,14 @@
         <ion-input type='text' [(ngModel)]="userData.mobile" ></ion-input>
       </ion-item>
     </ion-list>
+
+
+    <div notice *ngIf=" process.loader ">
+      <ion-spinner></ion-spinner> Please, wait.
+    </div>
+    <div warning *ngIf=" process.error ">
+      {{ process.error }}
+    </div>
   
       <button ion-button (click)="onClickRegister()">Register</button>
       <button ion-button (click)="onClickBack()">Back</button>

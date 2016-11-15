@@ -1,20 +1,8 @@
 import { Component } from '@angular/core';
-
 import { NavController } from 'ionic-angular';
-import { Member } from '../../member';
-import{ LoginPage }from '../login/login';
-
-
-export class User_Data{
-  id : string;
-  nickname : string;
-  password : string;
-  name : string;
-  email: string;
-  mobile : string;s
-  gender : 'M';
-  birth_year = '1916';
-}
+import { SampleLoginPage } from '../login/login';
+import { SampleHomePage } from '../home/home';
+import { Member, USER_DATA } from '../../v2/member';
 
 @Component({
   selector: 'page-register',
@@ -22,32 +10,33 @@ export class User_Data{
 })
 
 
-
-
-export class RegisterPage {
-   userData = <User_Data>{}
+export class SampleRegisterPage {
+   userData = <USER_DATA>{}
    urlPhoto = 'assets/img/anonymous.gif';
+   process = {};
  
-  constructor(public navCtrl: NavController,
-              private member : Member) { }
+  constructor(public navCtrl: NavController, private member: Member) {
 
-
-
-  
-    onClickRegister(){
-
-         this.member.sets(this.userData);
-         this.member.create(re=> {
-           alert('You are now register');
-           console.log(re);
-         },
-         e =>{
-           console.log(e);
-         })
-        
+  }
+    onClickRegister() {
+      console.log('onClickRegister():', this.userData);
+      this.process  = { 'loader': true };
+      this.member.register( this.userData, () => {
+        console.log('onClickRegister::sucess: ');
+        this.navCtrl.setRoot( SampleHomePage );
+        alert("Registration Success!");
+      },
+      e => {
+        if ( e == 'json-parse-error' ) {
+          this.process['error'] = 'Server Error. Please notify this to admin';
+        }
+        else this.process = { 'error': e };
+      })
     }
+
+
     onClickBack(){
-        this.navCtrl.setRoot(LoginPage);
+        this.navCtrl.setRoot(SampleLoginPage);
     }
 
 
@@ -61,19 +50,6 @@ export class RegisterPage {
 
     onChangeFile($event){
 
-        console.log($event);
-        this.member.set('submit','1');
-        this.member.set('module','ajax');
-        this.member.set('action','file_upload_submit');
-        this.member.set('page','register');
-        this.member.set('gid','id'+Date.now);
-        this.member.set('file', $event);
-
-        this.member.methodPost(re=>{
-          console.log(re);
-        }, e =>{
-          console.log(e);
-        })
     }
 
 }
