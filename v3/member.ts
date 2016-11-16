@@ -71,6 +71,11 @@ export class Member extends Api {
                         session_id: data.session_id
                     };
                     this.setLoginData( login ).then( () => successCallback( login ) );
+                    let userCloudData = this.generateCloudUserData(login.id)
+                    this.loginToCloud(userCloudData);
+                  
+                    
+
                 }
                 catch( e ) {
                     console.log('login(): re: ', re);
@@ -81,23 +86,42 @@ export class Member extends Api {
     }
 
 
-    getCloudUserData(id : string ) :  UserDetails{
-        let cloudUserData : UserDetails = <UserDetails>{
-                            email : id + "@philgo.com",
-                            password : "~philgo@" + id
-                          }
 
+
+    generateCloudUserData(id : string ) :  UserDetails{
+        let cloudUserData : UserDetails = <UserDetails>{
+            email : id + "@philgo.com",
+            password : "~philgo@" + id
+         }
          return cloudUserData;
     }
     
 
-    registerToCloud( cloudUserData : UserDetails, successCallback: (cloudUserData : UserDetails) => void, errorCallback?: (error: string) => void ){
-        this.auth.signup(cloudUserData).then(() => {
+    loginToCloud(cloudUserData : UserDetails){    
+             this.auth.login('basic', cloudUserData).then( ()=>{
+                 console.log('User is now logged In in Ionic Cloud');
+             }).catch( e =>{
+                this.registerToCloud(cloudUserData['id']);       
+             });         
+    }
+
+    registerToCloud( id : string)  {
+            
+         let cloudUserData : UserDetails = this.generateCloudUserData(id);
+         if ( !this.auth.isAuthenticated()){
+            console.log('Registration to ionic cloud started::' );
+            this.auth.signup(cloudUserData).then( ()=> {
                   console.log('Cloud Registration success : ', cloudUserData)  
-                  successCallback(cloudUserData);
+                  this.auth.login('basic', {'email': cloudUserData.email, 'password': cloudUserData.password}).then(()=>{
+                     console.log('User is now logged In in Ionic Cloud');                  
+                  });                
             }, (err: IDetailedError<string[]>) => {
-                   errorCallback('Error: Cloud Registration fail' ); 
-            });       
+                    console.error('Error: Cloud Registration fail' );                     
+            });   
+         }  
+
+
+             
     }
 
 
@@ -116,15 +140,12 @@ export class Member extends Api {
                     console.log('register::sucess: ', data);
                     this.setLoginData( data )
                         .then( () => {
-                            console.log('user login saved: ' );
-                            console.log('Registration to ionic cloud started::' );
-                            let cloudUserData : UserDetails = this.getCloudUserData(data['id']);
-                            this.registerToCloud(cloudUserData, cloudUserData =>{
-                                 console.log('Successfully register to ionic cloud');
-                            });
-
+                            console.log('user login saved: ' );   
+                             this.registerToCloud(data['id']) ;                                           
                             successCallback();
                         });
+                        
+                         
                 }
                 catch( e ) {
                     console.log(re);
@@ -134,11 +155,11 @@ export class Member extends Api {
 
     }
     
-
-
     setLoginData( data ) : Promise<any> {
         let login = { id: data.id, session_id: data.session_id };
         let str = JSON.stringify( login );
+
+          
         return this.storage.set( 'login', str );
     }
     getLoginData( callback ) {
@@ -157,6 +178,11 @@ export class Member extends Api {
     logout( callback ) {
         this.storage.remove( 'login' )
             .then( () => callback() );
+
+        if (this.auth.isAuthenticated()){
+            this.auth.logout();
+            console.log('User is logout to Ionic Cloud');
+        }   
     }
 
     logged( yesCallback: ( login: USER_LOGIN_DATA ) => void, noCallback?: () => void ) {
