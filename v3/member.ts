@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { Http, Headers, RequestOptions } from '@angular/http';
+import { Http} from '@angular/http';
 import { Api } from './api';
 import { Auth, User, UserDetails, IDetailedError } from '@ionic/cloud-angular';
 
@@ -99,7 +99,8 @@ export class Member extends Api {
 
     loginToCloud(cloudUserData : UserDetails){    
              this.auth.login('basic', cloudUserData).then( ()=>{
-                 console.log('User is now logged In in Ionic Cloud');
+                if ( this.auth.isAuthenticated())   console.log('User is now logged In in Ionic Cloud');
+                else console.info('Fail to logged in');
              }).catch( e =>{
                 this.registerToCloud(cloudUserData['id']);       
              });         
@@ -112,8 +113,9 @@ export class Member extends Api {
             console.log('Registration to ionic cloud started::' );
             this.auth.signup(cloudUserData).then( ()=> {
                   console.log('Cloud Registration success : ', cloudUserData)  
-                  this.auth.login('basic', {'email': cloudUserData.email, 'password': cloudUserData.password}).then(()=>{
-                     console.log('User is now logged In in Ionic Cloud');                  
+                  this.auth.login('basic', {'email': cloudUserData.email, 'password': cloudUserData.password}).then(()=>{             
+                       if (this.auth.isAuthenticated())   console.log('User is now logged In in Ionic Cloud');
+                       else console.info('Fail to logged in');
                   });                
             }, (err: IDetailedError<string[]>) => {
                     console.error('Error: Cloud Registration fail' );                     
