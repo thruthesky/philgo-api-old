@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Member, USER_LOGIN_DATA } from '../../v3/member';
 import { SampleLoginPage } from '../login/login';
+import { SampleFaceBookLoginPage } from '../facebooklogin/login';
 import { SampleRegisterPage } from '../register/register'
 @Component({
   templateUrl: 'home.html'
@@ -17,6 +18,8 @@ export class SampleHomePage {
     this.checkLogin();
   }
 
+
+
   checkLogin() {
     this.member.logged( x => this.login = x, () => this.login = null );
   }
@@ -27,6 +30,9 @@ export class SampleHomePage {
 
   onClickLogin() {
     this.navCtrl.setRoot( SampleLoginPage );
+  }
+  onClickFaceBookLogin() {
+    this.navCtrl.setRoot( SampleFaceBookLoginPage );
   }
 
   onClickLogout() {

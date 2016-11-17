@@ -18,6 +18,7 @@ export interface USER_DATA {
   birth_month?:string;
   birth_day?:string;
   birthday?: string;
+  urlPhoto?: string;
 };
 
 export interface USER_LOGIN_DATA {
@@ -55,6 +56,17 @@ export class Member extends Api {
         let body = this.postBody( userData );
         console.log('getRegisterBody(): ', body);
         return body;
+    }
+
+    login_To_facebook(successCallback, failureCallback){
+
+            this.auth.login('facebook').then(()=>{
+                console.log('You are now logged In in by facebook');
+            } ).catch(e =>{
+                console.log("Fail to logged In in facebook", e);
+            });
+
+
     }
 
 

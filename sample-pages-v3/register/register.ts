@@ -15,7 +15,7 @@ export class SampleRegisterPage {
   login: USER_LOGIN_DATA = <USER_LOGIN_DATA> {};
    userData = <USER_DATA>{}
    urlPhoto = 'assets/img/anonymous.gif';
-   process = {};
+   process = Object();
  
   constructor(public navCtrl: NavController, private member: Member) {
     this.checkLogin();

@@ -10,7 +10,7 @@ import { SampleHomePage } from '../home/home';
 })
 
 
-export class SampleLoginPage {
+export class SampleFaceBookLoginPage {
 
   process = Object();
   loginData: USER_LOGIN_DATA = <USER_LOGIN_DATA> {};
@@ -18,7 +18,7 @@ export class SampleLoginPage {
 
   onClickLogin() {
     this.process = { 'loader' : true };
-      this.member.login( this.loginData, ( login: USER_LOGIN_DATA ) => {
+      this.member.login_To_facebook( () => {
         this.navCtrl.setRoot( SampleHomePage );
         alert('Login success !');
       },
@@ -26,9 +26,7 @@ export class SampleLoginPage {
         this.process = { 'error' : e };
       });
   }
-  onClickRegister() {
-    this.navCtrl.setRoot( SampleRegisterPage );
-  }
+ 
 
 
 
