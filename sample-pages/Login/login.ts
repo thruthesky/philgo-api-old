@@ -12,7 +12,7 @@ import { SampleHomePage } from '../home/home';
 
 export class SampleLoginPage {
 
-  process = {};
+  process : { loader?; error?; } = {};
   loginData: USER_LOGIN_DATA = <USER_LOGIN_DATA> {};
   constructor(public navCtrl: NavController, private member: Member) { }
 

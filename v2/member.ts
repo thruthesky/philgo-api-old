@@ -16,6 +16,7 @@ export interface USER_DATA {
   birth_month?:string;
   birth_day?:string;
   birthday?: string;
+  urlPhoto?: string;
 };
 
 export interface USER_LOGIN_DATA {

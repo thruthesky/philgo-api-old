@@ -13,9 +13,10 @@ import { Member, USER_DATA, USER_LOGIN_DATA } from '../../v2/member';
 
 export class SampleRegisterPage {
   login: USER_LOGIN_DATA = <USER_LOGIN_DATA> {};
-   userData = <USER_DATA>{}
-   urlPhoto = 'assets/img/anonymous.gif';
-   process = {};
+  userData = <USER_DATA>{}
+  urlPhoto = 'assets/img/anonymous.gif';
+  process : { loader?; error?; } = {};
+  cordova: boolean = false;
  
   constructor(public navCtrl: NavController, private member: Member) {
     this.checkLogin();

@@ -23,4 +23,4 @@ import { SampleRegisterPage } from '../sample-pages/register/register';
 })
 
 
-export class PhilgoModule {}
+export class PhilgoApiModule {}
