@@ -10,8 +10,8 @@ export interface USER_DATA {
   password : string;
   name : string;
   email: string;
-  mobile : string;s
-  gender : 'M' | 'F';
+  mobile : string;
+  gender : '' | 'M' | 'F';
   birth_year?:string;
   birth_month?:string;
   birth_day?:string;
@@ -19,11 +19,27 @@ export interface USER_DATA {
   urlPhoto?: string;
 };
 
+export let userData: USER_DATA = <USER_DATA> {
+    id: '',
+    session_id: '',
+    nickname: '',
+    password: '',
+    name: '',
+    email: '',
+    mobile: '',
+    gender: '',
+    birth_year: '',
+    birth_month: '',
+    birth_day: '',
+    birthday: '',
+    urlPhoto: ''
+};
+
 export interface USER_LOGIN_DATA {
     id: string;
     password?: string;
     session_id: string;
-}
+};
 
 
 @Injectable()
