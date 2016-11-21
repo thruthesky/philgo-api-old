@@ -11,7 +11,7 @@ export interface USER_DATA {
   name : string;
   email: string;
   mobile : string;
-  gender : '' | 'M' | 'F';
+  gender : string;
   birth_year?:string;
   birth_month?:string;
   birth_day?:string;
