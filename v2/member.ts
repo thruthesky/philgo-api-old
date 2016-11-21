@@ -16,24 +16,9 @@ export interface USER_DATA {
   birth_month?:string;
   birth_day?:string;
   birthday?: string;
-  urlPhoto?: string;
+  varchar_1?: string; // as url of photo
 };
 
-export let userData: USER_DATA = <USER_DATA> {
-    id: '',
-    session_id: '',
-    nickname: '',
-    password: '',
-    name: '',
-    email: '',
-    mobile: '',
-    gender: '',
-    birth_year: '',
-    birth_month: '',
-    birth_day: '',
-    birthday: '',
-    urlPhoto: ''
-};
 
 export interface USER_LOGIN_DATA {
     id: string;
@@ -133,7 +118,7 @@ export class Member extends Api {
                 catch ( e ) {
                     callback( null );
                 }
-            })
+            });
     }
 
     logout( callback ) {
@@ -158,6 +143,7 @@ export class Member extends Api {
     data( successCallback: (data: any) => void, errorCallback?: (error: string) => void ) {
         this.logged( login => {
             let url = this.getUrl('version&user_extra=1&id=' + login.id + '&session_id=' + login.session_id );
+            console.log('data: ', url);
             this.http.get( url )
                 .subscribe( re => {
                     // console.log('version: ', re);

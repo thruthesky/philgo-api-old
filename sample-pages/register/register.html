@@ -19,7 +19,7 @@
         
           <img [src]="urlPhoto">
         </div>
-        <div *ngIf=" userData?.urlPhoto ">
+        <div *ngIf=" userData?.varchar_1">
           <button ion-button (click)="onClickDeletePhoto()">DELETE</button>
         </div>
         <input *ngIf=" !cordova " type="file" (change)="onChangeFile($event)">
@@ -37,6 +37,7 @@
          <ion-label floating>Password</ion-label>
          <ion-input type = 'password' [(ngModel)]="userData.password"></ion-input>
       </ion-item>
+
 
        <ion-item>
         <ion-label floating>Name</ion-label>
@@ -67,6 +68,8 @@
         <ion-label floating>Birth Day</ion-label>
         <ion-input type='date' [(ngModel)]="userData.birthday" ></ion-input>
       </ion-item>
+
+
 
     </ion-list>
 
