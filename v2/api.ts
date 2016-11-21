@@ -8,7 +8,7 @@ export class Api {
 
 
     get serverUrl() : string {
-        return "http://w8.philgo.com";
+        return "http://www.philgo.com";
     }
 
     get requestOptions() : RequestOptions {

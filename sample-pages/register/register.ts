@@ -38,6 +38,7 @@ export class SampleRegisterPage {
       this.userData.gender = re.user_gender;
       this.userData.birthday = re.birth_year + '-' + re.birth_month + '-' + re.birth_day;
 
+      this.userData.varchar_1 = re.user_varchar_1;
     },
     e => {
       alert("error: " + e);
