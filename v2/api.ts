@@ -23,7 +23,7 @@ export class Api {
      * @endcode
      * 
      */
-    getUrl( qs: string ) {
+    getUrl( qs: string = '' ) {
         return this.serverUrl + "?module=ajax&submit=1&action=" + qs;
     }
 
