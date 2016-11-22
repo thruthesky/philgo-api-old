@@ -19,7 +19,7 @@
         
           <img [src]="urlPhoto">
         </div>
-        <div *ngIf=" userData?.varchar_1">
+        <div *ngIf=" userData?.text_1">
           <button ion-button (click)="onClickDeletePhoto()">DELETE</button>
         </div>
         <input *ngIf=" !cordova " type="file" (change)="onChangeFile($event)">

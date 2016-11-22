@@ -16,14 +16,14 @@ export interface USER_DATA {
   birth_month?:string;
   birth_day?:string;
   birthday?: string;
-  varchar_1?: string; // as url of photo
+  text_1?: string; // as url of photo
 };
 
 
 export interface USER_LOGIN_DATA {
     id: string;
     password?: string;
-    session_id: string;
+    session_id?: string;
 };
 
 
