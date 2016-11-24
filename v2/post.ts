@@ -68,7 +68,7 @@ type COMMENT = {
     idx_root: string;
     int_10: string;
     member: MEMBER;
-    phtos: string;
+    photos: string;
     post_id: string;
     stamp: string;
     user_name: string;
@@ -92,11 +92,17 @@ type POST = {
     member: MEMBER;
     no_of_comment: string;
     no_of_view: string;
-    photos: string;
+    photos: Array< PHOTOS >;
     post_id: string;
     stamp: string;
     subject: string;
     user_name: string;
+}
+
+type PHOTOS = {
+    idx: number;
+    src: string;
+    original_src: string;   
 }
 
 export interface POSTS {
@@ -175,7 +181,7 @@ export class Post extends Api {
         console.log('page(): url: ', url);
         this.http.get( url )
             .subscribe( re => {
-                console.log('re: ', re);
+                //console.log('re: ', re);
                 let body = re['_body'];
                 let data;
                 try {
