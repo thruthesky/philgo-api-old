@@ -1,90 +1,75 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>
       <div *ngIf=" login ">
         Update Profile
       </div>
       <div *ngIf=" ! login ">
         Register
       </div>
-    </ion-title>
-  </ion-navbar>
-</ion-header>
 
-<ion-content padding>
-
-    <ion-list>
-      <ion-item>
         <div (click)="onClickPhoto()">
-        
           <img [src]="urlPhoto">
         </div>
+
         <div *ngIf=" userData?.text_1">
           <button ion-button (click)="onClickDeletePhoto()">DELETE</button>
         </div>
+
         <input *ngIf=" !cordova " type="file" (change)="onChangeFile($event)">
        
-      </ion-item>
 
 
-
-      <ion-item *ngIf=" ! login ">
-        <ion-label floating>User Id</ion-label>
-        <ion-input type='text' [(ngModel)]="userData.id" ></ion-input>
-      </ion-item>
+      <div *ngIf=" ! login ">
+        <label floating>User Id</label>
+        <input type='text' [(ngModel)]="userData.id" >
+      </div>
       
-      <ion-item *ngIf=" ! login ">
-         <ion-label floating>Password</ion-label>
-         <ion-input type = 'password' [(ngModel)]="userData.password"></ion-input>
-      </ion-item>
+      <div *ngIf=" ! login ">
+         <label floating>Password</label>
+         <input type = 'password' [(ngModel)]="userData.password">
+      </div>
 
 
-       <ion-item>
-        <ion-label floating>Name</ion-label>
-        <ion-input type='text' [(ngModel)]="userData.name" ></ion-input>
-      </ion-item>
+       <div>
+        <label floating>Name</label>
+        <input type='text' [(ngModel)]="userData.name" >
+      </div>
 
-       <ion-item *ngIf=" ! login ">
-        <ion-label floating>Nickname</ion-label>
-        <ion-input type='text' [(ngModel)]="userData.nickname" ></ion-input>
-      </ion-item>
+       <div *ngIf=" ! login ">
+        <label floating>Nickname</label>
+        <input type='text' [(ngModel)]="userData.nickname" >
+      </div>
 
-       <ion-item>
-        <ion-label floating>Email</ion-label>
-        <ion-input type='text' [(ngModel)]="userData.email" ></ion-input>
-      </ion-item>
+       <div>
+        <label floating>Email</label>
+        <input type='text' [(ngModel)]="userData.email" >
+      </div>
 
-       <ion-item>
-        <ion-label floating>Mobile</ion-label>
-        <ion-input type='text' [(ngModel)]="userData.mobile" ></ion-input>
-      </ion-item>
+       <div>
+        <label floating>Mobile</label>
+        <input type='text' [(ngModel)]="userData.mobile" >
+      </div>
 
-       <ion-item>
-        <ion-label floating>Gender</ion-label>
-        <ion-input type='text' [(ngModel)]="userData.gender" ></ion-input>
-      </ion-item>
+       <div>
+        <label floating>Gender</label>
+        <input type='text' [(ngModel)]="userData.gender" >
+      </div>
 
-       <ion-item>
-        <ion-label floating>Birth Day</ion-label>
-        <ion-input type='date' [(ngModel)]="userData.birthday" ></ion-input>
-      </ion-item>
+       <div>
+        <label floating>Birth Day</label>
+        <input type='date' [(ngModel)]="userData.birthday" >
+      </div>
 
 
-
-    </ion-list>
 
 
     <div notice *ngIf=" process.loader ">
-      <ion-spinner></ion-spinner> Please, wait.
+      Please, wait.
     </div>
     <div warning *ngIf=" process.error ">
       {{ process.error }}
     </div>
   
-      <button *ngIf=" ! login " ion-button (click)="onClickRegister()">Register</button>
-      <button *ngIf=" login " ion-button (click)="onClickUpdate()">UPDATE</button>
+      <button *ngIf=" ! login " (click)="onClickRegister()">Register</button>
+      <button *ngIf=" login " (click)="onClickUpdate()">UPDATE</button>
 
-      <button ion-button (click)="onClickBack()">Back</button>
+      <button (click)="onClickBack()">Back</button>
      
-  
-</ion-content>

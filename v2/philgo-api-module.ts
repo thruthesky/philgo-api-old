@@ -1,9 +1,16 @@
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 import { Member } from './member';
 import { SampleHomePage } from '../sample-pages/home/home';
 import { SampleLoginPage } from '../sample-pages/login/login';
 import { SampleRegisterPage } from '../sample-pages/register/register';
 
+
+export let ROUTES = [
+        { path: "test/philgo/home", component: SampleHomePage, name: 'philgoHome' },
+        { path: "test/philgo/login", component: SampleLoginPage, name: 'philgoLogin' }
+];
 
 
 @NgModule({
@@ -12,7 +19,10 @@ import { SampleRegisterPage } from '../sample-pages/register/register';
     SampleLoginPage,
     SampleRegisterPage
   ],
-  imports: [],
+  imports: [
+    BrowserModule,
+    FormsModule
+  ],
 
   entryComponents: [
    SampleHomePage,

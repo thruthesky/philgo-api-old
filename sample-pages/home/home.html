@@ -1,19 +1,10 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>
-      Home
-    </ion-title>
-  </ion-navbar>
-</ion-header>
-
-<ion-content padding>
+Philgo Home
 
   <div *ngIf=" login?.id ">
-    <button ion-button (click)="onClickProfile()">PORIFLE</button>
-    <button ion-button (click)="onClickLogout()">Logout</button>
+    <button (click)="onClickProfile()">PORIFLE</button>
+    <button (click)="onClickLogout()">Logout</button>
   </div>
   <div *ngIf=" ! login?.id ">
-    <button ion-button (click)="onClickRegister()">REGISTER</button>
-    <button ion-button (click)="onClickLogin()">LOGIN</button>
+    <button (click)="onClickRegister()">REGISTER</button>
+    <button (click)="onClickLogin()">LOGIN</button>
   </div>
-</ion-content>

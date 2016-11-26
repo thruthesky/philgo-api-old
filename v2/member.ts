@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Api } from './api';
 
+const PHILGO_MEMBER_LOGIN = 'philgo-login';
+
 export interface USER_DATA {
   id : string;
   session_id? : string;
@@ -28,7 +30,7 @@ export interface USER_LOGIN_DATA {
 
 @Injectable()
 export class Member extends Api {
-    constructor( http: Http, private storage: Storage ) {
+    constructor( http: Http ) {
         super( http );
     }
 
@@ -64,13 +66,13 @@ export class Member extends Api {
                         id: data.user_id,
                         session_id: data.session_id
                     };
-                    this.setLoginData( login ).then( () => successCallback( login ) );
+                    this.setLoginData( login );
+                    successCallback( login );
                 }
                 catch( e ) {
                     console.log('login(): re: ', re);
                     errorCallback( 'json-parse-error' );
                 }
-
             });
     }
     register( userData: USER_DATA, successCallback: () => void, errorCallback: (error: string) => void ) {
@@ -86,11 +88,8 @@ export class Member extends Api {
                     //if ( data['code'] )
                     if ( this.isRequestError(data) ) return errorCallback( data['message'] );
                     console.log('register::sucess: ', data);
-                    this.setLoginData( data )
-                        .then( () => {
-                            console.log('user login saved: ' );
-                            successCallback();
-                        });
+                    this.setLoginData( data );
+                    successCallback();
                 }
                 catch( e ) {
                     console.log(re);
@@ -102,36 +101,28 @@ export class Member extends Api {
     
 
 
-    setLoginData( data ) : Promise<any> {
+    setLoginData( data ) : void {
         let login = { id: data.id, session_id: data.session_id };
         let str = JSON.stringify( login );
-        return this.storage.set( 'login', str );
+        localStorage.setItem( PHILGO_MEMBER_LOGIN, str );
     }
-    getLoginData( callback ) {
-        this.storage.get('login')
-            .then( data => {
-                try {
-                    let login = JSON.parse( data );
-                    callback( login );
-                }
-                catch ( e ) {
-                    callback( null );
-                }
-            });
+    getLoginData() {
+        let data = localStorage.getItem( PHILGO_MEMBER_LOGIN );
+        try {
+            let login = JSON.parse( data );
+            return login;
+        }
+        catch ( e ) {
+            return null;
+        }
     }
 
-    logout( callback ) {
-        this.storage.remove( 'login' )
-            .then( () => callback() );
+    logout() {
+        localStorage.removeItem( PHILGO_MEMBER_LOGIN );
     }
 
-    logged( yesCallback: ( login: USER_LOGIN_DATA ) => void, noCallback?: () => void ) {
-        this.getLoginData( ( login: USER_LOGIN_DATA ) => {
-            if ( typeof login == 'undefined' || login == null || typeof login.id == 'undefined' ) {
-                if ( noCallback ) noCallback();
-            }
-            else yesCallback( login );
-        });
+    logged () {
+        return this.getLoginData();
     }
 
 
@@ -140,7 +131,8 @@ export class Member extends Api {
  * 
  */
     data( successCallback: (data: any) => void, errorCallback?: (error: string) => void ) {
-        this.logged( login => {
+        let login = this.logged();
+        if ( login ) {
             let url = this.getUrl('version&user_extra=1&id=' + login.id + '&session_id=' + login.session_id );
             console.log('data: ', url);
             this.http.get( url )
@@ -154,9 +146,8 @@ export class Member extends Api {
                         errorCallback('json-parse-error');
                     }
                 });
-        },
-        () => errorCallback('not logged in'));
-
+        }
+        else return errorCallback('not logged in');
     }
 
 

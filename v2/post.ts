@@ -109,6 +109,7 @@ export interface POSTS {
     action: string;
     ads: Array<POST_AD>;
     code: number;
+    message?: string;
     domain: string;
     event: any;
     mobile: any;
@@ -134,7 +135,7 @@ export interface POSTS {
 @Injectable()
 export class Post extends Api {
 
-    constructor( http: Http, private storage: Storage ) {
+    constructor( http: Http ) {
         super( http );
     }
 
@@ -161,54 +162,37 @@ export class Post extends Api {
      * @endcode
      * 
      */
-
-    page( data: PAGE_DATA, successCallback: ( re: POSTS ) => void, errorCallback: ( error: any ) => void ) {
+    page( data: PAGE_DATA, successCallback: ( re: POSTS ) => void, errorCallback: ( error: string ) => void ) {
         let url = this.getUrl() + 'post-list&post_id=' + data.post_id + '&page_no=' + data.page_no + '&limit=30';
-
-        if ( data.page_no == 1 ) {
-            this.storage.get( data.post_id ).then( re => {
-                if ( re ) {
-                    try {
-                        let data = JSON.parse( re );
-                        successCallback( data );
-                    }
-                    catch (e) { }
-                }
-            });
-        }
+        if ( data.page_no == 1 ) this.cacheCallback( data.post_id, successCallback );
 
         console.log('page(): url: ', url);
         this.http.get( url )
             .subscribe( re => {
-                //console.log('re: ', re);
-                let body = re['_body'];
-                let data;
-                try {
-                    data = JSON.parse( body );
-                    if ( data.page_no == 1 ) {
-                        this.storage.set( data.post_id, body );
-                    }
-                }
-                catch( e ) {
-                    console.error(e);
-                    console.info( re );
-                    return errorCallback('json-parse-error');
-                }
-                successCallback( data );
+                console.log('post::page() re: ', re);
+                this.responseData( re, (posts: POSTS) => {
+                    if ( data.page_no == 1 ) this.saveCache( data.post_id, posts );
+                    successCallback( posts );
+                }, errorCallback );
             });
     }
+
+
 
     /**
      * Returns forum category
      * 게시판 종류를 리턴한다.
      * 
+     * @code simple example
+     *      this.post.getForums( re => console.log(re), e => alert(e) );
+     * @endcode
      * @code example code
         this.post.getForums( data => {
             console.log(data);
         }, e => {
             console.log('getForum() error: ', e);
         });
-     * @code
+     * @endcode
      */
     getForums( successCallback: (data: any) => void, errorCallback?: (error: string) => void ) {
         console.log('getForums()');
@@ -217,14 +201,7 @@ export class Post extends Api {
         console.log('url:', url);
         this.http.get( url )
             .subscribe( re => {
-                console.log('re: ', re);
-                try {
-                    let data = JSON.parse( re['_body'] );
-                    successCallback( data );
-                }
-                catch( e ) {
-                    errorCallback('json-parse-error');
-                }
+                this.responseData( re, successCallback, errorCallback );
             });
     }
 

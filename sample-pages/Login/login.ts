@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
 import { Member, USER_LOGIN_DATA } from '../../v2/member';
 import { SampleRegisterPage } from '../register/register';
 import { SampleHomePage } from '../home/home';
@@ -14,12 +13,11 @@ export class SampleLoginPage {
 
   process : { loader?; error?; } = {};
   loginData: USER_LOGIN_DATA = <USER_LOGIN_DATA> {};
-  constructor(public navCtrl: NavController, private member: Member) { }
+  constructor(private member: Member) { }
 
   onClickLogin() {
     this.process = { 'loader' : true };
       this.member.login( this.loginData, ( login: USER_LOGIN_DATA ) => {
-        this.navCtrl.setRoot( SampleHomePage );
         alert('Login success !');
       },
       e => {
@@ -27,7 +25,7 @@ export class SampleLoginPage {
       });
   }
   onClickRegister() {
-    this.navCtrl.setRoot( SampleRegisterPage );
+    alert('move page');
   }
 
 

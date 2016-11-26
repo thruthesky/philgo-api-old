@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
 import { SampleLoginPage } from '../login/login';
 import { SampleHomePage } from '../home/home';
 import { Member, USER_DATA, USER_LOGIN_DATA } from '../../v2/member';
@@ -18,14 +17,13 @@ export class SampleRegisterPage {
   process : { loader?; error?; } = {};
   cordova: boolean = false;
  
-  constructor(public navCtrl: NavController, private member: Member) {
+  constructor(private member: Member) {
     this.checkLogin();
   }
   checkLogin() {
-    this.member.logged( x => {
-      this.login = x;
-      this.loadUserProfile();
-    }, () => this.login = null );
+    let x = this.member.logged();
+    this.login = x;
+    this.loadUserProfile();
   }
 
   loadUserProfile() {
@@ -50,7 +48,6 @@ export class SampleRegisterPage {
       this.process  = { 'loader': true };
       this.member.register( this.userData, () => {
         console.log('onClickRegister::sucess: ');
-        this.navCtrl.setRoot( SampleHomePage );
         alert("Registration Success!");
       },
       e => {
@@ -82,7 +79,7 @@ export class SampleRegisterPage {
 
 
     onClickBack(){
-        this.navCtrl.setRoot(SampleLoginPage);
+      alert('move to login page');
     }
 
 

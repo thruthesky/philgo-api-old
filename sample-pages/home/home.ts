@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
 import { Member, USER_LOGIN_DATA } from '../../v2/member';
 import { SampleLoginPage } from '../login/login';
 import { SampleRegisterPage } from '../register/register'
@@ -9,31 +8,27 @@ import { SampleRegisterPage } from '../register/register'
 
 export class SampleHomePage {
   login: USER_LOGIN_DATA = <USER_LOGIN_DATA> {};
-  constructor( public navCtrl: NavController, private member: Member ) {
+  constructor( private member: Member ) {
     console.log(member);
     member.version( v => console.log('version: ', v) );
-     this.navCtrl.setRoot( SampleRegisterPage );
-    // this.navCtrl.setRoot(SampleLoginPage);
     this.checkLogin();
   }
 
   checkLogin() {
-    this.member.logged( x => this.login = x, () => this.login = null );
+    this.login = this.member.logged();
   }
 
   onClickRegister() {
-    this.navCtrl.setRoot( SampleRegisterPage );
   }
 
   onClickLogin() {
-    this.navCtrl.setRoot( SampleLoginPage );
   }
 
   onClickLogout() {
-    this.member.logout( () => this.checkLogin() );
+    this.member.logout();
+    this.checkLogin();
   }
   onClickProfile() {
-    this.navCtrl.setRoot( SampleRegisterPage );
   }
 
 }
