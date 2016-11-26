@@ -1,9 +1,0 @@
-<h2>PhilGo Login</h2>
-
-<div>User Id: <input type='text' [(ngModel)]="loginData.id" ></div>
-<div>Password: <input type = 'password' [(ngModel)]="loginData.password"></div>
-<div notice *ngIf=" process.loader ">Please, wiat.</div>
-<div warning *ngIf=" process.error ">{{ process.error }}</div>
-<button (click)="onClickLogin()">Login</button>
-<button (click)="onClickRegister()">Create account</button>
-     
