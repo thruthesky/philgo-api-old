@@ -1,6 +1,4 @@
 import { NgModule } from '@angular/core';
-import { IonicModule } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
 import { Member } from './member';
 import { SampleHomePage } from '../sample-pages/home/home';
 import { SampleLoginPage } from '../sample-pages/login/login';
@@ -14,14 +12,14 @@ import { SampleRegisterPage } from '../sample-pages/register/register';
     SampleLoginPage,
     SampleRegisterPage
   ],
-  imports: [ IonicModule  ],
+  imports: [],
 
   entryComponents: [
    SampleHomePage,
    SampleLoginPage,
    SampleRegisterPage
   ],
-  providers : [ Storage, Member ]
+  providers : [ Member ]
 })
 
 
