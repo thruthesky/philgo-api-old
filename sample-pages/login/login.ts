@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { Member, USER_LOGIN_DATA } from '../../v2/member';
 import { SampleRegisterPage } from '../register/register';
 import { SampleHomePage } from '../home/home';
@@ -11,24 +12,29 @@ import { SampleHomePage } from '../home/home';
 
 export class SampleLoginPage {
 
-  process : { loader?; error?; } = {};
+  status : { loader?; error?; success?; } = {};
   loginData: USER_LOGIN_DATA = <USER_LOGIN_DATA> {};
-  constructor(private member: Member) { }
+  constructor(
+    private router: Router,
+    private member: Member) { }
 
   onClickLogin() {
-    this.process = { 'loader' : true };
+    this.status = { 'loader' : true };
+    this.member.login( this.loginData,
+      login => { console.log('login success: ', login), this.status = { 'success': 'login success' }; },
+      er => { alert("login error:" + er); this.status.error = er },
+      () => { console.log('login complete!'); this.status.loader = false; }
+    );
+
+    /*
       this.member.login( this.loginData, ( login: USER_LOGIN_DATA ) => {
         alert('Login success !');
       },
       e => {
         this.process = { 'error' : e };
       });
+      */
   }
-  onClickRegister() {
-    alert('move page');
-  }
-
-
 
 }
 

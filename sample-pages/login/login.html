@@ -2,8 +2,10 @@
 
 <div>User Id: <input type='text' [(ngModel)]="loginData.id" ></div>
 <div>Password: <input type = 'password' [(ngModel)]="loginData.password"></div>
-<div notice *ngIf=" process.loader ">Please, wiat.</div>
-<div warning *ngIf=" process.error ">{{ process.error }}</div>
+<div notice *ngIf=" status.loader ">Please, wiat.</div>
+<div warning *ngIf=" status.error ">{{ status.error }}</div>
+<div warning *ngIf=" status.success ">{{ status.success }}</div>
 <button (click)="onClickLogin()">Login</button>
-<button (click)="onClickRegister()">Create account</button>
+<a routerLink="/test/philgo/register">Register</a>
+<a routerLink="/test/philgo/home">Cancel</a>
      

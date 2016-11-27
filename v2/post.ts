@@ -167,6 +167,10 @@ export class Post extends Api {
         if ( data.page_no == 1 ) this.cacheCallback( data.post_id, successCallback );
 
         console.log('page(): url: ', url);
+        this.get( url, re => {
+
+        }, errorCallback );
+
         this.http.get( url )
             .subscribe( re => {
                 console.log('post::page() re: ', re);
@@ -194,15 +198,24 @@ export class Post extends Api {
         });
      * @endcode
      */
-    getForums( successCallback: (data: any) => void, errorCallback?: (error: string) => void ) {
+    getForums( successCallback: (data: any) => void, errorCallback?: (error: string) => void, completeCallback?: () => void ) {
         console.log('getForums()');
         // check if it has cached data.
         let url = this.getUrl('forums');
         console.log('url:', url);
+        this.get( url, re => {
+            if ( +re['code'] ) errorCallback( re['message'] );
+            else successCallback( re );
+        },
+        errorCallback,
+        completeCallback );
+
+        /*
         this.http.get( url )
             .subscribe( re => {
                 this.responseData( re, successCallback, errorCallback );
             });
+            */
     }
 
 }
