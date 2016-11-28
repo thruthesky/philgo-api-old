@@ -1,3 +1,23 @@
+export interface PHILGO_API_RESPONSE {
+    acl: string;
+    action: string;
+    code: number;
+    domain: string;
+    event?: any;
+    id: string;
+    idx_member: string;
+    message?: string;
+    mode?: string;
+    module: string;
+    post_id: string;
+    post_name: string;
+    register_mode: string;
+    session_id: string;
+    site: string;
+    user_id: any;
+    user_name: string;
+    version: string;
+}
 export interface MEMBER_DATA {
   id : string;
   session_id? : string;
@@ -190,32 +210,24 @@ export interface PHOTOS {
     original_src: string;   
 }
 
-export interface POSTS {
-    acl: string;
-    action: string;
+export interface POSTS extends PHILGO_API_RESPONSE {
     ads: Array<POST_AD>;
-    code: number;
-    message?: string;
-    domain: string;
-    event: any;
-    mobile: any;
-    mode: any;
-    module: string;
     page_no: number;
     post_id: string;
     post_name: string;
     post_top_ad: Array<POST_TOP_AD>;
     post_top_premium_ad: Array<POST_TOP_PREMIUM_AD>;
     posts: Array<POST>;
-    site: string;
-    user_id: any;
-    user_name: any;
-    version: string;
 };
 
 
 
+/**
+ * Post data structure for create/update
+ */
 export interface POST_DATA {
+    module?: string; // for crate/update
+    action?: string; // for create/update
     id?: string; // user id to create/update.
     session_id?: string; // user id to create or update.
     idx?
@@ -306,4 +318,8 @@ export interface POST_DATA {
     text_8?
     text_9?
     text_10?
-}
+};
+
+export interface POST_RESPONSE extends PHILGO_API_RESPONSE {
+    post: POST_DATA;
+};

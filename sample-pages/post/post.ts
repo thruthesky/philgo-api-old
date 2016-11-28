@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Post, POST_DATA } from '../../v2/post';
 import { Member, MEMBER_DATA, MEMBER_LOGIN_DATA } from '../../v2/member';
+
 @Component({
   selector: 'philgo-test-post',
   templateUrl: 'post.html',
@@ -57,10 +58,26 @@ export class SamplePostPage {
     }
     createComment( idx_parent ) {
         console.log("createComment()");
-        this.form.idx_parent = idx_parent;
-        this.post.createComment( this.form, data => {
+        let c = <POST_DATA> {};
+        c.id = this.login.id;
+        c.session_id = this.login.session_id;
+        c.idx_parent = idx_parent;
+        c.subject = "Comment title";
+        c.content = "Comment content";
+        console.log("comment create data: ", c);
+        this.post.debug = true;
+        this.post.createComment( c, data => {
             console.log('createComment() data: ', data);
-        }, error => alert( error ) );
+            this.updateComment( data.post.idx );
+        }, error => {
+            console.error("create comment error: " + error );
+            alert( error );
+        } );
+    }
+
+
+    updateComment( idx ) {
+
     }
     compareUpdatePost( idx ) {
         this.post.get( idx, data => {
@@ -79,6 +96,7 @@ export class SamplePostPage {
         );
     }
     compareCreatePost( idx ) {
+        console.log("compareCreatePost()");
         this.post.get( idx, data => {
             console.log("comparePost() get post : ", data.post);
             let p: POST_DATA = data.post;

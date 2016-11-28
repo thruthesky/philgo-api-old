@@ -2,6 +2,7 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/timeout';
 export class Api {
     http: Http;
+    debug: boolean = false;
     constructor( http ) {
         this.http = http;
         // console.log('Api::constructor()', http);
@@ -18,6 +19,7 @@ export class Api {
      * 
      */
     get( url, successCallback: (data:any) => void, errorCallback?: ( e:any ) => void, completeCallback?: () => void ) {
+        if ( this.debug ) console.info("get: ", url);
         this.http.get( url )
             .timeout( 9000, new Error('timeout exceeded') )
             .subscribe(
@@ -33,7 +35,10 @@ export class Api {
     post( data: any, successCallback: (data:any) => void, errorCallback?: ( e:any ) => void, completeCallback?: () => void ) {
         if ( data['action'] === void 0 ) return errorCallback("Ajax request 'action' value is empty");
         data = this.buildQuery( data );
-        //console.log('post data: ', data);
+        if ( this.debug ) {
+            let url = this.serverUrl + '?' + data;
+            console.info("post: ", url);
+        }
         this.http.post( this.serverUrl, data, this.requestOptions )
             .timeout( 9000, new Error('timeout exceeded') )
             .subscribe(
