@@ -31,6 +31,9 @@ export class Api {
      * @example code @see member.login()
      */
     post( data: any, successCallback: (data:any) => void, errorCallback?: ( e:any ) => void, completeCallback?: () => void ) {
+        if ( data['action'] === void 0 ) return errorCallback("Ajax request 'action' value is empty");
+        data = this.buildQuery( data );
+        //console.log('post data: ', data);
         this.http.post( this.serverUrl, data, this.requestOptions )
             .timeout( 9000, new Error('timeout exceeded') )
             .subscribe(
@@ -136,16 +139,19 @@ export class Api {
      * 
      * @param params must be an object.
      */
-    postBody( params ) {
+    buildQuery( params ) {
+        params[ 'module' ] = 'ajax'; // 'module' must be ajax.
+        params[ 'submit' ] = 1; // all submit must send 'submit'=1
+        return this.http_build_query( params );
 
-        params[ 'module' ] = 'ajax';
-        params[ 'submit' ] = 1;
 
+/*
         let keys = Object.keys( params );
         let en = encodeURIComponent;
         let q = keys.map( e => en( e ) + '=' + en( params[e] ) ).join('&');
         // console.log('postBody(): ', q);
         return q;
+        */
     }
 
 
@@ -232,5 +238,67 @@ export class Api {
      */
     saveCache( cache_id, data ) {
         localStorage.setItem( cache_id, JSON.stringify(data) );
+    }
+
+
+
+    http_build_query (formdata, numericPrefix='', argSeparator='') { 
+        var urlencode = this.urlencode;
+        var value
+        var key
+        var tmp = []
+        var _httpBuildQueryHelper = function (key, val, argSeparator) {
+            var k
+            var tmp = []
+            if (val === true) {
+            val = '1'
+            } else if (val === false) {
+            val = '0'
+            }
+            if (val !== null) {
+            if (typeof val === 'object') {
+                for (k in val) {
+                if (val[k] !== null) {
+                    tmp.push(_httpBuildQueryHelper(key + '[' + k + ']', val[k], argSeparator))
+                }
+                }
+                return tmp.join(argSeparator)
+            } else if (typeof val !== 'function') {
+                return urlencode(key) + '=' + urlencode(val)
+            } else {
+                throw new Error('There was an error processing for http_build_query().')
+            }
+            } else {
+            return ''
+            }
+        }
+
+        if (!argSeparator) {
+            argSeparator = '&'
+        }
+        for (key in formdata) {
+            value = formdata[key]
+            if (numericPrefix && !isNaN(key)) {
+            key = String(numericPrefix) + key
+            }
+            var query = _httpBuildQueryHelper(key, value, argSeparator)
+            if (query !== '') {
+            tmp.push(query)
+            }
+        }
+
+        return tmp.join(argSeparator)
+    }
+
+
+    urlencode (str) {
+        str = (str + '')
+        return encodeURIComponent(str)
+            .replace(/!/g, '%21')
+            .replace(/'/g, '%27')
+            .replace(/\(/g, '%28')
+            .replace(/\)/g, '%29')
+            .replace(/\*/g, '%2A')
+            .replace(/%20/g, '+')
     }
 }

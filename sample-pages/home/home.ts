@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Member, USER_LOGIN_DATA } from '../../v2/member';
+import { Member, MEMBER_LOGIN_DATA } from '../../v2/member';
 import { Post } from '../../v2/post';
 import { SampleLoginPage } from '../login/login';
 import { SampleRegisterPage } from '../register/register'
@@ -9,9 +9,8 @@ import { SampleRegisterPage } from '../register/register'
   templateUrl: 'home.html',
   styleUrls: ['./home.scss']
 })
-
 export class SampleHomePage {
-  login: USER_LOGIN_DATA = <USER_LOGIN_DATA> {};
+  login: MEMBER_LOGIN_DATA = <MEMBER_LOGIN_DATA> {};
   userData;
   constructor( public router: Router, private member: Member, private post: Post ) {
     console.log(member);

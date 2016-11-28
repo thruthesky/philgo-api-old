@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Member, USER_LOGIN_DATA } from '../../v2/member';
+import { Member, MEMBER_LOGIN_DATA } from '../../v2/member';
 import { SampleRegisterPage } from '../register/register';
 import { SampleHomePage } from '../home/home';
 
@@ -13,7 +13,7 @@ import { SampleHomePage } from '../home/home';
 export class SampleLoginPage {
 
   status : { loader?; error?; success?; } = {};
-  loginData: USER_LOGIN_DATA = <USER_LOGIN_DATA> {};
+  loginData: MEMBER_LOGIN_DATA = <MEMBER_LOGIN_DATA> {};
   constructor(
     private router: Router,
     private member: Member) { }
@@ -27,7 +27,7 @@ export class SampleLoginPage {
     );
 
     /*
-      this.member.login( this.loginData, ( login: USER_LOGIN_DATA ) => {
+      this.member.login( this.loginData, ( login: MEMBER_LOGIN_DATA ) => {
         alert('Login success !');
       },
       e => {

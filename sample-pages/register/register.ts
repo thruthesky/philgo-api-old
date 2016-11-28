@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { SampleLoginPage } from '../login/login';
 import { SampleHomePage } from '../home/home';
-import { Member, USER_DATA, USER_LOGIN_DATA } from '../../v2/member';
+import { Member, MEMBER_DATA, MEMBER_LOGIN_DATA } from '../../v2/member';
 import * as _ from 'lodash';
 
 @Component({
@@ -12,8 +12,8 @@ import * as _ from 'lodash';
 
 
 export class SampleRegisterPage {
-  form: USER_DATA = <USER_DATA>{}
-  login: USER_LOGIN_DATA;
+  form: MEMBER_DATA = <MEMBER_DATA>{}
+  login: MEMBER_LOGIN_DATA;
   urlPhoto = 'assets/img/anonymous.gif';
   process : { loader?; error?; } = {};
   cordova: boolean = false;
