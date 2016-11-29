@@ -10,6 +10,10 @@ Philgo Restful API
 npm install @ionic/storage --save
 
 
+# TEST
+
+* http://localhost:4200/test/philgo/home for test page
+* http://localhost:4200/test/philgo/register
 
 
 # Example Codes

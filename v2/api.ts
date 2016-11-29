@@ -50,6 +50,7 @@ export class Api {
     /**
      * 
      * @example code @see member.login()
+     * 
      */
     post( data: any, successCallback: (data:any) => void, errorCallback?: ( e:any ) => void, completeCallback?: () => void ) {
         if ( data['action'] === void 0 ) return errorCallback("Ajax request 'action' value is empty");

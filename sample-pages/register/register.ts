@@ -158,7 +158,7 @@ export class SampleRegisterPage {
       this.member.data( data => {
         console.log("userDataTest() data: ", data);
         for ( let i in this.form ) {
-          if ( i == 'action' || i == 'submit' || i == 'password' || i == 'birthday' || i == 'session_id') continue;
+          if ( i == 'nickname' || i == 'action' || i == 'submit' || i == 'password' || i == 'birthday' || i == 'session_id') continue;
           if ( this.form[i] == data[i] ) console.info( i + ' match: OK');
           else console.error( i + ` match: FAIL. form vaue: ${this.form[i]} response value: ${data[i]}`);
         }
