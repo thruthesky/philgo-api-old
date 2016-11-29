@@ -1,5 +1,7 @@
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { MEMBER_LOGIN_DATA } from './philgo-api-interface';
 import 'rxjs/add/operator/timeout';
+export const PHILGO_MEMBER_LOGIN = 'philgo-login';
 export class Api {
     http: Http;
     debug: boolean = false;
@@ -8,6 +10,19 @@ export class Api {
         // console.log('Api::constructor()', http);
     }
 
+/**
+ * 
+ */
+    getLoginData() : MEMBER_LOGIN_DATA {
+        let data = localStorage.getItem( PHILGO_MEMBER_LOGIN );
+        try {
+            let login = JSON.parse( data );
+            return login;
+        }
+        catch ( e ) {
+            return null;
+        }
+    }
 
     get serverUrl() : string {
         return "http://philgo.org";
@@ -306,4 +321,6 @@ export class Api {
             .replace(/\*/g, '%2A')
             .replace(/%20/g, '+')
     }
+
+
 }

@@ -33,8 +33,8 @@ export class SamplePostPage {
         this.member.register( userData, login => {
             console.log("user registration success: ", login);
             this.login = login;
-            this.form.id = id;
-            this.form.session_id = login.session_id;
+            //this.form.id = id;
+            //this.form.session_id = login.session_id;
             // 2. create a post
             this.post.create( this.form, data => {
                 console.log("post create success: ", data);
@@ -50,6 +50,8 @@ export class SamplePostPage {
     updatePost( idx ) {
         this.editFormValues();
         this.form.idx = idx;
+        this.form.id = null;
+        this.form.session_id = null;
         this.post.update( this.form, data => {
             console.log("post update : ", data);
             // ==>
@@ -59,8 +61,6 @@ export class SamplePostPage {
     createComment( idx_parent ) {
         console.log("createComment()");
         let c = <POST_DATA> {};
-        c.id = this.login.id;
-        c.session_id = this.login.session_id;
         c.idx_parent = idx_parent;
         c.subject = "Comment title";
         c.content = "Comment content";
@@ -77,7 +77,38 @@ export class SamplePostPage {
 
 
     updateComment( idx ) {
+        console.log("updateComment()");
+        let c = <POST_DATA> {};
+        c.idx = idx;
+        c.subject = "edited comment subject";
+        c.content = "edited comment content";
+        this.post.update( c, data => {
+            console.log("updateComment() success: ", data);
+            this.compareUpdatedComment( data.idx );
+        }, error => {
+            console.error("comment update error: " + error );
+            alert( error );
+        })
+    }
 
+    compareUpdatedComment( idx ) {
+        this.post.get( idx, data => {
+            console.log("compareUpdatedComment() get post : ", data.post);
+            if ( data.post.subject != 'edited comment subject') console.error('comment subject does not match');
+            if ( data.post.content != 'edited comment content') console.error('comment content does not match');
+            this.deletePostComment( data.post.idx, data.post.idx_parent );
+        }, er => alert("error: compareUpdatedComment() : " + er) );
+    }
+
+    deletePostComment( idx, idx_parent ) {
+        console.log("deletePostComment()");
+        this.post.delete( idx, re => {
+            console.log("delete comment success: idx: " );
+        }, error => alert("error: " + error));
+
+        this.post.delete( idx_parent, re => {
+            console.log("delete post success: idx: " );
+        }, error => alert("error: " + error));
     }
     compareUpdatePost( idx ) {
         this.post.get( idx, data => {

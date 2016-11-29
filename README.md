@@ -15,6 +15,15 @@ npm install @ionic/storage --save
 # Example Codes
 
 
+## Debugging
+
+* To see Reqeust Url, do below.
+
+````
+    this.post.debug = true
+````
+
+
 ## Comment Create
 
 ````

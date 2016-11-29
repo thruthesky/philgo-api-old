@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import { Api } from './api';
+import { Api, PHILGO_MEMBER_LOGIN } from './api';
 import { MEMBER_DATA, MEMBER_LOGIN_DATA } from './philgo-api-interface';
 export * from './philgo-api-interface';
 import * as _ from 'lodash';
 
-const PHILGO_MEMBER_LOGIN = 'philgo-login';
 
 
 @Injectable()
@@ -127,21 +126,19 @@ export class Member extends Api {
     
 
 
+    /**
+     * Sets user login id & session_id.
+     * 
+     * This 'setLoginData()' method must be here while 'getLoginDta()' is on parent class.
+     */
     setLoginData( data ) : void {
         let login = { id: data.id, session_id: data.session_id };
         let str = JSON.stringify( login );
         localStorage.setItem( PHILGO_MEMBER_LOGIN, str );
     }
-    getLoginData() : MEMBER_LOGIN_DATA {
-        let data = localStorage.getItem( PHILGO_MEMBER_LOGIN );
-        try {
-            let login = JSON.parse( data );
-            return login;
-        }
-        catch ( e ) {
-            return null;
-        }
-    }
+
+
+
 
     logout() {
         localStorage.removeItem( PHILGO_MEMBER_LOGIN );

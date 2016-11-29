@@ -17,6 +17,7 @@ export interface PHILGO_API_RESPONSE {
     user_id: any;
     user_name: string;
     version: string;
+    idx?: any; // for post/comment update.
 }
 export interface MEMBER_DATA {
   id : string;
