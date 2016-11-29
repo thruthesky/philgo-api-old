@@ -13,6 +13,9 @@ export class Api {
 /**
  * 
  */
+    getLogin() : MEMBER_LOGIN_DATA {
+        return this.getLoginData();
+    }
     getLoginData() : MEMBER_LOGIN_DATA {
         let data = localStorage.getItem( PHILGO_MEMBER_LOGIN );
         try {

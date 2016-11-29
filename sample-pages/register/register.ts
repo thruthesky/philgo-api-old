@@ -60,7 +60,8 @@ export class SampleRegisterPage {
     if ( ! pre ) f.password = 'pass-' + f.id;
 
     f.name = pre + 'name-' + f.id;
-    f.nickname = 'nickname-' + f.id;
+    if ( pre == '' ) f.nickname = 'nickname-' + f.id;
+    else f.nickname = '';
     f.email = pre + 'email-' + f.id + '@gmail.com';
     f.mobile = pre + '10123456789';
     f.landline= pre + '9876543210';
@@ -141,6 +142,7 @@ export class SampleRegisterPage {
     loginTest() {
       let req = { id: this.form.id, password: this.form.password };
       console.log('loginTest() req: ', req);
+      this.member.debug = true;
       this.member.login( req,
         login => {
           console.log('loginTest success: ', login);
@@ -158,7 +160,7 @@ export class SampleRegisterPage {
         for ( let i in this.form ) {
           if ( i == 'action' || i == 'submit' || i == 'password' || i == 'birthday' || i == 'session_id') continue;
           if ( this.form[i] == data[i] ) console.info( i + ' match: OK');
-          else console.error( i + ' match: FAIL');
+          else console.error( i + ` match: FAIL. form vaue: ${this.form[i]} response value: ${data[i]}`);
         }
         // ==> userUpdateData();
         this.userUpdateTest();
@@ -179,7 +181,8 @@ export class SampleRegisterPage {
         // ==> login test
         this.loginTest();
       }, error => {
-        console.log("update error: ", error );
+        console.error("update error: ", error );
+        alert( error );
       });
     }
 

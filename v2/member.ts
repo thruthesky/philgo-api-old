@@ -21,9 +21,10 @@ export class Member extends Api {
 
     getLoginBody( loginData: MEMBER_LOGIN_DATA ) {
         loginData['action'] = 'login';
-        let body = this.buildQuery( loginData );
+        //let body = this.buildQuery( loginData );
         //console.log('getLoginBody(): ', body);
-        return body;
+        //return body;
+        return loginData;
     }
     /*
     getRegisterBody( userData: MEMBER_DATA ) {
@@ -113,6 +114,7 @@ export class Member extends Api {
     update( userData: MEMBER_DATA, successCallback: ( login: MEMBER_LOGIN_DATA ) => void, errorCallback: (error: string) => void, completeCallback?: () => void ) {
         let login = this.getLoginData();
         if ( login === void 0 || login.id === void 0 ) errorCallback('login-first');
+        if ( userData['nickname'] ) errorCallback('cannot-edit-nickname');
         userData['id'] = login.id;
         userData['session_id'] = login.session_id;
         userData['action'] = 'member_register_submit';

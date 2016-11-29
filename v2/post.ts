@@ -19,7 +19,6 @@ export class Post extends Api {
         if ( data.session_id === void 0 ) return 'session_id-is-empty';
         if ( data.action === void 0 ) return 'action-is-empty';
 
-
         if ( data.action == 'post_write_submit' ) {
             if ( data.post_id === void 0 ) return 'post-id-is-empty';
         }
