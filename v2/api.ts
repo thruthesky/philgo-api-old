@@ -1,5 +1,6 @@
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { MEMBER_LOGIN_DATA } from './philgo-api-interface';
+import { Config } from '../../../etc/config';
 import 'rxjs/add/operator/timeout';
 export const PHILGO_MEMBER_LOGIN = 'philgo-login';
 export class Api {
@@ -28,7 +29,7 @@ export class Api {
     }
 
     get serverUrl() : string {
-        return "http://philgo.org";
+        return Config.urlPhilgoServer;
     }
 
 
