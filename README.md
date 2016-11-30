@@ -18,6 +18,19 @@ npm install @ionic/storage --save
 
 # Example Codes
 
+* @see home.ts to get forums
+* get posts of a category
+````
+    let req = { post_id: this.post_id, page_no: this.page_no };
+    this.post.page( req, ( posts: POSTS ) => {
+      console.log('posts: ', posts);
+      this.posts = posts;
+    }, e => {
+      alert( e );
+    });
+````
+
+
 
 ## Debugging
 
