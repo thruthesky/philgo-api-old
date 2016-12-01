@@ -4,8 +4,7 @@ import { Member, MEMBER_DATA, MEMBER_LOGIN_DATA } from '../../v2/member';
 
 @Component({
   selector: 'philgo-test-post',
-  templateUrl: 'post.html',
-  styleUrls: ['./post.scss']
+  templateUrl: 'post.html'
 })
 export class SamplePostPage {
     form = <POST_DATA> {};

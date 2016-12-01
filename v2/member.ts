@@ -3,7 +3,7 @@ import { Http } from '@angular/http';
 import { Api, PHILGO_MEMBER_LOGIN } from './api';
 import { MEMBER_DATA, MEMBER_LOGIN_DATA } from './philgo-api-interface';
 export * from './philgo-api-interface';
-import * as _ from 'lodash';
+// import * as _ from 'lodash';
 
 
 

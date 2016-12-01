@@ -1,8 +1,12 @@
 import { NgModule } from '@angular/core';
+import { HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+
+import { Post } from './post';
 import { Member } from './member';
+
 import { SampleHomePage } from '../sample-pages/home/home';
 import { SampleLoginPage } from '../sample-pages/login/login';
 import { SampleRegisterPage } from '../sample-pages/register/register';
@@ -24,10 +28,11 @@ export let ROUTES = [
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     RouterModule,
     FormsModule
   ],
-  providers : [ Member ]
+  providers : [ Member, Post ]
 })
 
 

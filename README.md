@@ -7,8 +7,8 @@ Philgo Restful API
 
 # Install
 
-npm install @ionic/storage --save
 
+npm install @types/lodash
 
 # TEST
 

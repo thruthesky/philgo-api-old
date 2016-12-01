@@ -2,12 +2,11 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Member, MEMBER_LOGIN_DATA } from '../../v2/member';
 import { Post } from '../../v2/post';
-import { SampleLoginPage } from '../login/login';
+// import { SampleLoginPage } from '../login/login';
 import { SampleRegisterPage } from '../register/register'
 @Component({
   selector: 'philgo-test-home',
-  templateUrl: 'home.html',
-  styleUrls: ['./home.scss']
+  templateUrl: 'home.html'
 })
 export class SampleHomePage {
   login: MEMBER_LOGIN_DATA = <MEMBER_LOGIN_DATA> {};
