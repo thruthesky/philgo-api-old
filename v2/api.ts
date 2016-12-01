@@ -1,5 +1,5 @@
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { MEMBER_LOGIN_DATA } from './philgo-api-interface';
+import { MEMBER_LOGIN_DATA, SEARCH_QUERY_DATA } from './philgo-api-interface';
 import 'rxjs/add/operator/timeout';
 export const PHILGO_MEMBER_LOGIN = 'philgo-login';
 export class Api {
@@ -160,6 +160,7 @@ export class Api {
     /**
      * Returns the body of POST method.
      * 
+     * @attention This addes 'module', 'submit'. If you don't needed just user http_build_query()
      * 
      * @param params must be an object.
      */
@@ -220,6 +221,18 @@ export class Api {
             */
     }
 
+
+
+
+
+
+    search( data: SEARCH_QUERY_DATA, successCallback: ( re: any ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
+        let url = this.getUrl( 'search&' + this.http_build_query( data ) );
+        this.get( url,
+            successCallback,
+            errorCallback,
+            completeCallback );
+    }
 
 
 

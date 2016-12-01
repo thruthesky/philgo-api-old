@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Api } from './api';
-import { PAGE_DATA, POSTS, POST_DATA, POST_RESPONSE } from './philgo-api-interface';
+import { PAGE_DATA, POSTS, POST_DATA, POST_RESPONSE, SEARCH_QUERY_DATA } from './philgo-api-interface';
 export * from './philgo-api-interface';
 import * as _ from 'lodash';
 
@@ -138,6 +138,8 @@ export class Post extends Api {
                 }, errorCallback );
             });
     }
+
+
 
 
 

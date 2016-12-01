@@ -18,6 +18,7 @@ npm install @types/lodash
 
 # Example Codes
 
+
 * @see home.ts to get forums
 * get posts of a category
 ````
@@ -29,6 +30,12 @@ npm install @types/lodash
       alert( e );
     });
 ````
+
+
+## Search
+
+@see home.ts for search.
+
 
 
 
@@ -64,3 +71,22 @@ npm install @types/lodash
 ````
 
 
+
+
+
+# Locations of Philippines
+
+You can get provinces and cities of province like below.
+
+ * @example to get provinces : http://philgo.com/etc/location/philippines/json.php
+ * @example to get cities of a province : http://philgo.com/etc/location/philippines/json.php?province=Bohol
+ * @example to get all the provinces and cities : http://philgo.com/etc/location/philippines/json.php?province=all
+
+ ````
+    http.get( 'http://philgo.com/etc/location/philippines/json.php' )
+      .subscribe( re => {
+        let data = JSON.parse( re['_body'] );
+        this.provinces = data;
+        console.log('place:', data);
+      });
+````

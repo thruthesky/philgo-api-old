@@ -110,6 +110,14 @@ export interface MEMBER_LOGIN_DATA {
 };
 
 
+export interface SEARCH_QUERY_DATA {
+    fields: string;
+    from: string;
+    on?: string;
+    where?: string;
+    orderby?: string;
+    limit?: string;
+}
 export interface PAGE_DATA {
     post_id: string;
     page_no: number;

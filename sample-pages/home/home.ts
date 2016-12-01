@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Member, MEMBER_LOGIN_DATA } from '../../v2/member';
-import { Post } from '../../v2/post';
+import { Post, SEARCH_QUERY_DATA } from '../../v2/post';
 // import { SampleLoginPage } from '../login/login';
 import { SampleRegisterPage } from '../register/register'
 @Component({
@@ -41,4 +41,14 @@ export class SampleHomePage {
     })
   }
 
+  onClickSearch() {
+    console.log("search()");
+
+    let data = <SEARCH_QUERY_DATA> {};
+    data.fields = "name, email";
+    data.from = "sf_member";
+    this.post.search( data, re => {
+      console.log("search result: ", re);
+    }, error => alert("error on search: " + error ) );
+  }
 }
