@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 // import { SampleLoginPage } from '../login/login';
 // import { SampleHomePage } from '../home/home';
 import { Member, MEMBER_DATA, MEMBER_LOGIN_DATA } from '../../v2/member';
-import * as _ from 'lodash';
+//import * as _ from 'lodash';
 
 @Component({
   selector: 'page-register',

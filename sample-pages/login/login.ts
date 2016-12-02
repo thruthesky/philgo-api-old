@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Member, MEMBER_LOGIN_DATA } from '../../v2/member';
-import { SampleRegisterPage } from '../register/register';
-import { SampleHomePage } from '../home/home';
+// import { SampleRegisterPage } from '../register/register';
+// import { SampleHomePage } from '../home/home';
 
 @Component({
   selector: 'page-login',

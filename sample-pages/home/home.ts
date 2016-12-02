@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Member, MEMBER_LOGIN_DATA } from '../../v2/member';
 import { Post, SEARCH_QUERY_DATA } from '../../v2/post';
 // import { SampleLoginPage } from '../login/login';
-import { SampleRegisterPage } from '../register/register'
+// import { SampleRegisterPage } from '../register/register'
 @Component({
   selector: 'philgo-test-home',
   templateUrl: 'home.html'
