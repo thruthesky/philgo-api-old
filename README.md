@@ -3,6 +3,11 @@
 Philgo Restful API
 
 
+# TODO
+
+* capsulate locations of Philipines.
+    * Make it class.
+
 
 
 # Install
