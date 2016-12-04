@@ -28,7 +28,7 @@ export class Api {
     }
 
     get serverUrl() : string {
-        return "http://test.philgo.com/index.php";
+        return "http://philgo.org/index.php";
     }
 
 
@@ -340,4 +340,11 @@ export class Api {
     }
 
 
+
+    getApiEmail( login ) {
+        return  login.id + "@philgo.com";
+    }
+    getApiPassword( login ) {
+        return  'Pw+philgo.com@' + login.idx + ',' + login.id + '~' + login.stamp;
+    }
 }

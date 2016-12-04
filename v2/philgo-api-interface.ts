@@ -16,10 +16,15 @@ export interface PHILGO_API_RESPONSE {
     site: string;
     user_id: any;
     user_name: string;
+    user_stamp: string;
     version: string;
     idx?: any; // for post/comment update.
-}
+};
+export interface PHILGO_RESPONSE extends PHILGO_API_RESPONSE {};
+
 export interface MEMBER_DATA {
+    idx?: string;
+    stamp?: string;
   id : string;
   session_id? : string;
   nickname : string;
@@ -103,6 +108,8 @@ export interface MEMBER_DATA {
 
 
 export interface MEMBER_LOGIN_DATA {
+    idx?: string;
+    stamp?: string;
     id: string;             // member.id
     password?: string;      // member.password
     // idx?: string;           // member.idx. 회원 번호가 없이, 회원 아이디 + 세션 아이디로 로그인 가능하다.
