@@ -116,6 +116,9 @@ export interface MEMBER_LOGIN_DATA {
     session_id?: string;    // member session_id
 };
 
+export interface MEMBER_REGISTER_DATA extends MEMBER_DATA {
+
+};
 
 export interface SEARCH_QUERY_DATA {
     fields: string;
@@ -124,7 +127,8 @@ export interface SEARCH_QUERY_DATA {
     where?: string;
     orderby?: string;
     limit?: string;
-}
+};
+
 export interface PAGE_DATA {
     post_id: string;
     page_no: number;
@@ -142,6 +146,7 @@ export interface POST_AD {
     subject: string;
     url: string;
 };
+
 export interface POST_TOP_AD {
     category: string;
     gid: string;
@@ -175,6 +180,7 @@ export interface MEMBER {
     name: string;
     nickname: string;
 };
+
 export interface COMMENT {
     bad: string;
     blind: string;
@@ -193,7 +199,8 @@ export interface COMMENT {
     post_id: string;
     stamp: string;
     user_name: string;
-}
+};
+
 export interface POST {
     bad: string;
     blind: string;
@@ -218,13 +225,13 @@ export interface POST {
     stamp: string;
     subject: string;
     user_name: string;
-}
+};
 
 export interface PHOTOS {
     idx: number;
     src: string;
     original_src: string;   
-}
+};
 
 export interface POSTS extends PHILGO_API_RESPONSE {
     ads: Array<POST_AD>;
