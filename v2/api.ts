@@ -7,8 +7,8 @@ export class Api {
     http: Http;
     debug: boolean = false;
     //apiEndpoint = "http://test.philgo.com/index.php";
-    apiEndpoint = "http://philgo.org/index.php";
-    //apiEndpoint = "http://www.philgo.com/index.php";
+    //apiEndpoint = "http://philgo.org/index.php";
+    apiEndpoint = "http://www.philgo.com/index.php";
     constructor( http ) {
         this.http = http;
         // console.log('Api::constructor()', http);
@@ -135,16 +135,8 @@ export class Api {
      *          responseError() 는 서버로 부터 올바른 값이 넘어 오지 않은 경우를 처리한다.
      */
     responseConnectionError( error: Response | any, errorCallback: ( error : string ) => void ) {
-        let errMsg: string;
-        if ( error instanceof Response ) {
-            const body = error.json() || '';
-            const err = body.error || JSON.stringify(body);
-            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-        } else {
-            errMsg = error.message ? error.message : error.toString();
-        }
-        console.error(errMsg);
-        if ( errorCallback ) errorCallback("http-get/post-subscribe-error may-be-no-internet or wrong-domain or timeout or server-down: " + errMsg);
+        console.error(Response);
+        if ( errorCallback ) errorCallback("http-get/post-subscribe-error may-be-no-internet or wrong-domain or timeout or server-down: ...");
     }
 
     get requestOptions() : RequestOptions {
@@ -261,11 +253,23 @@ export class Api {
     cacheCallback( cache_id, callback ) {
         let re = localStorage.getItem( cache_id );
         if ( re ) {
+            let data = null;
             try {
-                let data = JSON.parse( re );
+                data = JSON.parse( re );
+            }
+            catch (e) {
+                // error. no callback.
+                console.error( "error on parsing data of localstroage.");
+            }
+            try {
                 if ( data ) callback( data );
             }
-            catch (e) { }
+            catch ( e ) {
+                console.error("error on cacheCallback() ==> callback()");
+            }
+        }
+        else {
+            // no data. no callback.
         }
     }
     /**
@@ -353,4 +357,9 @@ export class Api {
     getApiPassword( login ) {
         return  'Pw+philgo.com@' + login.idx + ',' + login.id + '~' + login.stamp;
     }
+
+    uniqid (prefix?:any, moreEntropy?:any) {
+        return (new Date().getTime()).toString(36);
+    }
+
 }

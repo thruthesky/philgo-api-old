@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Api, PHILGO_MEMBER_LOGIN } from './api';
-import { MEMBER_DATA, MEMBER_LOGIN_DATA, PHILGO_RESPONSE } from './philgo-api-interface';
+import { MEMBER_DATA, MEMBER_LOGIN_DATA, PHILGO_RESPONSE, MEMBER_REGISTER_RESPONSE_DATA } from './philgo-api-interface';
 export * from './philgo-api-interface';
 // import * as _ from 'lodash';
 
@@ -83,7 +83,7 @@ export class Member extends Api {
             });
             */
     }
-    register( userData: MEMBER_DATA, successCallback: ( login: MEMBER_LOGIN_DATA ) => void, errorCallback: (error: string) => void, completeCallback?: () => void ) {
+    register( userData: MEMBER_DATA, successCallback: ( login: MEMBER_REGISTER_RESPONSE_DATA ) => void, errorCallback: (error: string) => void, completeCallback?: () => void ) {
         userData['action'] = 'member_register_submit';
         userData['login'] = 'pass';
         this.post( userData, re => {

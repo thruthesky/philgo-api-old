@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Post, POST_DATA } from '../../v2/post';
-import { Member, MEMBER_DATA, MEMBER_LOGIN_DATA } from '../../v2/member';
+import { Member, MEMBER_DATA, MEMBER_LOGIN_DATA, MEMBER_REGISTER_RESPONSE_DATA } from '../../v2/member';
 
 @Component({
   selector: 'philgo-test-post',
@@ -29,9 +29,12 @@ export class SamplePostPage {
             email: id + '@gmail.com',
             mobile: '12345678901'
         };
-        this.member.register( userData, login => {
+        this.member.register( userData, (login: MEMBER_REGISTER_RESPONSE_DATA) => {
             console.log("user registration success: ", login);
-            this.login = login;
+            this.login = {
+                id: login.id,
+                session_id: login.session_id
+            };
             //this.form.id = id;
             //this.form.session_id = login.session_id;
             // 2. create a post

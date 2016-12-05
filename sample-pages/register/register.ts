@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 // import { SampleLoginPage } from '../login/login';
 // import { SampleHomePage } from '../home/home';
-import { Member, MEMBER_DATA, MEMBER_LOGIN_DATA } from '../../v2/member';
+import { Member, MEMBER_DATA, MEMBER_LOGIN_DATA, MEMBER_REGISTER_RESPONSE_DATA } from '../../v2/member';
 //import * as _ from 'lodash';
 
 @Component({
@@ -121,11 +121,14 @@ export class SampleRegisterPage {
     onClickRegister() {
       //console.log('onClickRegister():', this.form);
       this.process  = { 'loader': true };
-      this.member.register( this.form, (login) => {
+      this.member.register( this.form, (login:MEMBER_REGISTER_RESPONSE_DATA) => {
         console.log('onClickRegister(), registration sucess: ', login );
         // alert("Registration Success!");
         // ==> copy registration data.
-        this.login = login;
+        this.login = {
+          id: login.id,
+          session_id: login.session_id
+        };
 
         // ==> login test
         this.loginTest();

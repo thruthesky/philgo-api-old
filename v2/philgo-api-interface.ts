@@ -1,32 +1,32 @@
 export interface PHILGO_API_RESPONSE {
-    acl: string;
-    action: string;
-    code: number;
-    domain: string;
+    acl?: string;
+    action?: string;
+    code?: number;
+    domain?: string;
     event?: any;
-    id: string;
-    idx_member: string;
+    id?: string;
+    idx_member?: string;
     message?: string;
     mode?: string;
-    module: string;
-    post_id: string;
-    post_name: string;
-    register_mode: string;
-    session_id: string;
-    site: string;
-    user_id: any;
-    user_name: string;
-    user_stamp: string;
-    version: string;
+    module?: string;
+    post_id?: string;
+    post_name?: string;
+    register_mode?: string;
+    session_id?: string;
+    site?: string;
+    user_id?: any;
+    user_name?: string;
+    user_stamp?: string;
+    user_url_primary_photo?: string; // for user primary photo.
+    version?: string;
     idx?: any; // for post/comment update.
 };
 export interface PHILGO_RESPONSE extends PHILGO_API_RESPONSE {};
 
-export interface MEMBER_DATA {
+export interface MEMBER_DATA extends PHILGO_API_RESPONSE {
     idx?: string;
     stamp?: string;
   id : string;
-  session_id? : string;
   nickname : string;
   password: string;
   name: string;
@@ -119,6 +119,36 @@ export interface MEMBER_LOGIN_DATA {
 export interface MEMBER_REGISTER_DATA extends MEMBER_DATA {
 
 };
+
+export interface MEMBER_REGISTER_RESPONSE_DATA extends PHILGO_API_RESPONSE {
+
+};
+
+
+
+export interface FILE_UPLOAD_DATA {
+    code: string;
+    idx: number;
+    name: string;
+    path: string;
+    result: number;
+    src_org: string;
+    url: string;
+    url_thumbnail: string;
+    gid?: string; // @Warning 'gid' is not returned from server. you must keep it by yourself.
+};
+export interface FILE_UPLOAD_RESPONSE extends PHILGO_API_RESPONSE {
+    data: FILE_UPLOAD_DATA;
+};
+
+export interface FILE_DELETE_RESPONSE extends PHILGO_API_RESPONSE {
+    data: {
+        code: number;
+        idx: number;
+    }
+}
+
+
 
 export interface SEARCH_QUERY_DATA {
     fields: string;
