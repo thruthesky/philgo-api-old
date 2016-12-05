@@ -6,6 +6,8 @@ import { RouterModule } from '@angular/router';
 
 import { Post } from './post';
 import { Member } from './member';
+import { Data } from './data';
+
 
 import { SampleHomePage } from '../sample-pages/home/home';
 import { SampleLoginPage } from '../sample-pages/login/login';
@@ -31,7 +33,7 @@ export let ROUTES = [
     RouterModule,
     FormsModule
   ],
-  providers : [ Member, Post ]
+  providers : [ Member, Post, Data ]
 })
 
 

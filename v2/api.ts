@@ -6,9 +6,9 @@ export const PHILGO_MEMBER_LOGIN = 'philgo-login';
 export class Api {
     http: Http;
     debug: boolean = false;
-    apiEndpoint = "http://test.philgo.com";
-    //apiEndpoint = "http://philgo.org";
-    //apiEndpoint = "http://www.philgo.com";
+    //apiEndpoint = "http://test.philgo.com/index.php";
+    apiEndpoint = "http://philgo.org/index.php";
+    //apiEndpoint = "http://www.philgo.com/index.php";
     constructor( http ) {
         this.http = http;
         // console.log('Api::constructor()', http);

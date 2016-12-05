@@ -85,6 +85,7 @@ export class Member extends Api {
     }
     register( userData: MEMBER_DATA, successCallback: ( login: MEMBER_LOGIN_DATA ) => void, errorCallback: (error: string) => void, completeCallback?: () => void ) {
         userData['action'] = 'member_register_submit';
+        userData['login'] = 'pass';
         this.post( userData, re => {
             this.setLoginData( re );
             successCallback( re );
