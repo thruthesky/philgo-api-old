@@ -18,7 +18,6 @@ export let ROUTES = [
         { path: "test/philgo/register", component: SampleRegisterPage, name: 'philgoRegister' },
         { path: "test/philgo/post", component: SamplePostPage, name: 'philgoPost' }
 ];
-
 @NgModule({
   declarations : [
     SampleHomePage,
