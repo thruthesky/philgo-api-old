@@ -108,7 +108,6 @@ export class Data extends Api {
                 }, error => {
                     alert( error );
                 } );
-
      * @endcode
      */
     delete( data: { idx?: any, gid?: string }, successCallback: (re:FILE_DELETE_RESPONSE) => void, failureCallback: ( error: string) => void ) {
