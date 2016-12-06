@@ -1,5 +1,5 @@
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { MEMBER_LOGIN_DATA, SEARCH_QUERY_DATA } from './philgo-api-interface';
+import { MEMBER_LOGIN_DATA, SEARCH_QUERY_DATA, MEMBER_DATA } from './philgo-api-interface';
 
 import 'rxjs/add/operator/timeout';
 export const PHILGO_MEMBER_LOGIN = 'philgo-login';
@@ -14,13 +14,26 @@ export class Api {
         // console.log('Api::constructor()', http);
     }
 
-/**
- * 
- * 
- * 
- */
-    getLogin() : MEMBER_LOGIN_DATA {
-        return this.getLoginData();
+    /**
+     * 
+     * Returns login data in non-blocking code through callback.
+     * 
+     * Use getLogin() as much as possible.
+     * 
+     * getLogin() 은 내부적으로 getLoginData() 를 사용하는데, setTimeout 을 통해서 non-blocking 을 처리하고 있다.
+     * 예를 들어, constructor() 에 많은 코드를 넣으면 앱 부팅이 느려지는데, 그러한 이유로 non-blocking 을 하는 것이 좋다.
+     * 
+     * 내부적으로 callback 이 막 엉킬 경우, getLoginData() 를 사용해서 callback 없이 그냥 값을 받는다.
+     * 
+     * 
+     *
+     * @code
+     *      member.getLogin( x => this.login = x );
+     * @endcode 
+     * 
+     */
+    getLogin( callback: ( login: MEMBER_LOGIN_DATA ) => void ) : void {
+        setTimeout( () => { callback( this.getLoginData() ); }, 1 );
     }
     getLoginData() : MEMBER_LOGIN_DATA {
         let data = localStorage.getItem( PHILGO_MEMBER_LOGIN );
@@ -362,4 +375,22 @@ export class Api {
         return (new Date().getTime()).toString(36);
     }
 
+    getBirthdayFormValue( data: MEMBER_DATA ) {
+        let str = '';
+        try {
+            if ( data.birth_year !== void 0 ) {
+                str += data.birth_year + '-';
+                str += parseInt(data.birth_month) < 10 ? '0' + data.birth_month : data.birth_month;
+                str += '-';
+                str += parseInt(data.birth_day) < 10 ? '0' + data.birth_day : data.birth_day;
+            }
+        }
+        catch( e ) {
+            console.error('birthday error: ', e );
+        }
+        
+        return str;
+
+        
+    }
 }

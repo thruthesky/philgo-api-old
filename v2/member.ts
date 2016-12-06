@@ -9,9 +9,12 @@ export * from './philgo-api-interface';
 
 @Injectable()
 export class Member extends Api {
+
+    
     constructor( http: Http ) {
         super( http );
     }
+
 
 /*
     load( id: string ) {
@@ -186,6 +189,5 @@ export class Member extends Api {
         }
         else return errorCallback('not logged in');
     }
-
 
 }

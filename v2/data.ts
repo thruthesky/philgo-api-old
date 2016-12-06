@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Api } from './api';
-import { PHILGO_RESPONSE, FILE_UPLOAD_RESPONSE, FILE_UPLOAD_DATA, FILE_DELETE_RESPONSE } from './philgo-api-interface';
+import { FILE_UPLOAD_RESPONSE, FILE_UPLOAD_DATA, FILE_DELETE_RESPONSE, CODE_PRIMARY_PHOTO } from './philgo-api-interface';
 import { Member } from './member';
 export * from './philgo-api-interface';
 
@@ -23,22 +23,44 @@ export class Data extends Api {
     constructor( http: Http, private member: Member ) {
         super( http );
     }
-    upload( files, successCallback: (data: FILE_UPLOAD_RESPONSE) => void, failureCallback: (error:string) => void, progressCallback: (progress:number) => void) {
+
+    /**
+     * This does file upload.
+     * 
+     * 
+     * @note if user has logged in, then it automatically send user authentication information to the server.
+     * 
+     * 
+     * @note 회원 가입/수정 화면에서 사진을 등록 할 때,
+     *          회원 가입하기 전에 사진을 업로드와 삭제를 위해서 'gid' 는 중요하다.
+     *          하지만, 가입 후에는, gid 값은 반드시 넣어야 하는데, 엉터리 값을 넣으면 된다.
+     * 
+     */
+    upload( files, successCallback: (data: FILE_UPLOAD_RESPONSE) => void, failureCallback: (error:string) => void, progressCallback?: (progress:number) => void) {
         console.log("Data::upload()");
         // let url = this.getUrl('file_upload_submit');
         let url = this.urlFileServer + 'file_upload_submit';
-        let login = this.member.getLogin();
-        if ( login ) {
-            url += '&id=' + login.id;
-            url += '&session_id=' + login.session_id;
-        }
+        
+        
+        
+
         if ( files.gid !== void 0 ) {
             url += '&gid=' + files.gid;
             delete files.gid;
         }
-        if ( files.login !== void 0 ) {
+
+        // login=pass 이면 회원 가입 없이 파일 업로드 한다.
+        if ( files.login !== void 0 && files.login == 'pass' ) {
             url += '&login=' + files.login;
             delete files.login;
+        }
+        // login=pass 가 아니면, 무조건 회원 가입을 해야지만 파일 업로드를 할 수 있다.
+        else {
+            let login = this.member.getLoginData();
+            if ( login ) {
+                url += '&id=' + login.id;
+                url += '&session_id=' + login.session_id;
+            }
         }
         if ( files.varname !== void 0 ) {
             url += '&varname=' + files.varname;
@@ -53,9 +75,46 @@ export class Data extends Api {
             failureCallback( "Failed to addToQueue() onBrowserUpload()" );
         }
     }
-    delete( data: FILE_UPLOAD_DATA, successCallback: (re:FILE_DELETE_RESPONSE) => void, failureCallback: ( error: string) => void ) {
+
+    /**
+     * Deletes uploaded file.
+     * 
+     * 
+     * @param data - data['idx'] 또는 data['gid'] 값이 반드시 들어와야 한다.
+     * @note 회원 정보 사진을 관리(업로드,삭제) 할 때,
+     *      회원 가입을 할 때,
+     *          로그인/가입을 하지 않은 상태에서 파일을 업로드하면 'gid' 값을 입력해야하고, 그 'gid' 값으로 삭제를 해야 한다.
+     *          로그인을 한 다음에는 파일 업로드/삭제를 할 때, 'idx_member' 를 사용하고 코드는 'priamry_photo' 로 고정되므로 gid' 에 엉터리 값이 들어가도 된다.
+     * 
+     * @note 참고 : module/data/delte_submit.php 의 상단 코멘트를 참고한다.
+     * 
+     * @note 파일을 삭제 할 때, gid 와 회원 로그인 정보를 같이 전달한다.
+     *      이 둘 중에 맞는 것이 있으면 삭제를 한다.
+     * 
+     * @code
+     * 
+                let data = {
+                    idx: idx,
+                    gid: this.gid
+                }
+                this.data.delete( data, (re) => {
+                    console.log("file deleted: idx: ", re.data.idx);
+                    if ( silent === void 0 || silent !== true ) {
+                        this.progress = 0;
+                        this.urlPhoto = this.urlDefault;
+                        this.inputFileValue = '';
+                    }
+                    this.uploadData = null;
+                }, error => {
+                    alert( error );
+                } );
+
+
+     * @endcode
+     */
+    delete( data: { idx?: any, gid?: string }, successCallback: (re:FILE_DELETE_RESPONSE) => void, failureCallback: ( error: string) => void ) {
         let url = this.urlFileServer + "data_delete_submit";
-        let login = this.member.getLogin();
+        let login = this.member.getLoginData();
         if ( login ) {
             url += '&id=' + login.id;
             url += '&session_id=' + login.session_id;
@@ -128,4 +187,46 @@ export class Data extends Api {
             fileItem.upload(); // upload file.
         }
     }
+
+
+
+    
+
+    /**
+     * This does primary photo upload for users who are not logged in.
+     * 
+     * @note Be sure you update idx_member after register.
+     * 
+     * @param files - This is 'event.target.files' from HTML FORM INPUT type='file'
+     */
+    uploadAnonymousPrimaryPhoto( gid: string, files, successCallback: (data: FILE_UPLOAD_RESPONSE) => void, failureCallback: (error:string) => void, progressCallback?: (progress:number) => void) {
+        files.gid = gid;
+        files.login = 'pass';
+        files.varname = CODE_PRIMARY_PHOTO;
+        this.upload( files, successCallback, failureCallback, progressCallback );
+    }
+    /**
+     * If user logged in, use this method.
+     */
+    uploadPrimaryPhoto( files, successCallback: (data: FILE_UPLOAD_RESPONSE) => void, failureCallback: (error:string) => void, progressCallback?: (progress:number) => void) {
+        files.varname = CODE_PRIMARY_PHOTO;
+        files.gid = this.uniqid();
+        this.upload( files, successCallback, failureCallback, progressCallback );
+    }
+
+    /**
+     * Returns file.idx from a uploaded file url.
+     */
+    getIdxFromUrl( url: string ) : number {
+        try {
+            if ( url ) {
+                let ar = url.split('/');
+                return parseInt(ar[ ar.length - 1 ]);
+            }
+        }
+        catch( e ) {
+            return 0;
+        }
+    }
+
 }

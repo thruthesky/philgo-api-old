@@ -1,3 +1,5 @@
+export const CODE_PRIMARY_PHOTO = 'primary-photo';
+
 export interface PHILGO_API_RESPONSE {
     acl?: string;
     action?: string;
@@ -115,6 +117,8 @@ export interface MEMBER_LOGIN_DATA {
     // idx?: string;           // member.idx. 회원 번호가 없이, 회원 아이디 + 세션 아이디로 로그인 가능하다.
     session_id?: string;    // member session_id
 };
+export interface MEMBER_LOGIN extends MEMBER_LOGIN_DATA {};
+
 
 export interface MEMBER_REGISTER_DATA extends MEMBER_DATA {
 
