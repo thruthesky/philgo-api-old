@@ -1,4 +1,4 @@
-export const CODE_PRIMARY_PHOTO = 'primary-photo';
+export const CODE_PRIMARY_PHOTO = 'primary_photo';
 
 export interface PHILGO_API_RESPONSE {
     acl?: string;

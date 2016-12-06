@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Api } from './api';
-import { FILE_UPLOAD_RESPONSE, FILE_UPLOAD_DATA, FILE_DELETE_RESPONSE, CODE_PRIMARY_PHOTO } from './philgo-api-interface';
+import { FILE_UPLOAD_RESPONSE, FILE_DELETE_RESPONSE, CODE_PRIMARY_PHOTO } from './philgo-api-interface';
 import { Member } from './member';
 export * from './philgo-api-interface';
 
@@ -25,6 +25,31 @@ export class Data extends Api {
     }
 
     /**
+     * Returns the URL of file upload.
+     * 
+     */
+    getUploadUrl( gid?: string, module_name?: string, code?: string, finish?: number, login?: string ) {
+        let url = this.urlFileServer + 'file_upload_submit';
+
+        //
+        //
+        if ( gid ) url += '&gid=' + gid;
+        if ( login && login == 'pass' ) url += '&login=' + login;
+        else {
+            let login = this.member.getLoginData();
+            if ( login ) {
+                url += '&id=' + login.id;
+                url += '&session_id=' + login.session_id;
+            }
+        }
+        if ( module_name ) url += '&module_name=' + module_name;
+        if ( code ) url += '&varname=' + code;
+        if ( finish ) url += '&finish=1';
+
+        return url;
+    }
+
+    /**
      * This does file upload.
      * 
      * 
@@ -41,9 +66,8 @@ export class Data extends Api {
         // let url = this.getUrl('file_upload_submit');
         let url = this.urlFileServer + 'file_upload_submit';
         
-        
-        
-
+        //
+        //
         if ( files.gid !== void 0 ) {
             url += '&gid=' + files.gid;
             delete files.gid;
@@ -66,6 +90,12 @@ export class Data extends Api {
             url += '&varname=' + files.varname;
             delete files.varname;
         }
+        if ( files.module_name !== void 0 ) {
+            url += '&module_name=' + files.module_name;
+            delete files.module_name;
+        }
+        
+        console.log("uplaod: ", url);
         this.uploader = new FileUploader({ url: url });
         this.initFileUpload( successCallback, failureCallback, progressCallback );
         try {
@@ -128,8 +158,12 @@ export class Data extends Api {
      * 
      * 참고로 게시판에서는 GID 만으로 충분하므로 별도로 idx_member 를 업데이트 하지 않는다.
      */
-    updateMemberIdx( gid, idx_member, successCallback, failureCallback ) {
-        let url = this.urlFileServer + 'data_update_idx_member&gid=' + gid + '&idx_member=' + idx_member;
+    updateMemberIdx( gid, successCallback, failureCallback ) {
+        let login = this.getLoginData();
+        let url = this.getUrl('data_update_idx_member')
+             + '&gid=' + gid
+             + '&id=' + login.id
+             + '&session_id=' + login.session_id;
         console.log(url);
         this.get( url, successCallback, failureCallback );
     }
@@ -201,15 +235,25 @@ export class Data extends Api {
         files.gid = gid;
         files.login = 'pass';
         files.varname = CODE_PRIMARY_PHOTO;
+        files.module_name = 'member';
         this.upload( files, successCallback, failureCallback, progressCallback );
+    }
+    getUploadUrlAnonymousPrimaryPhoto( gid: string ) {
+        return this.getUploadUrl( gid, 'member', CODE_PRIMARY_PHOTO, 0, 'pass' );
     }
     /**
      * If user logged in, use this method.
      */
     uploadPrimaryPhoto( files, successCallback: (data: FILE_UPLOAD_RESPONSE) => void, failureCallback: (error:string) => void, progressCallback?: (progress:number) => void) {
+        let login = this.getLoginData();
+        files.gid = login.id;
         files.varname = CODE_PRIMARY_PHOTO;
-        files.gid = this.uniqid();
+        files.module_name = 'member';
         this.upload( files, successCallback, failureCallback, progressCallback );
+    }
+    getUploadUrlPrimaryPhoto() {
+        let login = this.getLoginData();
+        return this.getUploadUrl( login.id, 'member', CODE_PRIMARY_PHOTO, 1 );
     }
 
     /**

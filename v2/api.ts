@@ -8,7 +8,8 @@ export class Api {
     debug: boolean = false;
     //apiEndpoint = "http://test.philgo.com/index.php";
     //apiEndpoint = "http://philgo.org/index.php";
-    apiEndpoint = "http://www.philgo.com/index.php";
+    // apiEndpoint = "http://www.philgo.com/index.php";
+    apiEndpoint = "http://w8.philgo.com/index.php";
     constructor( http ) {
         this.http = http;
         // console.log('Api::constructor()', http);
@@ -25,6 +26,9 @@ export class Api {
      * 
      * 내부적으로 callback 이 막 엉킬 경우, getLoginData() 를 사용해서 callback 없이 그냥 값을 받는다.
      * 
+     * @return void
+     *      - if the user logged in, callback will be called with login information.
+     *      - otherwise, callback will not be called.
      * 
      *
      * @code
@@ -33,7 +37,10 @@ export class Api {
      * 
      */
     getLogin( callback: ( login: MEMBER_LOGIN_DATA ) => void ) : void {
-        setTimeout( () => { callback( this.getLoginData() ); }, 1 );
+        setTimeout( () => {
+            let login = this.getLoginData();
+            if ( login ) callback( login  );
+        }, 1 );
     }
     getLoginData() : MEMBER_LOGIN_DATA {
         let data = localStorage.getItem( PHILGO_MEMBER_LOGIN );
