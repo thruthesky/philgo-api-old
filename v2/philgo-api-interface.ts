@@ -149,6 +149,7 @@ export interface FILE_DELETE_RESPONSE extends PHILGO_API_RESPONSE {
     data: {
         code: number;
         idx: number;
+        message?: string;
     }
 }
 
@@ -325,6 +326,7 @@ export interface POST_DATA {
     bad?
     access_code?
     region?
+    photos?
     int_1?
     int_2?
     int_3?

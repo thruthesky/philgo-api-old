@@ -133,7 +133,7 @@ export class Api {
      * @endcode
      */
     responseData( re, successCallback: ( data: any ) => void, errorCallback: ( error: string ) => void ) : any {
-        console.log('responseData() re: ', re);
+        // console.log('responseData() re: ', re);
         let data;
         try {
             data = JSON.parse( re['_body'] );

@@ -129,9 +129,9 @@ export class SamplePostPage {
         );
     }
     compareCreatePost( idx ) {
-        console.log("compareCreatePost()");
+//        console.log("compareCreatePost()");
         this.post.get( idx, data => {
-            console.log("comparePost() get post : ", data.post);
+            // console.log("comparePost() get post : ", data.post);
             let p: POST_DATA = data.post;
             let f = this.form;
             let keys = Object.keys( f );

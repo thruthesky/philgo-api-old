@@ -149,7 +149,10 @@ export class Data extends Api {
         }
         if ( data.gid ) url += '&gid=' + data.gid;
         url += '&idx=' + data.idx;
-        this.get( url, successCallback, failureCallback );
+        this.get( url, (re:FILE_DELETE_RESPONSE) => {
+            if ( re.data.code ) failureCallback( re.data.message );
+            else successCallback( re );
+        }, failureCallback );
     }
     /**
      * This updates idx_member of 'gid'

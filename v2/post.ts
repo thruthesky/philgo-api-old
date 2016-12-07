@@ -21,6 +21,7 @@ export class Post extends Api {
 
         if ( data.action == 'post_write_submit' ) {
             if ( data.post_id === void 0 ) return 'post-id-is-empty';
+            if ( data.gid === void 0 ) return 'gid-is-empty';
         }
         else if  ( data.action == 'post_edit_submit' ) {
             if ( data.idx === void 0 ) return 'idx-is-empty';
@@ -69,6 +70,7 @@ export class Post extends Api {
     update( data: POST_DATA, successCallback: ( re: POST_RESPONSE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
         data['action'] = 'post_edit_submit';
         let login = this.getLoginData();
+        if ( ! login ) return errorCallback('login first');
         data.id = login.id;
         data.session_id = login.session_id;
         if ( this.hasError( data ) ) return errorCallback( this.getError( data ) );
@@ -124,14 +126,14 @@ export class Post extends Api {
         let url = this.getUrl() + 'post-list&post_id=' + data.post_id + '&page_no=' + data.page_no + '&limit=30';
         if ( data.page_no == 1 ) this.cacheCallback( data.post_id, successCallback );
 
-        console.log('page(): url: ', url);
+        // console.log('page(): url: ', url);
         this.get( url, re => {
 
         }, errorCallback );
 
         this.http.get( url )
             .subscribe( re => {
-                console.log('post::page() re: ', re);
+                // console.log('post::page() re: ', re);
                 this.responseData( re, (posts: POSTS) => {
                     if ( data.page_no == 1 ) this.saveCache( data.post_id, posts );
                     successCallback( posts );
