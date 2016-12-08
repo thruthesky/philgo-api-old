@@ -22,9 +22,11 @@ export class Post extends Api {
         if ( data.action == 'post_write_submit' ) {
             if ( data.post_id === void 0 ) return 'post-id-is-empty';
             if ( data.gid === void 0 ) return 'gid-is-empty';
+            if ( data.subject === void 0 ) return 'subject-is-empty';
         }
         else if  ( data.action == 'post_edit_submit' ) {
             if ( data.idx === void 0 ) return 'idx-is-empty';
+            if ( data.subject === void 0 ) return 'subject-is-empty';
         }
         else if  ( data.action == 'comment_write_submit' ) {
             if ( data.idx_parent === void 0 ) return 'idx_parent-is-empty';
@@ -34,7 +36,7 @@ export class Post extends Api {
             else return false;
         }
 
-        if ( data.subject === void 0 ) return 'subject-is-empty';
+        
         if ( data.content === void 0 ) return 'content-is-empty';
 
         return false;
