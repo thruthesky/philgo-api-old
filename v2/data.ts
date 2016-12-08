@@ -15,6 +15,14 @@ export interface FileUploadResponse {
   headers: any;
 };
 
+export interface DATA_UPLOAD_OPTIONS {
+    gid?: string;
+    login?: string;
+    module_name?: string;
+    code?: string; // varname
+    finish?: '0' | '1'; //
+}
+
 @Injectable()
 export class Data extends Api {
     private uploader: FileUploader = Object();
@@ -25,10 +33,32 @@ export class Data extends Api {
     }
 
     /**
-     * Returns the URL of file upload.
+     * Returns file upload URL based on the options.
+     * 
+     * 
      * 
      */
-    getUploadUrl( gid?: string, module_name?: string, code?: string, finish?: number, login?: string ) {
+    getUploadUrl( options ) {
+        let url = this.urlFileServer + 'file_upload_submit';
+
+        //
+        //
+        if ( options.gid ) url += '&gid=' + options.gid;
+        if ( options.login && options.login == 'pass' ) url += '&login=' + options.login;
+        else {
+            let login = this.member.getLoginData();
+            if ( login ) {
+                url += '&id=' + login.id;
+                url += '&session_id=' + login.session_id;
+            }
+        }
+        if ( options.module_name ) url += '&module_name=' + options.module_name;
+        if ( options.code ) url += '&varname=' + options.code;
+        if ( options.finish ) url += '&finish=' + options.finish;
+
+        return url;
+    }
+    getUploadUrl_old( gid?: string, module_name?: string, code?: string, finish?: number, login?: string ) {
         let url = this.urlFileServer + 'file_upload_submit';
 
         //
@@ -60,9 +90,54 @@ export class Data extends Api {
      *          회원 가입하기 전에 사진을 업로드와 삭제를 위해서 'gid' 는 중요하다.
      *          하지만, 가입 후에는, gid 값은 반드시 넣어야 하는데, 엉터리 값을 넣으면 된다.
      * 
+     * @return void
+     *      - If no file selected, it pass 2 through completeCallback().
+     *      - If file upload success, it pass 0 through completeCallback().
+     *      - If there was error, it pass 1 through completeCallback().
      */
-    upload( files, successCallback: (data: FILE_UPLOAD_RESPONSE) => void, failureCallback: (error:string) => void, progressCallback?: (progress:number) => void) {
+    upload(
+        options: DATA_UPLOAD_OPTIONS,
+        event,
+        successCallback: (data: FILE_UPLOAD_RESPONSE) => void,
+        failureCallback: (error:string) => void,
+        completeCallback?: ( code: number ) => void,
+        progressCallback?: (progress:number) => void
+        ) {
+        let url = this.getUploadUrl( options );
+        console.log("Data::upload options and event, url ", options, event, url);
+        this.uploader = new FileUploader({ url: url });
+
+        let files;
+        try {
+            if ( event === void 0 || event.target === void 0 || event.target.files === void 0 ) {
+                if ( completeCallback ) completeCallback( 2 );
+                return;
+            }
+            files = event.target.files;
+            if ( files === void 0 || files[0] == void 0 || ! files[0] ) {
+                if ( completeCallback ) completeCallback( 2 );
+                return;
+            }
+        }
+        catch (e) {
+            alert("Please inform admin for this error: Data::upload() - no file error.");
+            return;
+        }
+        
+
+        this.initFileUpload( successCallback, failureCallback, completeCallback, progressCallback );
+        try {
+            this.uploader.addToQueue( files );
+        }
+        catch ( e ) {
+            failureCallback( "Failed to addToQueue() onBrowserUpload()" );
+        }
+    }
+    upload_old( files, successCallback: (data: FILE_UPLOAD_RESPONSE) => void, failureCallback: (error:string) => void, progressCallback?: (progress:number) => void) {
         console.log("Data::upload()");
+        /*
+        
+        
         // let url = this.getUrl('file_upload_submit');
         let url = this.urlFileServer + 'file_upload_submit';
         
@@ -104,6 +179,7 @@ export class Data extends Api {
         catch ( e ) {
             failureCallback( "Failed to addToQueue() onBrowserUpload()" );
         }
+        */
     }
 
     /**
@@ -170,24 +246,32 @@ export class Data extends Api {
         console.log(url);
         this.get( url, successCallback, failureCallback );
     }
-    initFileUpload( successCallback: (data: FILE_UPLOAD_RESPONSE) => void, failureCallback: (error:string) => void, progressCallback: (progress:number) => void ) {
+    initFileUpload( successCallback: (data: FILE_UPLOAD_RESPONSE) => void,
+        failureCallback: (error:string) => void,
+        completeCallback?: ( code: number ) => void,
+        progressCallback?: (progress:number) => void
+    ) {
+        console.log('initFileUpload()');
+
         this.uploader.onSuccessItem = (item, response, status, headers) => {
+            console.log('onSuccessItem()');
             this.result = {
-            "success": true,
-            "item": item,
-            "response": response,
-            "status": status,
-            "headers": headers
+                "success": true,
+                "item": item,
+                "response": response,
+                "status": status,
+                "headers": headers
             };
             //console.log( 'onSuccessItem : ', this.result );
         };
         this.uploader.onErrorItem = (item, response, status, headers) => {
+            console.log('onFailureItem()');
             this.result = {
-            "success": false,
-            "item": item,
-            "response": response,
-            "status": status,
-            "headers": headers
+                "success": false,
+                "item": item,
+                "response": response,
+                "status": status,
+                "headers": headers
             };
             //console.log( 'onErrorItem : ', this.result );
         };
@@ -206,15 +290,29 @@ export class Data extends Api {
         this.uploader.onCompleteAll = () => {
             console.log("uploader.onCompleteAll()");
             // this.onBrowserUploadComplete();
-            let data = null;
+            let re = null;
             try {
-                data = JSON.parse( this.result['response'] );
+                re = JSON.parse( this.result['response'] );
             }
             catch ( e ) {
                 console.error("upload error: ", this.result['response'], e);
-                return failureCallback( 'json-parse-error' );
+                failureCallback( 'json-parse-error' );
+                if ( completeCallback ) completeCallback( 1 );
+                return 0;
             }
-            if ( successCallback ) successCallback( data );
+
+            // check if philgo api backend error. the error format is different from file delete submit.
+            if ( re.data.result || re.data.error ) {
+                failureCallback( re.data.error );
+                if ( completeCallback ) completeCallback( 1 );
+                return;
+            }
+
+
+            // file upload success.
+            successCallback( re );
+            if ( completeCallback ) completeCallback( 0 );
+            
         };
         this.uploader.onAfterAddingFile = ( fileItem ) => {
             console.log('uploader.onAfterAddingFile: begins to upload. ', fileItem);
@@ -232,31 +330,56 @@ export class Data extends Api {
      * 
      * @note Be sure you update idx_member after register.
      * 
-     * @param files - This is 'event.target.files' from HTML FORM INPUT type='file'
+     * @param files - This is 'event' from HTML FORM INPUT type='file'
      */
-    uploadAnonymousPrimaryPhoto( gid: string, files, successCallback: (data: FILE_UPLOAD_RESPONSE) => void, failureCallback: (error:string) => void, progressCallback?: (progress:number) => void) {
-        files.gid = gid;
-        files.login = 'pass';
-        files.varname = CODE_PRIMARY_PHOTO;
-        files.module_name = 'member';
-        this.upload( files, successCallback, failureCallback, progressCallback );
+    uploadAnonymousPrimaryPhoto( gid: string, event, successCallback: (data: FILE_UPLOAD_RESPONSE) => void, failureCallback: (error:string) => void, completeCallback?: (completeCode: number) => void, progressCallback?: (progress:number) => void) {
+        let options: DATA_UPLOAD_OPTIONS = {
+            gid: gid,
+            login: 'pass',
+            code: CODE_PRIMARY_PHOTO,
+            module_name: 'member',
+            finish: '0'
+        }
+        this.upload( options, event, successCallback, failureCallback, completeCallback, progressCallback );
     }
     getUploadUrlAnonymousPrimaryPhoto( gid: string ) {
-        return this.getUploadUrl( gid, 'member', CODE_PRIMARY_PHOTO, 0, 'pass' );
+        let options: DATA_UPLOAD_OPTIONS = {
+            gid: gid,
+            login: 'pass',
+            code: CODE_PRIMARY_PHOTO,
+            module_name: 'member',
+            finish: '0'
+        }
+        return this.getUploadUrl( options );
     }
     /**
      * If user logged in, use this method.
+     * @note this does not need 'login'='pass', but the finish must be 1.
      */
-    uploadPrimaryPhoto( files, successCallback: (data: FILE_UPLOAD_RESPONSE) => void, failureCallback: (error:string) => void, progressCallback?: (progress:number) => void) {
+    uploadPrimaryPhoto( event, successCallback: (data: FILE_UPLOAD_RESPONSE) => void, failureCallback: (error:string) => void, completeCallback?: (completeCode: number) => void, progressCallback?: (progress:number) => void) {
         let login = this.getLoginData();
-        files.gid = login.id;
-        files.varname = CODE_PRIMARY_PHOTO;
-        files.module_name = 'member';
-        this.upload( files, successCallback, failureCallback, progressCallback );
+        if ( ! login ) {
+            failureCallback('login first');
+            if ( completeCallback ) completeCallback( 1 );
+        }
+        let options: DATA_UPLOAD_OPTIONS = {
+            gid: login.id,
+            code: CODE_PRIMARY_PHOTO,
+            module_name: 'member',
+            finish: '1'
+        }
+        this.upload( options, event, successCallback, failureCallback, completeCallback, progressCallback );
     }
     getUploadUrlPrimaryPhoto() {
         let login = this.getLoginData();
-        return this.getUploadUrl( login.id, 'member', CODE_PRIMARY_PHOTO, 1 );
+        if ( ! login ) return '';
+        let options: DATA_UPLOAD_OPTIONS = {
+            gid: login.id,
+            code: CODE_PRIMARY_PHOTO,
+            module_name: 'member',
+            finish: '1'
+        }
+        return this.getUploadUrl( options );
     }
 
     /**
@@ -272,6 +395,29 @@ export class Data extends Api {
         catch( e ) {
             return 0;
         }
+    }
+
+    uploadPostFile(
+        gid: string,
+        event,
+        successCallback: (data: FILE_UPLOAD_RESPONSE) => void,
+        failureCallback: (error: string) => void,
+        completeCallback: (completeCode: number) => void,
+        progressCallback: ( percentage: number ) => void
+    ) {
+        /*
+        let login = this.getLoginData();
+        if ( ! login ) {
+            failureCallback('login first');
+            if ( completeCallback ) completeCallback( 1 );
+        }
+        */
+        let options: DATA_UPLOAD_OPTIONS = {
+            gid: gid,
+            module_name: 'post',
+            finish: '0'
+        }
+        this.upload( options, event, successCallback, failureCallback, completeCallback, progressCallback );
     }
 
 }

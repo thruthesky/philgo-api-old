@@ -8,7 +8,7 @@ export class Api {
     debug: boolean = false;
     //apiEndpoint = "http://test.philgo.com/index.php";
     //apiEndpoint = "http://philgo.org/index.php";
-    // apiEndpoint = "http://www.philgo.com/index.php";
+    //apiEndpoint = "http://www.philgo.com/index.php";
     apiEndpoint = "http://w8.philgo.com/index.php";
     constructor( http ) {
         this.http = http;
