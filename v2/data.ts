@@ -7,6 +7,7 @@ export * from './philgo-api-interface';
 
 import { FileUploader } from 'ng2-file-upload/file-upload/file-uploader.class';
 
+
 export interface FileUploadResponse {
   success: boolean;
   item: any;
@@ -22,6 +23,12 @@ export interface DATA_UPLOAD_OPTIONS {
     code?: string; // varname
     finish?: '0' | '1'; //
 }
+
+
+declare var FileUploadOptions;
+declare var FileTransfer;
+
+
 
 @Injectable()
 export class Data extends Api {
@@ -331,6 +338,12 @@ export class Data extends Api {
      * @note Be sure you update idx_member after register.
      * 
      * @param files - This is 'event' from HTML FORM INPUT type='file'
+     * 
+     * @note uploadAnonymousPrimaryPhoto() 와 uploadPrimaryPhoto() 는 실패작이다.
+     *  그냥 간단하게 upload() 함수 하나로 할 수 있는 것을
+     *  오히려 복잡하게 꼬아 놓은 것 같다.
+     * 
+     *  transfer() 함수를 보라. 따로 helper 함수 없이도 잘 된다.
      */
     uploadAnonymousPrimaryPhoto( gid: string, event, successCallback: (data: FILE_UPLOAD_RESPONSE) => void, failureCallback: (error:string) => void, completeCallback?: (completeCode: number) => void, progressCallback?: (progress:number) => void) {
         let options: DATA_UPLOAD_OPTIONS = {
@@ -420,4 +433,88 @@ export class Data extends Api {
         this.upload( options, event, successCallback, failureCallback, completeCallback, progressCallback );
     }
 
+    /**
+     * Transfers file to server using cordova-plugin-transfer.
+     */
+    transfer(
+        options: DATA_UPLOAD_OPTIONS,
+        fileURL: string,
+        successCallback: (data: FILE_UPLOAD_RESPONSE) => void,
+        failureCallback: (error:string) => void,
+        completeCallback?: ( code: number ) => void,
+        progressCallback?: (progress:number) => void
+        ) {
+
+        if ( fileURL === void 0 || ! fileURL ) {
+            if ( completeCallback ) completeCallback( 2 );
+            return;
+        }
+
+        let ft_options = new FileUploadOptions();
+        ft_options.fileKey="file";
+        ft_options.fileName=fileURL.substr(fileURL.lastIndexOf('/')+1);
+        ft_options.mimeType="image/jpeg";
+        let ft = new FileTransfer();
+        let percentage = 0;
+        
+        ft.onprogress = progressEvent => {
+            // @todo This is not working....
+            // make it work.
+            if ( progressEvent.lengthComputable ) {
+                try {
+                    percentage = Math.round( progressEvent.loaded / progressEvent.total );
+                }
+                catch ( e ) {
+                    console.error( 'percentage computation error' );
+                    percentage = 10;
+                }
+            }
+            else percentage = 10; // progressive does not work. it is not computable.
+            if ( progressCallback ) progressCallback( percentage );
+        };
+
+        let uri: string = this.getUploadUrl( options );
+        /*
+        let login = this.getLoginData();
+        if ( login ) uri = this.getUploadUrlPrimaryPhoto();
+        else uri = this.getUploadUrlAnonymousPrimaryPhoto( gid );
+        */
+
+        
+        console.log("file transfer to : ", uri);
+        uri = encodeURI( uri );
+        
+        ft.upload(fileURL, uri, s => {
+            console.log("file upload success: Code = " + s.responseCode);
+            console.log("Response = " + s.response);
+            console.log("Sent = " + s.bytesSent);
+            let re;
+            try {
+                re = JSON.parse( s.response );
+            }
+            catch ( e ) {
+                failureCallback( "JSON parse error on server response while file transfer..." );
+                if ( completeCallback ) completeCallback( 1 );
+                return;
+            }
+
+            
+            // check if philgo api backend error. the error format is different from file delete submit.
+            if ( re.data.result || re.data.error ) {
+                failureCallback( re.data.error );
+                if ( completeCallback ) completeCallback( 1 );
+                return;
+            }
+
+            successCallback( re );
+            if ( completeCallback ) completeCallback( 0 );
+        }, e => {
+            // alert("An error has occurred: Code = " + e.code);
+            console.log("upload error source " + e.source);
+            console.log("upload error target " + e.target);
+            failureCallback( e.code );
+            if ( completeCallback ) completeCallback( 1 );
+        }, ft_options);
+
+    }
 }
