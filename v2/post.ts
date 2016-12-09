@@ -130,7 +130,8 @@ export class Post extends Api {
      * 
      */
     page( data: PAGE_DATA, successCallback: ( re: POSTS ) => void, errorCallback: ( error: string ) => void ) {
-        let url = this.getUrl() + 'post-list&post_id=' + data.post_id + '&page_no=' + data.page_no + '&limit=30';
+        let limit = data.limit ? data.limit : 30;
+        let url = this.getUrl() + 'post-list&post_id=' + data.post_id + '&page_no=' + data.page_no + '&limit=' + limit;
         if ( data.page_no == 1 ) this.cacheCallback( data.post_id, successCallback );
 
         // console.log('page(): url: ', url);
