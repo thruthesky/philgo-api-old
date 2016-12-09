@@ -6,35 +6,35 @@ export const PHILGO_MEMBER_LOGIN = 'philgo-login';
 export class Api {
     http: Http;
     debug: boolean = false;
-    //apiEndpoint = "http://test.philgo.com/index.php";
+    apiEndpoint = "http://test.philgo.com/index.php";
     //apiEndpoint = "http://philgo.org/index.php";
     //apiEndpoint = "http://www.philgo.com/index.php";
-    apiEndpoint = "http://w8.philgo.com/index.php";
+    //apiEndpoint = "http://w8.philgo.com/index.php";
     constructor( http ) {
         this.http = http;
         // console.log('Api::constructor()', http);
     }
 
     /**
-     * 
+     *
      * Returns login data in non-blocking code through callback.
-     * 
+     *
      * Use getLogin() as much as possible.
-     * 
+     *
      * getLogin() 은 내부적으로 getLoginData() 를 사용하는데, setTimeout 을 통해서 non-blocking 을 처리하고 있다.
      * 예를 들어, constructor() 에 많은 코드를 넣으면 앱 부팅이 느려지는데, 그러한 이유로 non-blocking 을 하는 것이 좋다.
-     * 
+     *
      * 내부적으로 callback 이 막 엉킬 경우, getLoginData() 를 사용해서 callback 없이 그냥 값을 받는다.
-     * 
+     *
      * @return void
      *      - if the user logged in, callback will be called with login information.
      *      - otherwise, callback will not be called.
-     * 
+     *
      *
      * @code
      *      member.getLogin( x => this.login = x );
-     * @endcode 
-     * 
+     * @endcode
+     *
      */
     getLogin( callback: ( login: MEMBER_LOGIN_DATA ) => void ) : void {
         setTimeout( () => {
@@ -60,7 +60,7 @@ export class Api {
 
     /**
      * This does the same as 'http.get()' but in callback.
-     * 
+     *
      */
     get( url, successCallback: (data:any) => void, errorCallback?: ( e:any ) => void, completeCallback?: () => void ) {
         if ( this.debug ) console.info("get: ", url);
@@ -73,9 +73,9 @@ export class Api {
     }
 
     /**
-     * 
+     *
      * @example code @see member.login()
-     * 
+     *
      */
     post( data: any, successCallback: (data:any) => void, errorCallback?: ( e:any ) => void, completeCallback?: () => void ) {
         if ( data['action'] === void 0 ) return errorCallback("Ajax request 'action' value is empty");
@@ -93,9 +93,9 @@ export class Api {
     }
 
     /**
-     * 
+     *
      * Returns JSON parsed Object.
-     * 
+     *
      * @note this.get() 과 this.post() 호출 결과로 서버로 부터 받은 데이터를 파싱하고,
      *      code 에 0 의 값이 아니면, 에러이므로 errorCallback() 을 직접 호출 한다.
      *          즉, 서버 리턴 데이터가 에러인 경우에는 여기서 처리하므로 상위 메소드에서 처리 할 필요가 없다.
@@ -103,12 +103,12 @@ export class Api {
      *          따라서 상위 메소드에서는 거의 할 일이 없지만, 별도의 처리가 필요하면,
      *          아래의 예제 처럼 직접 캡쳐해서 처리를 할 수 있다.
      * @attention all http request must use this method to parse.
-     * 
+     *
      * @param re - is the response of http.get() or http.post()
      * @param successCallback - is the success callback to be called when success.
      * @param errorCallback - is the error callback to be called when there is error.
      * @attention you can capture the callbacks and extra works.
-     * 
+     *
      * @use to get response data on subscribe()
      *          http.get.subscribe() 의 서버 리턴 값에서 JSON 파싱해서 값을 받기 위해서 사용. 단순히 JSON.parse( re['_body'] ) 와 같이 할 수 있으나 통일된 구문을 사용한다.
      * @code
@@ -121,8 +121,8 @@ export class Api {
                     }, errorCallback );
                 });
      * @endcode
-     * 
-     * 
+     *
+     *
      * @code json-parse-error would probably be server error!
             e => {
                 if ( e == 'json-parse-error' ) {
@@ -161,15 +161,15 @@ export class Api {
 
     get requestOptions() : RequestOptions {
         let headers  = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
-        let options  = new RequestOptions({ headers: headers });   
+        let options  = new RequestOptions({ headers: headers });
         return options;
     }
     /**
-     * 
+     *
      * @code
      *      getUrl('version');
      * @endcode
-     * 
+     *
      */
     getUrl( qs: string = '' ) {
         return this.serverUrl + "?module=ajax&submit=1&action=" + qs;
@@ -177,9 +177,9 @@ export class Api {
 
     /**
      * Returns the body of POST method.
-     * 
+     *
      * @attention This addes 'module', 'submit'. If you don't needed just user http_build_query()
-     * 
+     *
      * @param params must be an object.
      */
     buildQuery( params ) {
@@ -199,12 +199,12 @@ export class Api {
 
 
 /**
- * 
+ *
  * @code
     member.version( v => console.log('version: ', v) );
  * @endcode
- * 
- * 
+ *
+ *
  */
     version( successCallback: (version:string) => void, errorCallback?: (error: string) => void, completeCallback?: () => void ) {
         this.get(
@@ -260,15 +260,15 @@ export class Api {
     }
 
     /**
-     * 
+     *
      * Returns cached data after JSON.parse() if exists.
-     * 
+     *
      * @attenion the cached data must be in JSON string format.
-     * 
+     *
      * @code example
         if ( data.page_no == 1 ) this.cacheCallback( data.post_id, successCallback );
      * @endcode
-     * 
+     *
      */
     cacheCallback( cache_id, callback ) {
         let re = localStorage.getItem( cache_id );
@@ -295,7 +295,7 @@ export class Api {
     /**
      * @para data - Javascript raw value. NOT JSON string.
      * @attention the data must not be JSON format string because it does by itself.
-     * 
+     *
      * @code example
                 this.responseData( re, (posts: POSTS) => {
                     if ( data.page_no == 1 ) this.saveCache( data.post_id, posts );
@@ -309,7 +309,7 @@ export class Api {
 
 
 
-    http_build_query (formdata, numericPrefix='', argSeparator='') { 
+    http_build_query (formdata, numericPrefix='', argSeparator='') {
         var urlencode = this.urlencode;
         var value
         var key
@@ -395,9 +395,9 @@ export class Api {
         catch( e ) {
             console.error('birthday error: ', e );
         }
-        
+
         return str;
 
-        
+
     }
 }
