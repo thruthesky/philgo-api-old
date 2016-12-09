@@ -24,9 +24,11 @@ export class Post extends Api {
             if ( data.gid === void 0 ) return 'gid-is-empty';
             if ( data.subject === void 0 ) return 'subject-is-empty';
         }
-        else if  ( data.action == 'post_edit_submit' ) {
+        else if  ( data.action == 'post_edit_submit' ) { // 글/코멘트 수정.
             if ( data.idx === void 0 ) return 'idx-is-empty';
-            if ( data.subject === void 0 ) return 'subject-is-empty';
+            if ( data.idx_parent === void 0 || ! data.idx_parent ) { // 글인 경우만, 제목 체크.
+                if ( data.subject === void 0 ) return 'subject-is-empty';
+            }
         }
         else if  ( data.action == 'comment_write_submit' ) {
             if ( data.idx_parent === void 0 ) return 'idx_parent-is-empty';
@@ -69,6 +71,9 @@ export class Post extends Api {
             completeCallback );
     }
 
+    /**
+     * This updates post/comment.
+     */
     update( data: POST_DATA, successCallback: ( re: POST_RESPONSE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
         data['action'] = 'post_edit_submit';
         let login = this.getLoginData();
