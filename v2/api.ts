@@ -65,7 +65,7 @@ export class Api {
     get( url, successCallback: (data:any) => void, errorCallback?: ( e:any ) => void, completeCallback?: () => void ) {
         if ( this.debug ) console.info("get: ", url);
         this.http.get( url )
-            .timeout( 9000, new Error('timeout exceeded') )
+            .timeout( 15000, new Error('timeout exceeded') )
             .subscribe(
                 re => this.responseData( re, successCallback, errorCallback ),
                 er => this.responseConnectionError( er, errorCallback ),

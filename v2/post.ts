@@ -22,9 +22,13 @@ export class Post extends Api {
         if ( data.action == 'post_write_submit' ) {
             if ( data.post_id === void 0 ) return 'post-id-is-empty';
             if ( data.gid === void 0 ) return 'gid-is-empty';
+            if ( data.subject === void 0 ) return 'subject-is-empty';
         }
-        else if  ( data.action == 'post_edit_submit' ) {
+        else if  ( data.action == 'post_edit_submit' ) { // 글/코멘트 수정.
             if ( data.idx === void 0 ) return 'idx-is-empty';
+            if ( data.idx_parent === void 0 || ! data.idx_parent ) { // 글인 경우만, 제목 체크.
+                if ( data.subject === void 0 ) return 'subject-is-empty';
+            }
         }
         else if  ( data.action == 'comment_write_submit' ) {
             if ( data.idx_parent === void 0 ) return 'idx_parent-is-empty';
@@ -34,7 +38,7 @@ export class Post extends Api {
             else return false;
         }
 
-        if ( data.subject === void 0 ) return 'subject-is-empty';
+        
         if ( data.content === void 0 ) return 'content-is-empty';
 
         return false;
@@ -67,6 +71,9 @@ export class Post extends Api {
             completeCallback );
     }
 
+    /**
+     * This updates post/comment.
+     */
     update( data: POST_DATA, successCallback: ( re: POST_RESPONSE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
         data['action'] = 'post_edit_submit';
         let login = this.getLoginData();
@@ -123,7 +130,8 @@ export class Post extends Api {
      * 
      */
     page( data: PAGE_DATA, successCallback: ( re: POSTS ) => void, errorCallback: ( error: string ) => void ) {
-        let url = this.getUrl() + 'post-list&post_id=' + data.post_id + '&page_no=' + data.page_no + '&limit=30';
+        let limit = data.limit ? data.limit : 30;
+        let url = this.getUrl() + 'post-list&post_id=' + data.post_id + '&page_no=' + data.page_no + '&limit=' + limit;
         if ( data.page_no == 1 ) this.cacheCallback( data.post_id, successCallback );
 
         // console.log('page(): url: ', url);

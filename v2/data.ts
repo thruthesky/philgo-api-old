@@ -458,10 +458,10 @@ export class Data extends Api {
         let percentage = 0;
         
         ft.onprogress = progressEvent => {
-            // @todo This is not working....
-            // make it work.
             if ( progressEvent.lengthComputable ) {
                 try {
+                    // console.log("loaded:", progressEvent.loaded);
+                    // console.log("total:", progressEvent.total);
                     percentage = Math.round( progressEvent.loaded / progressEvent.total );
                 }
                 catch ( e ) {
