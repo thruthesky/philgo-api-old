@@ -217,24 +217,35 @@ export interface MEMBER {
     nickname: string;
 };
 
+
+export interface PHOTOS {
+    idx: number;
+    src?: string; // deprecated. remove this.
+    original_src?: string; // deprecated. remove this.
+    url?: string;
+    url_thumbnail?: string;   
+};
+
+
+
 export interface COMMENT {
-    bad: string;
-    blind: string;
+    bad?: string;
+    blind?: string;
     content: string;
-    deleted: string;
-    depth: string;
+    deleted?: string;
+    depth?: string;
     gid: string;
-    good: string;
-    idx: string;
-    idx_member: string;
+    good?: string;
+    idx?: string;
+    idx_member?: string;
     idx_parent: string;
-    idx_root: string;
-    int_10: string;
-    member: MEMBER;
-    photos: string;
-    post_id: string;
-    stamp: string;
-    user_name: string;
+    idx_root?: string;
+    int_10?: string;
+    member?: MEMBER;
+    photos?: Array<PHOTOS>;
+    post_id?: string;
+    stamp?: string;
+    user_name?: string;
 };
 
 export interface POST {
@@ -261,12 +272,6 @@ export interface POST {
     stamp: string;
     subject: string;
     user_name: string;
-};
-
-export interface PHOTOS {
-    idx: number;
-    src: string;
-    original_src: string;   
 };
 
 export interface POSTS extends PHILGO_API_RESPONSE {
