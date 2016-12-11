@@ -136,6 +136,7 @@ export interface FILE_UPLOAD_DATA {
     name: string;
     path: string;
     result: number;
+    error?: string;
     src_org: string;
     url: string;
     url_thumbnail: string;
