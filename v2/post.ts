@@ -5,7 +5,6 @@ import { PAGE_DATA, POSTS, POST_DATA, POST_RESPONSE } from './philgo-api-interfa
 export * from './philgo-api-interface';
 // import * as _ from 'lodash';
 
-
 @Injectable()
 export class Post extends Api {
 

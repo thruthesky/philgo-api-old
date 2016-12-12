@@ -297,7 +297,7 @@ export class Data extends Api {
         this.uploader.onCompleteAll = () => {
             console.log("uploader.onCompleteAll()");
             // this.onBrowserUploadComplete();
-            let re = null;
+            let re: FILE_UPLOAD_RESPONSE = null;
             try {
                 re = JSON.parse( this.result['response'] );
             }
@@ -308,9 +308,31 @@ export class Data extends Api {
                 return 0;
             }
 
-            // check if philgo api backend error. the error format is different from file delete submit.
-            if ( re.data.result || re.data.error ) {
-                failureCallback( re.data.error );
+            // check if philgo api.
+            try {
+                if ( re.code ) {
+                    failureCallback( re.message );
+                    if ( completeCallback ) completeCallback( 1 );
+                    return;
+                }
+            }
+            catch ( e ) {
+                console.info( re );
+                failureCallback( 'try caught: failure on checking error');
+                if ( completeCallback ) completeCallback( 1 );
+                return;
+            }
+            // check if philgo api backend error on file upload module. the error format is different from file delete submit.
+            try {
+                if ( re.data.result || re.data.error ) {
+                    failureCallback( re.data.error );
+                    if ( completeCallback ) completeCallback( 1 );
+                    return;
+                }
+            }
+            catch ( e ) {
+                console.info( re );
+                failureCallback( 'try caught: failure onchecking  backend error');
                 if ( completeCallback ) completeCallback( 1 );
                 return;
             }
