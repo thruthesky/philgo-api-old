@@ -163,6 +163,7 @@ export interface SEARCH_QUERY_DATA {
     where?: string;
     orderby?: string;
     limit?: string;
+    page?: number;
 };
 
 export interface PAGE_DATA {
@@ -223,7 +224,7 @@ export interface PHOTOS {
     src?: string; // deprecated. remove this.
     original_src?: string; // deprecated. remove this.
     url?: string;
-    url_thumbnail?: string;   
+    url_thumbnail?: string;
 };
 
 
