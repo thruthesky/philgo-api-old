@@ -515,19 +515,40 @@ export class Data extends Api {
                 re = JSON.parse( s.response );
             }
             catch ( e ) {
-                failureCallback( "JSON parse error on server response while file transfer..." );
+                failureCallback( "transfer try caught: JSON parse error on server response while file transfer..." );
                 if ( completeCallback ) completeCallback( 1 );
                 return;
             }
 
-            
-            // check if philgo api backend error. the error format is different from file delete submit.
-            if ( re.data.result || re.data.error ) {
-                failureCallback( re.data.error );
+
+            // check if philgo api.
+            try {
+                if ( re.code ) {
+                    failureCallback( re.message );
+                    if ( completeCallback ) completeCallback( 1 );
+                    return;
+                }
+            }
+            catch ( e ) {
+                console.info( re );
+                failureCallback( 'transfer try caught: failure on checking error');
                 if ( completeCallback ) completeCallback( 1 );
                 return;
             }
-
+            // check if philgo api backend error on file upload module. the error format is different from file delete submit.
+            try {
+                if ( re.data.result || re.data.error ) {
+                    failureCallback( re.data.error );
+                    if ( completeCallback ) completeCallback( 1 );
+                    return;
+                }
+            }
+            catch ( e ) {
+                console.info( re );
+                failureCallback( 'transfer try caught: failure onchecking  backend error');
+                if ( completeCallback ) completeCallback( 1 );
+                return;
+            }
             successCallback( re );
             if ( completeCallback ) completeCallback( 0 );
         }, e => {

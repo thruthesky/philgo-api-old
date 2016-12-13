@@ -14,7 +14,7 @@ export class Post extends Api {
 
     hasError( data: POST_DATA ) : boolean | string {
 
-        if ( data.id === void 0 ) return 'id-is-empty';
+        if ( data.id === void 0 ) return 'user-id-is-empty-login-first';
         if ( data.session_id === void 0 ) return 'session_id-is-empty';
         if ( data.action === void 0 ) return 'action-is-empty';
 
@@ -50,8 +50,10 @@ export class Post extends Api {
     create( data: POST_DATA, successCallback: ( re: POST_RESPONSE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
         data['action'] = 'post_write_submit';
         let login = this.getLoginData();
-        data.id = login.id;
-        data.session_id = login.session_id;
+        if ( login ) {
+            data.id = login.id;
+            data.session_id = login.session_id;
+        }
         if ( this.hasError( data ) ) return errorCallback( this.getError( data ) );
         this.post( data,
             successCallback,
@@ -61,8 +63,10 @@ export class Post extends Api {
     createComment( data: POST_DATA, successCallback: ( re: POST_RESPONSE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
         data['action'] = 'comment_write_submit';
         let login = this.getLoginData();
-        data.id = login.id;
-        data.session_id = login.session_id;
+        if ( login ) {
+            data.id = login.id;
+            data.session_id = login.session_id;
+        }
         if ( this.hasError( data ) ) return errorCallback( this.getError( data ) );
         this.post( data,
             successCallback,
@@ -72,6 +76,7 @@ export class Post extends Api {
 
     /**
      * This updates post/comment.
+     * @attention it checks login for post update.
      */
     update( data: POST_DATA, successCallback: ( re: POST_RESPONSE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
         data['action'] = 'post_edit_submit';

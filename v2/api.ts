@@ -85,7 +85,7 @@ export class Api {
       console.info("post: ", url);
     }
     this.http.post( this.serverUrl, data, this.requestOptions )
-      .timeout( 9000, new Error('timeout exceeded') )
+      .timeout( 15000, new Error('timeout exceeded') )
       .subscribe(
         re => this.responseData( re, successCallback, errorCallback ),
         er => this.responseConnectionError( er, errorCallback ),
@@ -133,7 +133,7 @@ export class Api {
    * @endcode
    */
   responseData( re, successCallback: ( data: any ) => void, errorCallback: ( error: string ) => void ) : any {
-    // console.log('responseData() re: ', re);
+    console.log('Api::responseData() re: ', re);
     let data;
     try {
       data = JSON.parse( re['_body'] );
