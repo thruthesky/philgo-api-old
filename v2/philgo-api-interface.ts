@@ -164,6 +164,7 @@ export interface SEARCH_QUERY_DATA {
     orderby?: string;
     limit?: string;
     page?: number;
+    post?: number;
 };
 
 export interface PAGE_DATA {
