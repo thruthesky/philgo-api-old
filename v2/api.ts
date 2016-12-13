@@ -4,6 +4,7 @@ import 'rxjs/add/operator/timeout';
 declare let global; // for php-js. uniqid()
 export const PHILGO_MEMBER_LOGIN = 'philgo-login';
 export class Api {
+  self: Api = null;
   http: Http;
   debug: boolean = false;
   //apiEndpoint = "http://test.philgo.com/index.php";
@@ -63,6 +64,9 @@ export class Api {
    *
    */
   get( url, successCallback: (data:any) => void, errorCallback?: ( e:any ) => void, completeCallback?: () => void ) {
+    this._get( url, successCallback, errorCallback, completeCallback );
+  }
+  _get( url, successCallback: (data:any) => void, errorCallback?: ( e:any ) => void, completeCallback?: () => void ) {
     if ( this.debug ) console.info("get: ", url);
     this.http.get( url )
       .timeout( 15000, new Error('timeout exceeded') )
@@ -71,6 +75,8 @@ export class Api {
         er => this.responseConnectionError( er, errorCallback ),
         completeCallback );
   }
+
+
 
   /**
    *
@@ -246,7 +252,7 @@ export class Api {
 
   search( data: SEARCH_QUERY_DATA, successCallback: ( re: any ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
     let url = this.getUrl( 'search&' + this.http_build_query( data ) );
-    this.get( url,
+    this._get( url,
       successCallback,
       errorCallback,
       completeCallback );
