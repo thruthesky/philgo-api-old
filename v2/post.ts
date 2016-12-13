@@ -36,10 +36,6 @@ export class Post extends Api {
             if ( data.idx === void 0 ) return 'idx-is-empty';
             else return false;
         }
-
-        
-        if ( data.content === void 0 ) return 'content-is-empty';
-
         return false;
     }
     getError( data: POST_DATA ) : string {
@@ -91,7 +87,11 @@ export class Post extends Api {
             completeCallback );
     }
 
-    get( idx, successCallback: ( re: POST_RESPONSE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
+    /**
+     * @attention - It does not do 'GET' request. it gets data of a post.
+     * @note this method name has changed from 'get()' to 'load()'.
+     */
+    load( idx, successCallback: ( re: POST_RESPONSE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
         let url = this.getUrl( 'post_get_submit&idx=' + idx );
         super.get( url,
             successCallback,
@@ -104,14 +104,49 @@ export class Post extends Api {
         data['idx'] = idx;
         data['action'] = 'post_delete_submit';
         let login = this.getLoginData();
-        data['id'] = login.id;
-        data['session_id'] = login.session_id;
+        if ( login ) {
+            data['id'] = login.id;
+            data['session_id'] = login.session_id;
+        }
         if ( this.hasError( data ) ) return errorCallback( this.getError( data ) );
         this.post( data,
             successCallback,
             errorCallback,
             completeCallback );
     }
+
+    report( idx, successCallback: ( re: any ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
+        let data = {};
+        data['idx'] = idx;
+        data['action'] = 'post_report_submit';
+        let login = this.getLoginData();
+        if ( login ) {
+            data['id'] = login.id;
+            data['session_id'] = login.session_id;
+        }
+        if ( this.hasError( data ) ) return errorCallback( this.getError( data ) );
+        this.post( data,
+            successCallback,
+            errorCallback,
+            completeCallback );
+    }
+
+    vote( idx, successCallback: ( re: any ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
+        let data = {};
+        data['idx'] = idx;
+        data['action'] = 'post_vote_submit';
+        let login = this.getLoginData();
+        if ( login ) {
+            data['id'] = login.id;
+            data['session_id'] = login.session_id;
+        }
+        if ( this.hasError( data ) ) return errorCallback( this.getError( data ) );
+        this.post( data,
+            successCallback,
+            errorCallback,
+            completeCallback );
+    }
+
 
     /**
      * 
@@ -139,9 +174,11 @@ export class Post extends Api {
         if ( data.page_no == 1 ) this.cacheCallback( data.post_id, successCallback );
 
         // console.log('page(): url: ', url);
+        /*
         this.get( url, re => {
 
         }, errorCallback );
+        */
 
         this.http.get( url )
             .subscribe( re => {

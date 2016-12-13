@@ -7,10 +7,10 @@ export class Api {
   self: Api = null;
   http: Http;
   debug: boolean = false;
-  //apiEndpoint = "http://test.philgo.com/index.php";
+  // apiEndpoint = "http://test.philgo.com/index.php";
   // apiEndpoint = "http://philgo.org/index.php";
-  apiEndpoint = "http://www.philgo.com/index.php";
-  //apiEndpoint = "http://w8.philgo.com/index.php";
+  // apiEndpoint = "http://www.philgo.com/index.php";
+   apiEndpoint = "http://w8.philgo.com/index.php";
   constructor( http ) {
     this.http = http;
     // console.log('Api::constructor()', http);
@@ -139,7 +139,7 @@ export class Api {
    * @endcode
    */
   responseData( re, successCallback: ( data: any ) => void, errorCallback: ( error: string ) => void ) : any {
-    console.log('Api::responseData() re: ', re);
+    // console.log('Api::responseData() re: ', re);
     let data;
     try {
       data = JSON.parse( re['_body'] );
