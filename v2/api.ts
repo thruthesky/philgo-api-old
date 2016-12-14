@@ -10,7 +10,7 @@ export class Api {
   // apiEndpoint = "http://test.philgo.com/index.php";
   // apiEndpoint = "http://philgo.org/index.php";
   // apiEndpoint = "http://www.philgo.com/index.php";
-   apiEndpoint = "http://w8.philgo.com/index.php";
+   apiEndpoint = "http://w5.philgo.com/index.php"; // fastest server from db.
   constructor( http ) {
     this.http = http;
     // console.log('Api::constructor()', http);
@@ -162,7 +162,7 @@ export class Api {
    */
   responseConnectionError( error: Response | any, errorCallback: ( error : string ) => void ) {
     console.error(Response);
-    if ( errorCallback ) errorCallback("http-get/post-subscribe-error may-be-no-internet or wrong-domain or timeout or server-down: ...");
+    if ( errorCallback ) errorCallback("http-request-error maybe no-internet or wrong-domain or timeout or server-down");
   }
 
   get requestOptions() : RequestOptions {
@@ -288,7 +288,10 @@ export class Api {
         console.error( "error on parsing data of localstroage.");
       }
       try {
-        if ( data ) callback( data );
+        if ( data ) {
+          // console.log("Api::cacheCallback()");
+          callback( data );
+        }
       }
       catch ( e ) {
         console.error("error on cacheCallback() ==> callback()");
@@ -395,7 +398,7 @@ export class Api {
   /**
    * PHP uniqid()
    */
-  uniqid (prefix?, moreEntropy?) {
+  uniqid (prefix?, moreEntropy=true) {
     if (typeof prefix === 'undefined') {
       prefix = ''
     }

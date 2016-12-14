@@ -170,6 +170,7 @@ export interface SEARCH_QUERY_DATA {
 export interface PAGE_DATA {
     post_id: string;
     page_no: number;
+    fields?: string;
     limit?: number;
 };
 

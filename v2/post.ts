@@ -168,10 +168,16 @@ export class Post extends Api {
      * @endcode
      * 
      */
-    page( data: PAGE_DATA, successCallback: ( re: POSTS ) => void, errorCallback: ( error: string ) => void ) {
+    page( data: PAGE_DATA, successCallback: ( re: POSTS ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
+        let page_no = data.page_no ? data.page_no : 1;
         let limit = data.limit ? data.limit : 30;
-        let url = this.getUrl() + 'post-list&post_id=' + data.post_id + '&page_no=' + data.page_no + '&limit=' + limit;
-        if ( data.page_no == 1 ) this.cacheCallback( data.post_id, successCallback );
+        let fields = data.fields ? data.fields : '';
+        let url = this.getUrl() + 'post-list&post_id=' + data.post_id + '&page_no=' + page_no + '&limit=' + limit + '&fields=' + fields;
+        if ( this.debug ) console.log("page() url: ", url);
+        if ( page_no == 1 ) {
+            // console.log("page no: 1");
+            this.cacheCallback( data.post_id, successCallback );
+        }
 
         // console.log('page(): url: ', url);
         /*
@@ -179,7 +185,7 @@ export class Post extends Api {
 
         }, errorCallback );
         */
-
+        /*
         this.http.get( url )
             .subscribe( re => {
                 // console.log('post::page() re: ', re);
@@ -188,6 +194,11 @@ export class Post extends Api {
                     successCallback( posts );
                 }, errorCallback );
             });
+        */
+        this.get( url, (posts: POSTS) => {
+            if ( data.page_no == 1 ) this.saveCache( data.post_id, posts );
+            successCallback( posts );
+        }, errorCallback, completeCallback );
     }
 
 
