@@ -145,7 +145,7 @@ export class SampleRegisterPage {
     loginTest() {
       let req = { id: this.form.id, password: this.form.password };
       console.log('loginTest() req: ', req);
-      this.member.debug = true;
+      //this.member.debug = true;
       this.member.login( req,
         login => {
           console.log('loginTest success: ', login);

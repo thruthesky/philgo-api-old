@@ -67,7 +67,7 @@ export class SamplePostPage {
         c.subject = "Comment title";
         c.content = "Comment content";
         console.log("comment create data: ", c);
-        this.post.debug = true;
+        //this.post.debug = true;
         this.post.createComment( c, data => {
             console.log('createComment() data: ', data);
             this.updateComment( data.post.idx );
