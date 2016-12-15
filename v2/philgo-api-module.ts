@@ -13,15 +13,17 @@ import { SampleHomePage } from '../sample-pages/home/home';
 import { SampleLoginPage } from '../sample-pages/login/login';
 import { SampleRegisterPage } from '../sample-pages/register/register';
 import { SamplePostPage } from '../sample-pages/post/post';
-
+import { ViewComponent } from './component/view/view-component';
 export let ROUTES = [
         { path: "test/philgo/home", component: SampleHomePage, name: 'philgoHome' },
         { path: "test/philgo/login", component: SampleLoginPage, name: 'philgoLogin' },
         { path: "test/philgo/register", component: SampleRegisterPage, name: 'philgoRegister' },
         { path: "test/philgo/post", component: SamplePostPage, name: 'philgoPost' }
 ];
+
 @NgModule({
   declarations : [
+    ViewComponent,
     SampleHomePage,
     SampleLoginPage,
     SampleRegisterPage,
@@ -32,6 +34,9 @@ export let ROUTES = [
     HttpModule,
     RouterModule,
     FormsModule
+  ],
+  exports: [
+    ViewComponent
   ],
   providers : [ Member, Post, Data ]
 })

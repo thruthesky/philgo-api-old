@@ -169,7 +169,7 @@ export interface SEARCH_QUERY_DATA {
 
 export interface PAGE_DATA {
     post_id: string;
-    page_no: number;
+    page_no?: number;
     fields?: string;
     limit?: number;
 };
@@ -286,6 +286,9 @@ export interface POSTS extends PHILGO_API_RESPONSE {
     post_top_premium_ad: Array<POST_TOP_PREMIUM_AD>;
     posts: Array<POST>;
 };
+export interface PAGE extends POSTS {} // correct naming.
+export type PAGES = Array<PAGE>; // correct naming for array of page.
+
 
 
 

@@ -1,0 +1,15 @@
+view-component {
+    article.post {
+        .content {
+            padding: 1em;
+            background-color: white;
+        }
+    }
+
+    article.comment {
+        .content {
+            background-color: black;
+            color: white;
+        }
+    }
+}

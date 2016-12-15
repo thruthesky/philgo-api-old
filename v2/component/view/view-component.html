@@ -1,0 +1,6 @@
+
+<article class="" [class.post]=" isPost " [class.comment]=" ! isPost ">
+    <h2 *ngIf=" isPost " >{{ post.subject }}</h2>
+    <div class="content">{{ post.content }}</div>
+</article>
+
