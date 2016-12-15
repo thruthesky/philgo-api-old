@@ -14,6 +14,9 @@ import { SampleLoginPage } from '../sample-pages/login/login';
 import { SampleRegisterPage } from '../sample-pages/register/register';
 import { SamplePostPage } from '../sample-pages/post/post';
 import { ViewComponent } from './component/view/view-component';
+import { EditComponent } from './component/edit/edit-component';
+
+
 export let ROUTES = [
         { path: "test/philgo/home", component: SampleHomePage, name: 'philgoHome' },
         { path: "test/philgo/login", component: SampleLoginPage, name: 'philgoLogin' },
@@ -23,6 +26,7 @@ export let ROUTES = [
 
 @NgModule({
   declarations : [
+    EditComponent,
     ViewComponent,
     SampleHomePage,
     SampleLoginPage,
@@ -36,7 +40,9 @@ export let ROUTES = [
     FormsModule
   ],
   exports: [
+    EditComponent,
     ViewComponent
+    
   ],
   providers : [ Member, Post, Data ]
 })

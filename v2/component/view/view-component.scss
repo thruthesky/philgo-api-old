@@ -1,15 +1,35 @@
 view-component {
     article.post {
+
+        border : 1px solid gray;
+        background: gray;
+
         .content {
             padding: 1em;
-            background-color: white;
+            color: white;
         }
     }
 
     article.comment {
+
+        border : 1px solid gray;
+        background: darkgray;
         .content {
-            background-color: black;
+            background-color: darkgray;
             color: white;
+            font-size: 15px;
         }
+
+        &[depth='2'] { margin-left: 1em; }
+        &[depth='3'] { margin-left: 2em; }
+        &[depth='4'] { margin-left: 2.6em; }
+        &[depth='5'] { margin-left: 3.2em; }
+        &[depth='6'] { margin-left: 3.6em; }
+        &[depth='7'] { margin-left: 4em; }
+        &[depth='8'] { margin-left: 4.4em; }
+        &[depth='9'] { margin-left: 4.8em; }
+        &[depth='10'] { margin-left: 5em; }
+        &[depth='11'] { margin-left: 5.2em; }
+
     }
 }
