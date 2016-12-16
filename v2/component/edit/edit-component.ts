@@ -18,8 +18,10 @@ export class EditComponent {
      */
     @Input() pages: any = null;
     /**
-     * 'root' is the root post. It is only needed on creating/editing comment.
-     * It is not needed on POST create/edit.
+     * 'root' is the root post.
+     *      - It is needed editing comment.
+     *          - More specifically, it will be used to insert the created comment into view.
+     *      - It is not needed on comment edit and post create/edit.
      */
     @Input() root: POST = null;
     /**
