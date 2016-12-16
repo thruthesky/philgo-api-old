@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Api } from './api';
-import { PAGE_DATA, PAGE, POST_DATA, POST_RESPONSE } from './philgo-api-interface';
+import { PAGE_DATA, PAGE, POST_DATA, PAGE_OPTION, POST_RESPONSE } from './philgo-api-interface';
 export * from './philgo-api-interface';
 // import * as _ from 'lodash';
 
@@ -156,6 +156,8 @@ export class Post extends Api {
      *      1. load from cache & return data.
      *      2. load from server & cache & return data.
      * 
+     * @param If 'data.cache' is set, then it calls Post.pageCahce().
+     * 
      * @code example
 
         this.post.page( {post_id: this.post_id, page_no: 1}, (posts: POSTS) => {
@@ -169,18 +171,16 @@ export class Post extends Api {
      * @endcode
      * 
      */
-    page( data: PAGE_DATA, successCallback: ( page: PAGE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
-        let page_no = data.page_no ? data.page_no : 1;
+    page( data: PAGE_OPTION, successCallback: ( page: PAGE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
+        data.page_no = data.page_no ? data.page_no : 1;
+        data.limit = data.limit ? data.limit : 30;
+        data.fields = data.fields ? data.fields : '';
 
+        if ( data.expire !== void 0 ) return this.pageCache( data, successCallback, errorCallback, completeCallback );
 
-        let limit = data.limit ? data.limit : 30;
-        let fields = data.fields ? data.fields : '';
-
-
-
-        let url = this.getUrl() + 'post-list&post_id=' + data.post_id + '&page_no=' + page_no + '&limit=' + limit + '&fields=' + fields;
+        let url = this.getUrl() + 'post-list&post_id=' + data.post_id + '&page_no=' + data.page_no + '&limit=' + data.limit + '&fields=' + data.fields;
         if ( this.debug ) console.log("page() url: ", url);
-        if ( page_no == 1 ) {
+        if ( data.page_no == 1 ) {
             // console.log("page no: 1");
             this.cacheCallback( data.post_id, successCallback );
         }
@@ -213,15 +213,16 @@ export class Post extends Api {
      * This caches page of posts.
      * This method is separated to reduce the complexity of page().
      * 
+     * @note but you can still use "Post.page()"" to call Post.pageCache(). @see Post.page()
+     *
      * @note cache option
      * 
      *  IF data.cache = seconds
      *      1. see if there is cache on that 'data.page_no'
      *      2. if yes,
      *          2.1 callback the cache data
-     *          2.2 see if the cache interval time has expires
-     *              2.2.1 if expired, delete the cache.
-     *          2.3 RETURN.
+     *                      ; getCache() will delete the data if the data is expired.
+     *          2.2 RETURN.
      *      3. if no,
      *          3.1 get posts of the page no.
      *          3.2 callback the page.
@@ -229,17 +230,20 @@ export class Post extends Api {
      *          3.4 RETURN.
      * 
      */
-    pageCache() {
-/*
-        // cache
-        // it needs blocking code??
-        let d = this.getCache( 'cache-' + data.post_id );
-        if ( d ) {
-            successCallback( d );
+    pageCache( option: PAGE_OPTION, successCallback: ( page: PAGE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
+        console.log("pageCache() : ", option);
+        let cache_id = 'cache-' + option.post_id + '-' + option.page_no;
+        let page = this.getCache( cache_id, option.expire );
+        if ( page ) {
+            successCallback( <PAGE> page );
             completeCallback();
         }
-*/
-
+        let url = this.getUrl() + 'post-list&post_id=' + option.post_id + '&page_no=' + option.page_no + '&limit=' + option.limit + '&fields=' +option.fields;
+        
+        this.get( url, (page: PAGE) => {
+            successCallback( page );
+            this.setCache( cache_id, page );
+        }, errorCallback, completeCallback );
     }
 
 

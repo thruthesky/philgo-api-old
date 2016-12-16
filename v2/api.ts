@@ -307,9 +307,12 @@ export class Api {
   }
   /**
    * 
+   * Saves data into 'localStorage'.
+   * It also saves timestamp to mark when the data was saved. 
+   * 
    * @param id - can be any string.
    * @param data - Javascript raw value. NOT JSON string.
-   * @param expire - if set true, it saves stamp on the cache to mark when it was saved. 
+   * 
    * @attention the data must not be JSON format string because it does by itself.
    *
    * @code example
@@ -319,28 +322,45 @@ export class Api {
     }, errorCallback );
    * @endcode
    */
-  saveCache( cache_id:string, data:any, expire:boolean = false ) {
+  saveCache( cache_id:string, data:any ) {
     localStorage.setItem( cache_id, JSON.stringify(data) );
-    if ( expire ) {
-      localStorage.setItem( cache_id + '.stamp', (+ new Date()).toString());
-    }
+    let stamp = Math.floor(Date.now() / 1000)
+    localStorage.setItem( cache_id + '.stamp', stamp.toString());
   }
+  /**
+   * alias of saveCache()
+   */
+  setCache( cache_id:string, data:any ) {
+    return this.saveCache( cache_id, data );
+  }
+
   /**
    *  
    * Returns cached data after JSON.parse() if exists.
    *
    * 
    * @param id - can be any string.
+   * @param expire - seconds in number. If it is 0, then it does not delete the cache. default is 0.
    */
-  getCache( cache_id:string, expire:boolean = false ) {
-    let data = localStorage.getItem( cache_id );
-    if ( ! data ) return null;
+  getCache( cache_id:string, expire:number = 0 ) {
+    let raw = localStorage.getItem( cache_id );
+    if ( raw == null ) return null;
+    let data;
+    try {
+      raw = JSON.parse( raw );
+    }
+    catch ( e ) {
+      return null;
+    }
+    if ( expire == 0 ) return data;
     let cache_stamp = + localStorage.getItem( cache_id + '.stamp' );
-    let stamp = + new Date();
-    if ( cache_stamp < stamp ) { // if cache expired, delete cache.
+    let stamp = Math.floor(Date.now() / 1000);
+    if ( expire + cache_stamp < stamp ) { // if cache expired, delete cache.
+      console.info('cache removed');
       localStorage.removeItem( cache_id );
       localStorage.removeItem( cache_id + '.stamp' );
     }
+    console.log('cached data returned');
     return data; // even though cache expired and deleted, return the cache data. so, next time, it will return null.
   }
 

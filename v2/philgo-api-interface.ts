@@ -172,8 +172,10 @@ export interface PAGE_DATA {
     page_no?: number;
     fields?: string;
     limit?: number;
-    cache?: number;
+    expire?: number;
 };
+
+export interface PAGE_OPTION extends PAGE_DATA {}
 
 export interface POST_AD {
     deleted: string;
