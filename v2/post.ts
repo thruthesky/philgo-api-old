@@ -156,21 +156,6 @@ export class Post extends Api {
      *      1. load from cache & return data.
      *      2. load from server & cache & return data.
      * 
-     * @note cache option
-     * 
-     *  IF data.cache = seconds
-     *      1. see if there is cache on that 'data.page_no'
-     *      2. if yes,
-     *          2.1 callback the cache data
-     *          2.2 see if the cache interval time has expires
-     *              2.2.1 if expired, delete the cache.
-     *          2.3 RETURN.
-     *      3. if no,
-     *          3.1 get posts of the page no.
-     *          3.2 callback the page.
-     *          3.3 cache the page
-     *          3.4 RETURN.
-     * 
      * @code example
 
         this.post.page( {post_id: this.post_id, page_no: 1}, (posts: POSTS) => {
@@ -186,11 +171,6 @@ export class Post extends Api {
      */
     page( data: PAGE_DATA, successCallback: ( page: PAGE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
         let page_no = data.page_no ? data.page_no : 1;
-
-        // cache
-        // it needs blocking code??
-
-
 
 
         let limit = data.limit ? data.limit : 30;
@@ -228,7 +208,39 @@ export class Post extends Api {
     }
 
 
+    /**
+     * 
+     * This caches page of posts.
+     * This method is separated to reduce the complexity of page().
+     * 
+     * @note cache option
+     * 
+     *  IF data.cache = seconds
+     *      1. see if there is cache on that 'data.page_no'
+     *      2. if yes,
+     *          2.1 callback the cache data
+     *          2.2 see if the cache interval time has expires
+     *              2.2.1 if expired, delete the cache.
+     *          2.3 RETURN.
+     *      3. if no,
+     *          3.1 get posts of the page no.
+     *          3.2 callback the page.
+     *          3.3 cache the page
+     *          3.4 RETURN.
+     * 
+     */
+    pageCache() {
+/*
+        // cache
+        // it needs blocking code??
+        let d = this.getCache( 'cache-' + data.post_id );
+        if ( d ) {
+            successCallback( d );
+            completeCallback();
+        }
+*/
 
+    }
 
 
     /**

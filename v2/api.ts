@@ -268,8 +268,6 @@ export class Api {
   /**
    *
    * 
-   * 
-   * Returns cached data after JSON.parse() if exists.
    *
    * 
    * @attenion the cached data must be in JSON string format.
@@ -280,7 +278,7 @@ export class Api {
    * @endcode
    *
    */
-  cacheCallback( cache_id, callback, expire:boolean = false ) {
+  cacheCallback( cache_id, callback ) {
     let re = localStorage.getItem( cache_id );
     if ( re ) {
       let data = null;
@@ -323,6 +321,21 @@ export class Api {
     localStorage.setItem( cache_id, JSON.stringify(data) );
     if ( set_stamp ) {
       localStorage.setItem( cache_id + '.stamp', (+ new Date()).toString());
+    }
+  }
+  /**
+   *  
+   * Returns cached data after JSON.parse() if exists.
+   *
+   */
+  getCache( cache_id:string, expire:boolean = false ) {
+    let data = localStorage.getItem( cache_id );
+    if ( ! data ) return null;
+    let cache_stamp = + localStorage.getItem( cache_id + '.stamp' );
+    let stamp = + new Date();
+    if ( cache_stamp < stamp ) {
+      localStorage.removeItem( cache_id );
+      localStorage.removeItem( cache_id + '.stamp' );
     }
   }
 
