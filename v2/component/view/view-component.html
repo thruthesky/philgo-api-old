@@ -1,6 +1,44 @@
 
-<article class="" [class.post]=" isPost " [class.comment]=" ! isPost ">
+<article class="" [class.post]=" isPost " [class.comment]=" ! isPost "   [attr.depth]="post.depth">
+    <!--Header & content-->
     <h2 *ngIf=" isPost " >{{ post.subject }}</h2>
-    <div class="content">{{ post.content }}</div>
+    <div class="content" innerHTML="{{ post.content }}"></div>
+
+    <!--list images -->
+    <div *ngIf=" post.photos.length " class="uploaded-files">
+        <img *ngFor=" let photo of post.photos " [src]=" photo.url_thumbnail ">
+    </div>
+
+     <!--like edit etc. buttons-->
+     <span class="buttons">
+        <button (click)="onClickEdit( post )">Edit</button>
+        <button *ngIf=" ! post.inDeleting " (click)="onClickDelete( post )">Delete</button>
+        <i *ngIf=" post.inDeleting " class="fa fa-spinner fa-spin"></i>
+        <button *ngIf=" !post.inLike " (click)="onClickLike( post  )">Like({{ post.good }})</button>
+        <i *ngIf=" post.inLike " class="fa fa-spinner fa-spin"></i>
+        <button *ngIf=" !post.inReport " (click)="onClickReport( post  )">Report</button>
+        <i *ngIf=" post.inReport " class="fa fa-spinner fa-spin"></i>
+    </span>
+
+    <!-- edit post or comment-->
+   
+        <edit-component  *ngIf=" showEditComponent[ post.idx.toString() ] "
+            [current] = " post "
+            [mode] = "mode"
+            (error) = " onError( $event ) "
+            (cancel) = " onCancel() "
+            (success) = " onSuccess() "
+        ></edit-component>
+
+         <!-- add or reply  a comment -->
+        <edit-component *ngIf=" ! hideContent[ post.idx.toString() ] "
+            [root] = " post "
+            [current]=" post "
+            [mode]=" 'create-comment' "
+            (error) = " onError( $event ) "
+            (cancel) = " onCancel() "
+            (success) = " onSuccess() "
+        ></edit-component>
+
 </article>
 
