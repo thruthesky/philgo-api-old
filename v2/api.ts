@@ -7,9 +7,9 @@ export class Api {
   self: Api = null;
   http: Http;
   debug: boolean = false;
-   apiEndpoint = "http://test.philgo.com/index.php";
+  // apiEndpoint = "http://test.philgo.com/index.php";
   // apiEndpoint = "http://philgo.org/index.php";
-  // apiEndpoint = "http://www.philgo.com/index.php";
+   apiEndpoint = "http://www.philgo.com/index.php";
   // apiEndpoint = "http://w5.philgo.com/index.php"; // fastest server from db.
   constructor( http ) {
     this.http = http;
@@ -159,10 +159,13 @@ export class Api {
    * Response on http.get() / http.post()
    * @note responseData() 가 서버로 부터 올바른 값이 넘어 온 경우, 처리를 한다면,
    *          responseError() 는 서버로 부터 올바른 값이 넘어 오지 않은 경우를 처리한다.
+   * 
+   * @update 2016-12-17 error message change from "http-request-error maybe no-internet or wrong-domain or timeout or server-down" to "No Internet!..."
+   * @warning the error message "No Internet!" NOT only means for 'no internet' but also for 'no connection' to server maybe because of slow internet or wrong domain or server script error etc.
    */
   responseConnectionError( error: Response | any, errorCallback: ( error : string ) => void ) {
     console.error(Response);
-    if ( errorCallback ) errorCallback("http-request-error maybe no-internet or wrong-domain or timeout or server-down");
+    if ( errorCallback ) errorCallback("No Internet! Please connect to internet.");
   }
 
   get requestOptions() : RequestOptions {
@@ -347,7 +350,7 @@ export class Api {
     if ( raw == null ) return null;
     let data;
     try {
-      raw = JSON.parse( raw );
+      data = JSON.parse( raw );
     }
     catch ( e ) {
       return null;
@@ -360,7 +363,7 @@ export class Api {
       localStorage.removeItem( cache_id );
       localStorage.removeItem( cache_id + '.stamp' );
     }
-    console.log('cached data returned');
+    console.log('cached data will be returned');
     return data; // even though cache expired and deleted, return the cache data. so, next time, it will return null.
   }
 

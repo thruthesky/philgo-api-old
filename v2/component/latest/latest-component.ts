@@ -11,26 +11,22 @@ import { ONE_DAY_STAMP } from '../../../../../etc/share';
 export class LatestComponent {
     @Input() title: string = null;
     @Input() post_id: string = null;
-    posts: POSTS;
+    posts: POSTS = <POSTS> [];
     constructor( private post: Post ) {
-        console.log("LatestComponent::constructor()");
+        //console.log("LatestComponent::constructor()");
     }
     ngOnInit() {
-
         let option: PAGE_OPTION = {
             post_id: this.post_id,
             limit: 6,
-            expire: 20,
+            expire: 30,
             fields: 'idx,idx_parent,subject,deleted,gid,good,no_of_comment,no_of_view,post_id,stamp'
         };
-        console.log("LatestComponent::ngOnInit(), post_id: ", this.post_id);
         this.post.page( option, ( page: PAGE ) => {
             console.log("latest: ", page);
-            this.posts = page.posts;
+            page.posts.map( ( v, i ) => { setTimeout( () => this.posts.push( v ), i * 100 ) } );
         },
         error => alert( error ),
-        () => {
-            
-        })
+        () => {});
     }
 }

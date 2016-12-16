@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Api } from './api';
-import { PAGE_DATA, PAGE, POST_DATA, PAGE_OPTION, POST_RESPONSE } from './philgo-api-interface';
+import { PAGE, POST_DATA, PAGE_OPTION, POST_RESPONSE } from './philgo-api-interface';
 export * from './philgo-api-interface';
 // import * as _ from 'lodash';
 
@@ -229,18 +229,40 @@ export class Post extends Api {
      *          3.3 cache the page
      *          3.4 RETURN.
      * 
+     * 
+     * @code
+     *         
+        let option: PAGE_OPTION = {
+            post_id: this.post_id,
+            limit: 6,
+            expire: 30,
+            fields: 'idx,idx_parent,subject,deleted,gid,good,no_of_comment,no_of_view,post_id,stamp'
+        };
+        this.post.page( option, ( page: PAGE ) => {
+            console.log("latest: ", page);
+            this.posts = page.posts;
+        },
+        error => alert( error ),
+        () => {});
+        
+     * @endcode
+     * 
      */
     pageCache( option: PAGE_OPTION, successCallback: ( page: PAGE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
         console.log("pageCache() : ", option);
         let cache_id = 'cache-' + option.post_id + '-' + option.page_no;
         let page = this.getCache( cache_id, option.expire );
         if ( page ) {
+            console.info("use cached data");
             successCallback( <PAGE> page );
             completeCallback();
+            return;
         }
+        console.info("No cached data. Going to cache");
         let url = this.getUrl() + 'post-list&post_id=' + option.post_id + '&page_no=' + option.page_no + '&limit=' + option.limit + '&fields=' +option.fields;
         
         this.get( url, (page: PAGE) => {
+            console.info("Got new page. Set cache");
             successCallback( page );
             this.setCache( cache_id, page );
         }, errorCallback, completeCallback );
