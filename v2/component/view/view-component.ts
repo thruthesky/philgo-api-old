@@ -1,10 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { POST } from '../../philgo-api-interface';
 import { Post } from '../../post';
+import { ViewService } from './view-service';
 
 @Component({
     selector: 'view-component',
-    templateUrl: 'view-component.html'
+    templateUrl: 'view-component.html',
+   
 })
 export class ViewComponent {
     isPost: boolean = false;
@@ -16,6 +18,7 @@ export class ViewComponent {
     @Input() post: POST = <POST> {};
     
     constructor(
+        private view_service : ViewService,
         private post_service : Post
     ) {
         console.log("ViewComponent()");
@@ -29,11 +32,17 @@ export class ViewComponent {
     
 
      onClickEdit( post ) {
-        this.mode = 'edit-post';
-        this.hideContent = {};
-        this.hideContent[ post.idx.toString() ] = true;
-        this.showEditComponent = {};
-        this.showEditComponent[ post.idx.toString() ] = true;
+        this.mode = 'edit-comment';
+      
+        this.view_service.hideContent = {};
+        this.view_service.hideContent[ post.idx.toString() ] = true;
+        console.log(this.view_service.showEditComponent);
+        this.view_service.showEditComponent = {};
+        console.log(this.view_service.showEditComponent);
+        
+        this.view_service.showEditComponent[ post.idx.toString() ] = true;
+      
+        
     }
 
     onClickDelete( post ) {
@@ -89,8 +98,8 @@ export class ViewComponent {
     }
 
     closeAllOpenForms() {
-        this.hideContent = {};
-        this.showEditComponent = {};
+        this.view_service.hideContent = {};
+        this.view_service.showEditComponent = {};
         this.showPostCreateForm = false;
     }
 
