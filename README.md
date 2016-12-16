@@ -95,3 +95,16 @@ You can get provinces and cities of province like below.
         console.log('place:', data);
       });
 ````
+
+
+# Components
+
+## latest-component
+
+This component shows latest component.
+
+This shows in three format.
+
+1. text only.
+2. text with thumbnail.
+3. thumbnail only.

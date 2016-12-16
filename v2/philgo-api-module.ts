@@ -28,6 +28,7 @@ export let ROUTES = [
   declarations : [
     EditComponent,
     ViewComponent,
+    LatestComponent,
     SampleHomePage,
     SampleLoginPage,
     SampleRegisterPage,

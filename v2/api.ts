@@ -267,16 +267,20 @@ export class Api {
 
   /**
    *
+   * 
+   * 
    * Returns cached data after JSON.parse() if exists.
    *
+   * 
    * @attenion the cached data must be in JSON string format.
    *
+   * @param expire - if set true, it will delete the cached data if the cache interval is expired.
    * @code example
    if ( data.page_no == 1 ) this.cacheCallback( data.post_id, successCallback );
    * @endcode
    *
    */
-  cacheCallback( cache_id, callback ) {
+  cacheCallback( cache_id, callback, expire:boolean = false ) {
     let re = localStorage.getItem( cache_id );
     if ( re ) {
       let data = null;
@@ -302,7 +306,10 @@ export class Api {
     }
   }
   /**
-   * @para data - Javascript raw value. NOT JSON string.
+   * 
+   * @param id - can be any string.
+   * @param data - Javascript raw value. NOT JSON string.
+   * @param set_stamp - if set true, it saves stamp on the cache to mark when it was saved. 
    * @attention the data must not be JSON format string because it does by itself.
    *
    * @code example
@@ -312,8 +319,11 @@ export class Api {
                 }, errorCallback );
    * @endcode
    */
-  saveCache( cache_id, data ) {
+  saveCache( cache_id:string, data:any, set_stamp:boolean = false ) {
     localStorage.setItem( cache_id, JSON.stringify(data) );
+    if ( set_stamp ) {
+      localStorage.setItem( cache_id + '.stamp', (+ new Date()).toString());
+    }
   }
 
 

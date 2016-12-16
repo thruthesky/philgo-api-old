@@ -172,6 +172,7 @@ export interface PAGE_DATA {
     page_no?: number;
     fields?: string;
     limit?: number;
+    cache?: number;
 };
 
 export interface POST_AD {
@@ -277,16 +278,20 @@ export interface POST {
     user_name: string;
 };
 
-export interface POSTS extends PHILGO_API_RESPONSE {
+/**
+ * 2016-12-16 POSTS 를 PAGES 로 변경.
+ */
+export type POSTS = Array<POST>;
+export interface PAGE extends PHILGO_API_RESPONSE {
     ads: Array<POST_AD>;
     page_no: number;
     post_id: string;
     post_name: string;
     post_top_ad: Array<POST_TOP_AD>;
     post_top_premium_ad: Array<POST_TOP_PREMIUM_AD>;
-    posts: Array<POST>;
+    posts: POSTS;
 };
-export interface PAGE extends POSTS {} // correct naming.
+//export interface PAGE extends POSTS {} // correct naming.
 export type PAGES = Array<PAGE>; // correct naming for array of page.
 
 

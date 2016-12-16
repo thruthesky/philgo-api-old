@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Api } from './api';
-import { PAGE_DATA, POSTS, POST_DATA, POST_RESPONSE } from './philgo-api-interface';
+import { PAGE_DATA, PAGE, POST_DATA, POST_RESPONSE } from './philgo-api-interface';
 export * from './philgo-api-interface';
 // import * as _ from 'lodash';
 
@@ -151,9 +151,25 @@ export class Post extends Api {
     /**
      * 
      * 
-     * for 1st page.
-     * 1. load from cache & return data.
-     * 2. load from server & cache & return data.
+     * @note first page automatically cache.
+     *  when 'data.page_no' == 1,
+     *      1. load from cache & return data.
+     *      2. load from server & cache & return data.
+     * 
+     * @note cache option
+     * 
+     *  IF data.cache = seconds
+     *      1. see if there is cache on that 'data.page_no'
+     *      2. if yes,
+     *          2.1 callback the cache data
+     *          2.2 see if the cache interval time has expires
+     *              2.2.1 if expired, delete the cache.
+     *          2.3 RETURN.
+     *      3. if no,
+     *          3.1 get posts of the page no.
+     *          3.2 callback the page.
+     *          3.3 cache the page
+     *          3.4 RETURN.
      * 
      * @code example
 
@@ -168,10 +184,20 @@ export class Post extends Api {
      * @endcode
      * 
      */
-    page( data: PAGE_DATA, successCallback: ( re: POSTS ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
+    page( data: PAGE_DATA, successCallback: ( page: PAGE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
         let page_no = data.page_no ? data.page_no : 1;
+
+        // cache
+        // it needs blocking code??
+
+
+
+
         let limit = data.limit ? data.limit : 30;
         let fields = data.fields ? data.fields : '';
+
+
+
         let url = this.getUrl() + 'post-list&post_id=' + data.post_id + '&page_no=' + page_no + '&limit=' + limit + '&fields=' + fields;
         if ( this.debug ) console.log("page() url: ", url);
         if ( page_no == 1 ) {
@@ -195,9 +221,9 @@ export class Post extends Api {
                 }, errorCallback );
             });
         */
-        this.get( url, (posts: POSTS) => {
-            if ( data.page_no == 1 ) this.saveCache( data.post_id, posts );
-            successCallback( posts );
+        this.get( url, (page: PAGE) => {
+            if ( data.page_no == 1 ) this.saveCache( data.post_id, page );
+            successCallback( page );
         }, errorCallback, completeCallback );
     }
 
