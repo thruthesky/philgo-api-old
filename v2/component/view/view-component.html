@@ -35,7 +35,7 @@
 
          <!-- add or reply  a comment -->
         <edit-component *ngIf=" ! view_service.hideContent[ post.idx.toString() ] "
-            [root] = " post "
+            [root] = " root "
             [current]=" post "
             [mode]=" 'create-comment' "
             (error) = " onError( $event ) "

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { POST } from '../../philgo-api-interface';
+import { POST} from '../../philgo-api-interface';
 import { Post } from '../../post';
 import { ViewService } from './view-service';
 
@@ -16,7 +16,7 @@ export class ViewComponent {
     mode = 'edit-post';
 
     @Input() post: POST = <POST> {};
-    
+    @Input() root: POST = null;
     constructor(
         private view_service : ViewService,
         private post_service : Post
