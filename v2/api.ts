@@ -170,6 +170,8 @@ export class Api {
     let options  = new RequestOptions({ headers: headers });
     return options;
   }
+
+
   /**
    *
    * @code
@@ -307,19 +309,19 @@ export class Api {
    * 
    * @param id - can be any string.
    * @param data - Javascript raw value. NOT JSON string.
-   * @param set_stamp - if set true, it saves stamp on the cache to mark when it was saved. 
+   * @param expire - if set true, it saves stamp on the cache to mark when it was saved. 
    * @attention the data must not be JSON format string because it does by itself.
    *
    * @code example
-   this.responseData( re, (posts: POSTS) => {
-                    if ( data.page_no == 1 ) this.saveCache( data.post_id, posts );
-                    successCallback( posts );
-                }, errorCallback );
+     this.responseData( re, (posts: POSTS) => {
+        if ( data.page_no == 1 ) this.saveCache( data.post_id, posts );
+        successCallback( posts );
+    }, errorCallback );
    * @endcode
    */
-  saveCache( cache_id:string, data:any, set_stamp:boolean = false ) {
+  saveCache( cache_id:string, data:any, expire:boolean = false ) {
     localStorage.setItem( cache_id, JSON.stringify(data) );
-    if ( set_stamp ) {
+    if ( expire ) {
       localStorage.setItem( cache_id + '.stamp', (+ new Date()).toString());
     }
   }
@@ -327,16 +329,19 @@ export class Api {
    *  
    * Returns cached data after JSON.parse() if exists.
    *
+   * 
+   * @param id - can be any string.
    */
   getCache( cache_id:string, expire:boolean = false ) {
     let data = localStorage.getItem( cache_id );
     if ( ! data ) return null;
     let cache_stamp = + localStorage.getItem( cache_id + '.stamp' );
     let stamp = + new Date();
-    if ( cache_stamp < stamp ) {
+    if ( cache_stamp < stamp ) { // if cache expired, delete cache.
       localStorage.removeItem( cache_id );
       localStorage.removeItem( cache_id + '.stamp' );
     }
+    return data; // even though cache expired and deleted, return the cache data. so, next time, it will return null.
   }
 
 
