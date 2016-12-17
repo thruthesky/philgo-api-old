@@ -24,7 +24,7 @@ export class LatestComponent {
         };
         this.post.page( option, ( page: PAGE ) => {
             console.log("latest: ", page);
-            page.posts.map( ( v, i ) => { setTimeout( () => this.posts.push( v ), i * 100 ) } );
+            page.posts.map( ( v, i ) => { setTimeout( () => this.posts.push( v ), i * 50 ) } );
         },
         error => alert( error ),
         () => {});

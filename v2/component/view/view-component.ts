@@ -1,3 +1,6 @@
+/**
+ * @see ./README.md
+ */
 import { Component, Input } from '@angular/core';
 import { POST} from '../../philgo-api-interface';
 import { Post } from '../../post';
@@ -6,7 +9,6 @@ import { ViewService } from './view-service';
 @Component({
     selector: 'view-component',
     templateUrl: 'view-component.html',
-   
 })
 export class ViewComponent {
     isPost: boolean = false;
@@ -23,9 +25,6 @@ export class ViewComponent {
     ) {
         console.log("ViewComponent()");
     }
-
-
-
     ngOnInit() {
         this.isPost = ! parseInt(this.post.idx_parent);
     }

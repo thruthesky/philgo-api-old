@@ -1,4 +1,3 @@
-
 <table *ngIf=" mode == 'create-comment' "
     class="post-form"
     [class.selectForm]="selectForm"
@@ -15,7 +14,8 @@
             </div><!--/file-upload-button-->
         </td>
         <td>
-            <textarea name="content" [(ngModel)]="temp.content"></textarea>
+            <div *ngIf=" ! selectForm " class="fake-textarea">&nbsp;</div>
+            <textarea *ngIf=" selectForm " name="content" [(ngModel)]="temp.content"></textarea>
             <!-- show uploaded files while creating a comment -->
             <section *ngIf=" temp.photos " class="files">
                 <div *ngIf=" inDeleting " class="loader">
@@ -48,6 +48,7 @@
         </td>
     </tr>
 </table>
+
 
 <section *ngIf=" mode != 'create-comment' "
     class="post-form-full-width"

@@ -77,7 +77,6 @@ export class SamplePostPage {
         } );
     }
 
-
     updateComment( idx ) {
         console.log("updateComment()");
         let c = <POST_DATA> {};

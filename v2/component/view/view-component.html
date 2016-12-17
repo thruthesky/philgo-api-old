@@ -5,6 +5,11 @@
                   [class.hidden]=" view_service.hideContent[ post.idx.toString() ]">
     <!--Header & content-->
     <h2 *ngIf=" isPost " >{{ post.subject }}</h2>
+    <a *ngIf=" ! cordova " href="{{ post.url }}">{{ post.url }}</a><br />
+                     {{ post.member?.nickname }}
+                    idx: {{ post.idx }}
+                    {{ post.date }}
+
     <div class="content" innerHTML="{{ post.content }}"></div>
 
     <!--list images -->
@@ -14,17 +19,16 @@
 
      <!--like edit etc. buttons-->
      <span class="buttons">
-        <button (click)="onClickEdit( post )">Edit</button>
-        <button *ngIf=" ! post.inDeleting " (click)="onClickDelete( post )">Delete</button>
+        <span (click)="onClickEdit( post )">Edit</span>
+        <span *ngIf=" ! post.inDeleting " (click)="onClickDelete( post )">Delete</span>
         <i *ngIf=" post.inDeleting " class="fa fa-spinner fa-spin"></i>
-        <button *ngIf=" !post.inLike " (click)="onClickLike( post  )">Like({{ post.good }})</button>
+        <span *ngIf=" !post.inLike " (click)="onClickLike( post  )">Like({{ post.good }})</span>
         <i *ngIf=" post.inLike " class="fa fa-spinner fa-spin"></i>
-        <button *ngIf=" !post.inReport " (click)="onClickReport( post  )">Report</button>
+        <span *ngIf=" !post.inReport " (click)="onClickReport( post  )">Report</span>
         <i *ngIf=" post.inReport " class="fa fa-spinner fa-spin"></i>
     </span>
 
     <!-- edit post or comment-->
-   
         <edit-component  *ngIf=" view_service.showEditComponent[ post.idx.toString() ] "
             [current] = " post "
             [mode] = "mode"
