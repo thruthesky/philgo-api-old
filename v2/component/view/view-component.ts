@@ -11,7 +11,6 @@ import { ViewService } from './view-service';
     templateUrl: 'view-component.html',
 })
 export class ViewComponent {
-    isPost: boolean = false;
     showPostCreateForm: boolean = false;
     hideContent = {};
     showEditComponent  = {};
@@ -26,7 +25,6 @@ export class ViewComponent {
         console.log("ViewComponent()");
     }
     ngOnInit() {
-        this.isPost = ! parseInt(this.post.idx_parent);
     }
     
 

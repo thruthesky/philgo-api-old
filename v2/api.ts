@@ -8,9 +8,9 @@ export class Api {
   http: Http;
   debug: boolean = false;
   // apiEndpoint = "http://test.philgo.com/index.php";
-   apiEndpoint = "http://philgo.org/index.php";
-  // apiEndpoint = "http://www.philgo.com/index.php";
-  // apiEndpoint = "http://w5.philgo.com/index.php"; // fastest server from db.
+  // apiEndpoint = "http://philgo.org/index.php";
+   apiEndpoint = "http://www.philgo.com/index.php";
+ //  apiEndpoint = "http://w8.philgo.com/index.php"; // fastest server from db.
   constructor( http ) {
     this.http = http;
     // console.log('Api::constructor()', http);
@@ -69,7 +69,7 @@ export class Api {
   _get( url, successCallback: (data:any) => void, errorCallback?: ( e:any ) => void, completeCallback?: () => void ) {
     if ( this.debug ) console.info("get: ", url);
     this.http.get( url )
-      .timeout( 15000, new Error('timeout exceeded') )
+      .timeout( 25000, new Error('timeout exceeded') )
       .subscribe(
         re => this.responseData( re, successCallback, errorCallback ),
         er => this.responseConnectionError( er, errorCallback ),
@@ -91,7 +91,7 @@ export class Api {
       console.info("post: ", url);
     }
     this.http.post( this.serverUrl, data, this.requestOptions )
-      .timeout( 15000, new Error('timeout exceeded') )
+      .timeout( 25000, new Error('timeout exceeded') )
       .subscribe(
         re => this.responseData( re, successCallback, errorCallback ),
         er => this.responseConnectionError( er, errorCallback ),

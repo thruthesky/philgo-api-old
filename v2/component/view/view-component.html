@@ -1,10 +1,9 @@
-
-<article class="" [class.post]=" isPost "
-                  [class.comment]=" ! isPost "   
+<article class="" [class.post]=" post.idx_parent == '0' "
+                  [class.comment]=" post.idx_parent != '0' "   
                   [attr.depth]="post.depth"  
                   [class.hidden]=" view_service.hideContent[ post.idx.toString() ]">
     <!--Header & content-->
-    <h2 *ngIf=" isPost " >{{ post.subject }}</h2>
+    <h2 *ngIf=" post.idx_parent == '0' " >{{ post.subject }}</h2>
     <a *ngIf=" ! cordova " href="{{ post.url }}">{{ post.url }}</a><br />
                      {{ post.member?.nickname }}
                     idx: {{ post.idx }}
