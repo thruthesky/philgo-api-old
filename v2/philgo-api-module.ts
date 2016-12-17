@@ -16,7 +16,6 @@ import { SamplePostPage } from '../sample-pages/post/post';
 import { ViewComponent } from './component/view/view-component';
 import { EditComponent } from './component/edit/edit-component';
 import { LatestComponent } from './component/latest/latest-component';
-import { ViewService } from './component/view/view-service';
 
 export let ROUTES = [
         { path: "test/philgo/home", component: SampleHomePage, name: 'philgoHome' },
@@ -47,7 +46,7 @@ export let ROUTES = [
     LatestComponent
     
   ],
-  providers : [ Member, Post, Data, ViewService ]
+  providers : [ Member, Post, Data ]
 })
 
 

@@ -2,7 +2,7 @@
  * @see ./README.md
  */
 import { Component, Input } from '@angular/core';
-import { POST} from '../../philgo-api-interface';
+import { POST } from '../../philgo-api-interface';
 import { Post } from '../../post';
 import { ViewService } from './view-service';
 
@@ -14,37 +14,45 @@ export class ViewComponent {
     showPostCreateForm: boolean = false;
     hideContent = {};
     showEditComponent  = {};
-    mode = 'edit-post';
-
-    @Input() post: POST = <POST> {};
+    mode = '';
+    isPost: boolean = false;
+    isComment: boolean = false;
+    @Input() post: POST = <POST> {}; // it is comment or post.
     @Input() root: POST = null;
+    @Input() option = {};
     constructor(
-        private view_service : ViewService,
-        private post_service : Post
+        private postService : Post
     ) {
         console.log("ViewComponent()");
     }
     ngOnInit() {
+        this.isPost = this.post.idx_parent == '0';
+        this.isComment = ! this.isPost;
+
+        if ( this.option['show-reply-form'] ) {
+            if ( this.isPost ) this.mode = 'create-post';
+            else this.mode = 'create-comment';
+        }
     }
     
 
      onClickEdit( post ) {
         this.mode = 'edit-comment';
       
-        this.view_service.hideContent = {};
-        this.view_service.hideContent[ post.idx.toString() ] = true;
-        console.log(this.view_service.showEditComponent);
-        this.view_service.showEditComponent = {};
-        console.log(this.view_service.showEditComponent);
+        // this.view_service.hideContent = {};
+        // this.view_service.hideContent[ post.idx.toString() ] = true;
+        // console.log(this.view_service.showEditComponent);
+        // this.view_service.showEditComponent = {};
+        // console.log(this.view_service.showEditComponent);
         
-        this.view_service.showEditComponent[ post.idx.toString() ] = true;
+        // this.view_service.showEditComponent[ post.idx.toString() ] = true;
       
         
     }
 
     onClickDelete( post ) {
         post.inDeleting = true;
-        this.post_service.delete( post.idx, re => {
+        this.postService.delete( post.idx, re => {
             console.log('delete: re: ', re);
             post['subject'] = "deleted";
             post['content'] = "deleted";
@@ -59,7 +67,7 @@ export class ViewComponent {
         //console.log("onClickReport()");
         //this.post.debug = true;
         post.inReport = true;
-        this.post_service.report( post.idx, re => {
+        this.postService.report( post.idx, re => {
             // console.log('delete: re: ', re);
             alert("You have reported a post. Thank you.");
         },
@@ -72,7 +80,7 @@ export class ViewComponent {
 
     onClickLike( post ) {
         post.inLike = true;
-        this.post_service.vote( post.idx, re => {
+        this.postService.vote( post.idx, re => {
             console.log('delete: re: ', re);
             // alert("You have reported a post. Thank you.");
             post.good ++;
@@ -88,15 +96,15 @@ export class ViewComponent {
 
 
     onSuccess() {
-        this.closeAllOpenForms();
+        // this.closeAllOpenForms();
     }
     onCancel() {
-        this.closeAllOpenForms();
+        // this.closeAllOpenForms();
     }
 
     closeAllOpenForms() {
-        this.view_service.hideContent = {};
-        this.view_service.showEditComponent = {};
+        // this.view_service.hideContent = {};
+        // this.view_service.showEditComponent = {};
         this.showPostCreateForm = false;
     }
 
