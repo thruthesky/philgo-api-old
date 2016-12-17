@@ -34,7 +34,7 @@ export class EditComponent {
      */
     @Input() post_id: string = null;
     @Input() current: POST;
-    selectForm: boolean = false; // adding '.show' CSS Class to FORM
+    @Input() active: boolean = false; // adding '.show' CSS Class to FORM
     @Input() mode: 'create-post' | 'edit-post' | 'create-comment' | 'edit-comment';
     @Output() postLoad = new EventEmitter();
     @Output() error = new EventEmitter();
@@ -89,10 +89,15 @@ export class EditComponent {
     /**
      * When a user click on the form to input content of comemnt for creating a comment.
      */
-    onClickForm( post ) {
-        this.selectForm = true; // add CSS class
-        
+    onActivateForm( post ) {
+        this.active = true; // add CSS class   
     }
+    
+    onClickCancel() {
+        this.active = false;
+        this.cancel.emit();
+    }
+
 
     /**
      * Query to philog server to create/edit a post/comment.
@@ -113,9 +118,6 @@ export class EditComponent {
         }
     }
 
-    onClickCancel() {
-        this.cancel.emit();
-    }
 
     createPost() {
         this.temp.post_id = this.post_id;
@@ -196,7 +198,7 @@ export class EditComponent {
         }
 
         this.reset();
-        this.selectForm = false; // remove '.show' css class.  it cannot be inside this.clear()
+        this.active = false; // remove '.show' css class.  it cannot be inside this.clear()
         this.success.emit();
     }
     errorCallback( error ) {

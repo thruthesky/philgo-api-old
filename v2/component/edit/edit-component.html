@@ -1,13 +1,12 @@
-<section
-    class="post-form-full-width"
-    (click)="onClickForm()"
-    cellpadding='0' cellspacing='0'>
-            
-    <textarea name="content" [(ngModel)]="temp.content"></textarea>
 
-    <table width="100%">
+
+<section class="post-form-full-width">
+    
+    <textarea *ngIf= " active " name="content" [(ngModel)]="temp.content"></textarea>
+
+    <table width="100%" cellpadding='0' cellspacing='0'>
         <tr valign="top">
-            <td width="1%">
+            <td width="1%" (click)="onActivateForm()">
                 <div class="file-upload-button" (click)="onClickFileUploadButton()">
                     <span class="camera fa-stack fa-lg">
                         <i class="fa fa-circle fa-stack-2x"></i>
@@ -17,6 +16,7 @@
                 </div><!--/file-upload-button-->
             </td>
             <td width="98%">
+                <span *ngIf= " ! active "  (click)="onActivateForm()" class="fake-textarea"> &nbsp;</span>
                 <!-- show uploaded files while creating a post/comment -->
                 <section *ngIf=" temp.photos " class="files">
                     <div *ngIf=" inDeleting " class="loader">
@@ -40,7 +40,7 @@
                     <i class="fa fa-spinner fa-spin"></i> Uploading ...
                 </div>
             </td>
-            <td width="1%" nowrap>
+            <td *ngIf=" active " width="1%" nowrap>
                 <button (click)="onClickCancel()">
                     Cancel
                 </button>

@@ -17,6 +17,7 @@ export class ViewComponent {
     mode = '';
     isPost: boolean = false;
     isComment: boolean = false;
+    activeForm: boolean = false;
     @Input() post: POST = <POST> {}; // it is comment or post.
     @Input() root: POST = null;
     @Input() option = {};
@@ -36,7 +37,13 @@ export class ViewComponent {
     }
     
 
+
+    onClickReply() {
+        this.activeForm = true;
+        this.mode = 'create-comment';
+    }
      onClickEdit( post ) {
+        this.activeForm = true;
         this.mode = 'edit-comment';
       
         // this.view_service.hideContent = {};
@@ -95,10 +102,10 @@ export class ViewComponent {
     }
 
 
-    onSuccess() {
+    editComponentOnSuccess() {
         // this.closeAllOpenForms();
     }
-    onCancel() {
+    editComponentOnCancel() {
         // this.closeAllOpenForms();
     }
 

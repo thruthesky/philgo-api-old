@@ -97,6 +97,8 @@ You can get provinces and cities of province like below.
 ````
 
 
+
+
 # Components
 
 ## latest-component
@@ -108,3 +110,29 @@ This shows in three format.
 1. text only.
 2. text with thumbnail.
 3. thumbnail only.
+
+
+
+
+## view component
+
+
+### view page url.
+
+* if 'post.url' has a value, it assumes it is a permanent url of a post, so, it displays.
+    if you dont' want it, delete it before you pass 'post' data to the post.
+    of you want it, you put url on 'post.url'..
+    
+
+ [option]="{ 'show-reply-form': true }"
+
+
+ 와 같이 하면 코멘트 박스를 보여준다.
+
+
+
+## edit component
+
+### property
+
+    * active=true 이면, form 이 active 된 상태를 보여준다.

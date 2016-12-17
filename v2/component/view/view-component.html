@@ -16,8 +16,10 @@
         <img *ngFor=" let photo of post.photos " [src]=" photo.url_thumbnail ">
     </div>
 
+
      <!--like edit etc. buttons-->
      <span class="buttons">
+        <span (click)="onClickReply( post )">Reply</span>
         <span (click)="onClickEdit( post )">Edit</span>
         <span *ngIf=" ! post.inDeleting " (click)="onClickDelete( post )">Delete</span>
         <i *ngIf=" post.inDeleting " class="fa fa-spinner fa-spin"></i>
@@ -32,9 +34,10 @@
             [root] = " root "
             [current]=" post "
             [mode]="  mode "
-            (error) = " onError( $event ) "
-            (cancel) = " onCancel() "
-            (success) = " onSuccess() "
+            [active] = " activeForm "
+            (error) = " editComponentOnError( $event ) "
+            (cancel) = " editComponentOnCancel() "
+            (success) = " editComponentOnSuccess() "
         ></edit-component>
 
 </article>
