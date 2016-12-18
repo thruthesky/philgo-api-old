@@ -68,9 +68,31 @@ export class EditComponent {
     }
     
     ngOnInit() {
-        this.reset();
-        // console.log("EditComponent::ngOnInit() current: ", this.current);
-        // console.log("mode: ", this.mode);
+    }
+
+    /**
+     * 
+     * 폼 데이터 초기화
+     * 
+     *      - 새 글/코멘트 쓰기에서는 gid 값만 초기화
+     *      - 글/코멘트 수정에서는 내용 및 기타 필드를 temp 에 복사한다.
+     * 
+     * @param mode -
+     * 
+     *      "@Input() mode" 로 지정되어져 있고, parent 클래스에서 mode 의 값을 지정하지만, 값의 반영 속도가 좀 느린 것 같다.
+     *      그래서 입력 값으로 mode 를 받아서, 바로 반영하고,
+     *      폼의 데이터를 초기화 한다.
+     *  
+     *      특히 상위 컴포넌트( view-component ) 에서 수정 버튼을 클릭 했을 때, 이 함수를 직접 호출하면서, mode 값을 지정한다.
+     *      mode 를 지정하는 이유는 @Input() 바인딩에서 값 전달 속도가 느려서 인 것 같다.
+     *      
+     * 
+     */
+    initForm( mode? ) {
+        if ( mode ) this.mode = mode;
+        this.temp = <POST_DATA> {};
+        console.log("EditComponent::initForm() current: ", this.current);
+        console.log("mode: ", this.mode);
         if ( this.mode == 'edit-post' || this.mode == 'edit-comment' ) { //
             // console.log('without loading. mode: ', this.mode);
             this.temp = _.cloneDeep( this.current );
@@ -79,10 +101,6 @@ export class EditComponent {
         else if ( this.mode == 'create-post' || this.mode == 'create-comment' ) {
             //
         }
-    }
-    
-    reset() {
-        this.temp = <POST_DATA> {};
         this.temp.gid = this.post.uniqid();
     }
 
@@ -98,7 +116,7 @@ export class EditComponent {
         this.active = false;
         this.cancel.emit();
     }
-    
+
 
 
     /**
@@ -203,8 +221,6 @@ export class EditComponent {
             }
             catch ( e ) { alert("Please restart the app."); }
         }
-
-        this.reset();
         this.active = false; // remove '.show' css class.  it cannot be inside this.clear()
         this.success.emit();
     }

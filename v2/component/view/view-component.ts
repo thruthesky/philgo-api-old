@@ -56,59 +56,59 @@ export class ViewComponent {
         this.inEdit = true;
         if ( this.post.idx == '0' ) this.mode = 'post-edit';
         else this.mode = 'edit-comment';
+        this.editComponent.initForm( this.mode );
     }
 
-    onClickDelete( post ) {
-        post.inDeleting = true;
-        this.postService.delete( post.idx, re => {
+    onClickDelete() {
+        this.post['inDeleting'] = true;
+        this.postService.delete( this.post.idx, re => {
             console.log('delete: re: ', re);
-            post['subject'] = "deleted";
-            post['content'] = "deleted";
+            this.post['subject'] = "deleted";
+            this.post['content'] = "deleted";
             },
             error => alert("delete error: " + error ),
-            () => post.inDeleting = false
+            () => this.post['inDeleting'] = false
         );
     }
     
 
-    onClickReport( post ) {
+    onClickReport() {
         //console.log("onClickReport()");
         //this.post.debug = true;
-        post.inReport = true;
-        this.postService.report( post.idx, re => {
+        this.post['inReport'] = true;
+        this.postService.report( this.post.idx, re => {
             // console.log('delete: re: ', re);
             alert("You have reported a post. Thank you.");
         },
         error => alert("report error: " + error ),
         () => {
-            post.inReport = false;
+            this.post['inReport'] = false;
         });
     }
 
 
-    onClickLike( post ) {
-        post.inLike = true;
-        this.postService.vote( post.idx, re => {
+    onClickLike() {
+        this.post['inLike'] = true;
+        this.postService.vote( this.post.idx, re => {
             console.log('delete: re: ', re);
             // alert("You have reported a post. Thank you.");
-            post.good ++;
+            this.post.good = 1 + this.post.good;
         },
         error => {
             alert("like error: " + error );
             console.log("like error: " + error );
         },
         () => {
-            post.inLike = false;
+            this.post['inLike'] = false;
         });
     }
 
 
     editComponentOnSuccess() {
-        // this.closeAllOpenForms();
+        this.active = false;
+        this.inEdit = false;
     }
     editComponentOnCancel() {
-        // this.closeAllOpenForms();
-        
         this.active = false;
         this.inEdit = false;
     }
