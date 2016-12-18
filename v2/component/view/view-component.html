@@ -1,7 +1,7 @@
 <article class="" [class.post]=" isPost "
                   [class.comment]=" isComment "   
                   [attr.depth]=" post.depth "  
-                  [class.hidden]=" mode == '' ">
+>
     <!--Header & content-->
     <h2 *ngIf=" isPost " >{{ post.subject }}</h2>
     <a *ngIf=" ! cordova " href="{{ post.url }}">{{ post.url }}</a><br />
@@ -9,36 +9,38 @@
                     idx: {{ post.idx }}
                     {{ post.date }}
 
-    <div class="content" innerHTML="{{ post.content }}"></div>
+    <div class="content" [hidden]="inEdit" innerHTML="{{ post.content }}"></div>
 
     <!--list images -->
-    <div *ngIf=" post.photos.length " class="uploaded-files">
+    <div *ngIf=" post.photos.length " class="uploaded-files" [hidden]="inEdit">
         <img *ngFor=" let photo of post.photos " [src]=" photo.url_thumbnail ">
     </div>
 
 
-     <!--like edit etc. buttons-->
-     <span class="buttons">
-        <span (click)="onClickReply( post )">Reply</span>
-        <span (click)="onClickEdit( post )">Edit</span>
-        <span *ngIf=" ! post.inDeleting " (click)="onClickDelete( post )">Delete</span>
+
+    <!--like edit etc. buttons-->
+    <span class="buttons" [hidden]="inEdit">
+        <span *ngIf=" isComment " (click)="onClickReply( editComponent )">Reply</span>
+        <span (click)="onClickEdit()">Edit</span>
+        <span *ngIf=" ! post.inDeleting " (click)="onClickDelete( editComponent )">Delete</span>
         <i *ngIf=" post.inDeleting " class="fa fa-spinner fa-spin"></i>
-        <span *ngIf=" !post.inLike " (click)="onClickLike( post  )">Like({{ post.good }})</span>
+        <span *ngIf=" !post.inLike " (click)="onClickLike( editComponent )">Like({{ post.good }})</span>
         <i *ngIf=" post.inLike " class="fa fa-spinner fa-spin"></i>
-        <span *ngIf=" !post.inReport " (click)="onClickReport( post  )">Report</span>
+        <span *ngIf=" !post.inReport " (click)="onClickReport( editComponent )">Report</span>
         <i *ngIf=" post.inReport " class="fa fa-spinner fa-spin"></i>
     </span>
 
     <!-- create/edit post or comment-->
-        <edit-component  *ngIf=" mode "
-            [root] = " root "
-            [current]=" post "
-            [mode]="  mode "
-            [active] = " activeForm "
-            (error) = " editComponentOnError( $event ) "
-            (cancel) = " editComponentOnCancel() "
-            (success) = " editComponentOnSuccess() "
-        ></edit-component>
+    <edit-component #editComponent *ngIf=" show "
+        [root] = " root "
+        [current]=" post "
+        [mode]="  mode "
+        [active]=" active "
+        (error) = " editComponentOnError( $event ) "
+        (cancel) = " editComponentOnCancel() "
+        (success) = " editComponentOnSuccess() "
+    ></edit-component>
+
 
 </article>
 

@@ -1,5 +1,3 @@
-
-
 <section class="post-form-full-width">
     
     <textarea *ngIf= " active " name="content" [(ngModel)]="temp.content"></textarea>
@@ -16,7 +14,7 @@
                 </div><!--/file-upload-button-->
             </td>
             <td width="98%">
-                <span *ngIf= " ! active "  (click)="onActivateForm()" class="fake-textarea"> &nbsp;</span>
+                <span *ngIf= " !active "  (click)="onActivateForm()" class="fake-textarea"> &nbsp;</span>
                 <!-- show uploaded files while creating a post/comment -->
                 <section *ngIf=" temp.photos " class="files">
                     <div *ngIf=" inDeleting " class="loader">

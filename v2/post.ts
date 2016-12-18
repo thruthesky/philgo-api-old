@@ -304,4 +304,11 @@ export class Post extends Api {
             */
     }
 
+
+    getPermalink( post ) {
+        let full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+        full += '/article/' + post.idx;
+        return full;
+    }
+
 }

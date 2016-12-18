@@ -8,9 +8,9 @@ export class Api {
   http: Http;
   debug: boolean = false;
   // apiEndpoint = "http://test.philgo.com/index.php";
-   apiEndpoint = "http://philgo.org/index.php";
+  //  apiEndpoint = "http://philgo.org/index.php";
   //  apiEndpoint = "http://www.philgo.com/index.php";
-  //  apiEndpoint = "http://w8.philgo.com/index.php"; // fastest server from db.
+    apiEndpoint = "http://w8.philgo.com/index.php"; // fastest server from db.
   constructor( http ) {
     this.http = http;
     // console.log('Api::constructor()', http);

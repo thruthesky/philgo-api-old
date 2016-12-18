@@ -1,9 +1,10 @@
 /**
  * @see ./README.md
  */
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { POST } from '../../philgo-api-interface';
 import { Post } from '../../post';
+import { EditComponent } from '../edit/edit-component';
 import { ViewService } from './view-service';
 
 @Component({
@@ -11,16 +12,20 @@ import { ViewService } from './view-service';
     templateUrl: 'view-component.html',
 })
 export class ViewComponent {
+    @ViewChild('editComponent') editComponent: EditComponent;
     showPostCreateForm: boolean = false;
     hideContent = {};
     showEditComponent  = {};
-    mode = '';
     isPost: boolean = false;
     isComment: boolean = false;
-    activeForm: boolean = false;
+    inEdit: boolean = false; // "inEdit == true" means the user is in editing.
+
+    @Input() show: boolean = false; // if set true, the create/edit form box shows.
+    @Input() mode: string = null;
     @Input() post: POST = <POST> {}; // it is comment or post.
     @Input() root: POST = null;
-    @Input() option = {};
+    active: boolean = false;
+
     constructor(
         private postService : Post
     ) {
@@ -30,31 +35,27 @@ export class ViewComponent {
         this.isPost = this.post.idx_parent == '0';
         this.isComment = ! this.isPost;
 
-        if ( this.option['show-reply-form'] ) {
-            if ( this.isPost ) this.mode = 'create-post';
-            else this.mode = 'create-comment';
-        }
+
+
+        // if ( this.option['show-reply-form'] ) {
+        //     if ( this.isPost ) this.mode = 'create-post';
+        //     else this.mode = 'create-comment';
+        // }
     }
     
 
 
     onClickReply() {
-        this.activeForm = true;
+        this.active = true;
         this.mode = 'create-comment';
     }
-     onClickEdit( post ) {
-        this.activeForm = true;
-        this.mode = 'edit-comment';
-      
-        // this.view_service.hideContent = {};
-        // this.view_service.hideContent[ post.idx.toString() ] = true;
-        // console.log(this.view_service.showEditComponent);
-        // this.view_service.showEditComponent = {};
-        // console.log(this.view_service.showEditComponent);
-        
-        // this.view_service.showEditComponent[ post.idx.toString() ] = true;
-      
-        
+
+    onClickEdit() {
+        console.log("ViewComponent::onClickEdit()", this.editComponent );
+        this.active = true;
+        this.inEdit = true;
+        if ( this.post.idx == '0' ) this.mode = 'post-edit';
+        else this.mode = 'edit-comment';
     }
 
     onClickDelete( post ) {
@@ -70,7 +71,7 @@ export class ViewComponent {
     }
     
 
-     onClickReport( post ) {
+    onClickReport( post ) {
         //console.log("onClickReport()");
         //this.post.debug = true;
         post.inReport = true;
@@ -107,6 +108,9 @@ export class ViewComponent {
     }
     editComponentOnCancel() {
         // this.closeAllOpenForms();
+        
+        this.active = false;
+        this.inEdit = false;
     }
 
     closeAllOpenForms() {

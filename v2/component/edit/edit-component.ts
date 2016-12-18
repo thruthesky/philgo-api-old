@@ -19,9 +19,10 @@ export class EditComponent {
     @Input() pages: any = null;
     /**
      * 'root' is the root post.
-     *      - It is needed editing comment.
+     *      - It is needed to 'create-comment'.
      *          - More specifically, it will be used to insert the created comment into view.
-     *      - It is not needed on comment edit and post create/edit.
+     *      - It is not needed on 'edit-comment' and post create/edit.
+     * 
      */
     @Input() root: POST = null;
     /**
@@ -90,13 +91,14 @@ export class EditComponent {
      * When a user click on the form to input content of comemnt for creating a comment.
      */
     onActivateForm( post ) {
-        this.active = true; // add CSS class   
+        this.active = true; // add CSS class
     }
     
     onClickCancel() {
         this.active = false;
         this.cancel.emit();
     }
+    
 
 
     /**
@@ -121,6 +123,7 @@ export class EditComponent {
 
     createPost() {
         this.temp.post_id = this.post_id;
+        console.log("temp:", this.temp);
         this.post.create( this.temp,
             s => this.successCallback( s ),
             e => this.errorCallback( e ),
@@ -139,6 +142,10 @@ export class EditComponent {
 
     createComment() {
         this.temp.idx_parent = this.current.idx;
+        
+        this.temp.post_id = this.post_id;
+        console.log("temp:", this.temp);
+
         this.post.createComment( this.temp,
             s => this.successCallback( s ),
             e => this.errorCallback( e ),
