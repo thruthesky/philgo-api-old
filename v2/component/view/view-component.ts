@@ -33,9 +33,7 @@ export class ViewComponent {
         if ( this.post === null ) return alert("View Component Error: post is null");
         this.isPost = this.post.idx_parent == '0';
         this.isComment = ! this.isPost;
-
-
-
+        
         // if ( this.option['show-reply-form'] ) {
         //     if ( this.isPost ) this.mode = 'create-post';
         //     else this.mode = 'create-comment';
