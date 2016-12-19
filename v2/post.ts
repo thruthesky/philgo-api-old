@@ -321,4 +321,8 @@ export class Post extends Api {
         return full;
     }
 
+    getLink( post ) {
+        let full = '/article/' + post.idx;
+        return full;
+    }
 }

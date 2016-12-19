@@ -278,6 +278,7 @@ export interface POST {
     stamp: string;
     subject: string;
     user_name: string;
+    url?: string;
 };
 
 /**

@@ -5,7 +5,7 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { POST } from '../../philgo-api-interface';
 import { Post } from '../../post';
 import { EditComponent } from '../edit/edit-component';
-import { ViewService } from './view-service';
+
 
 @Component({
     selector: 'view-component',

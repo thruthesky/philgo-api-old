@@ -1,4 +1,4 @@
 {{ title }}
 <div *ngFor=" let post of posts ">
-    {{ post.subject }}
+    <div routerLink="{{ post.url }}">{{ post.subject }}</div>
 </div>
