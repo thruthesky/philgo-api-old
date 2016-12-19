@@ -16,7 +16,7 @@ export class EditComponent {
     /**
      * This is needed to put newly created post on top of post list.
      */
-    @Input() pages: any = null;
+    @Input() posts: any = null;
     /**
      * 'root' is the root post.
      *      - It is needed to 'create-comment'.
@@ -58,7 +58,8 @@ export class EditComponent {
         private data: Data,
         private sanitizer: DomSanitizer
         ) {
-        // console.log("EditComponent::constructor()");
+        console.log("EditComponent::constructor()");
+        
     }
 
     renderPage() {
@@ -68,6 +69,7 @@ export class EditComponent {
     }
     
     ngOnInit() {
+        this.initForm();
     }
 
     /**
@@ -90,25 +92,29 @@ export class EditComponent {
      */
     initForm( mode? ) {
         if ( mode ) this.mode = mode;
+        
         this.temp = <POST_DATA> {};
+        this.temp.gid = this.post.uniqid(); // generate new gid for new post/comment.
+
         console.log("EditComponent::initForm() current: ", this.current);
         console.log("mode: ", this.mode);
+
         if ( this.mode == 'edit-post' || this.mode == 'edit-comment' ) { //
             // console.log('without loading. mode: ', this.mode);
             this.temp = _.cloneDeep( this.current );
             this.temp.content = this.post.strip_tags( this.temp.content );
         }
-        else if ( this.mode == 'create-post' || this.mode == 'create-comment' ) {
-            //
-        }
-        this.temp.gid = this.post.uniqid();
+        
     }
 
 
     /**
      * When a user click on the form to input content of comemnt for creating a comment.
      */
-    onActivateForm( post ) {
+    onActivateForm() {
+        if ( this.active ) return; // active 할 때 마다, 내용을 초기화 하므로, 그냥 리턴한다.
+        console.log("onActivateForm: ", this.temp);
+        this.initForm( 'create-comment' ); // onActivateForm() 에서는 무조건 'create-comment' 를 하면 된다.
         this.active = true; // add CSS class
     }
     
@@ -162,7 +168,7 @@ export class EditComponent {
         this.temp.idx_parent = this.current.idx;
         
         this.temp.post_id = this.post_id;
-        console.log("temp:", this.temp);
+        console.log("createComment() temp:", this.temp);
 
         this.post.createComment( this.temp,
             s => this.successCallback( s ),
@@ -211,17 +217,16 @@ export class EditComponent {
         else if ( this.mode == "create-post" ) {
 
             try {
-                if ( this.pages && this.pages.length ) {
-                    // console.log("length: ", this.pages.length );
-                    let posts = this.pages[0]['posts'];
+                if ( this.posts ) {
                     // console.log("posts: ", posts);
                     // console.log("re: ", re);
-                    posts.unshift( re.post );
+                    this.posts.unshift( re.post );
                 }
             }
             catch ( e ) { alert("Please restart the app."); }
         }
         this.active = false; // remove '.show' css class.  it cannot be inside this.clear()
+        this.temp = {};
         this.success.emit();
     }
     errorCallback( error ) {
