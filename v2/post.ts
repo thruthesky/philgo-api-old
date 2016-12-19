@@ -210,15 +210,24 @@ export class Post extends Api {
 
     /**
      * 
-     * This caches page of posts.
+     * This gets posts of a page.
+     * It's mostly the same except it caches the posts of the page until 'option.expire' expires.
      * This method is separated to reduce the complexity of page().
+     * 
+     * @note (ko) 이 함수는 기본적으로 page() 함수와 동일하다.
+     *  다만,
+     *      - option.expire 가 될 때까지 기존의 캐시 데이터를 사용한다.
+     *      - 이 때, expire 해도 데이터를 삭제하지 않는다. 즉, 계속 기존 데이터를 사용하는데,
+     *      - expire 하면, 인터넷으로 새로운 데이터를 가져와서 캐시를 덮어쓴다.
+     *          - 만약, 인터넷이 안되면, 기존의 캐시를 계속 쓴다.
+     * 
      * 
      * @note but you can still use "Post.page()"" to call Post.pageCache(). @see Post.page()
      *
      * @note cache option
      * 
-     *  IF data.cache = seconds
-     *      1. see if there is cache on that 'data.page_no'
+     *  IF option.expire = seconds
+     *      1. see if there is cache on that 'option.page_no'
      *      2. if yes,
      *          2.1 callback the cache data
      *                      ; getCache() will delete the data if the data is expired.
@@ -258,14 +267,15 @@ export class Post extends Api {
             completeCallback();
             return;
         }
-        console.info("No cached data. Going to cache");
-        let url = this.getUrl() + 'post-list&post_id=' + option.post_id + '&page_no=' + option.page_no + '&limit=' + option.limit + '&fields=' +option.fields;
-        
-        this.get( url, (page: PAGE) => {
-            console.info("Got new page. Set cache");
-            successCallback( page );
-            this.setCache( cache_id, page );
-        }, errorCallback, completeCallback );
+        if ( this.isCacheExpired( cache_id, option.expire ) ) {
+            console.info("Cache expired. Going to cache");
+            let url = this.getUrl() + 'post-list&post_id=' + option.post_id + '&page_no=' + option.page_no + '&limit=' + option.limit + '&fields=' +option.fields;
+            this.get( url, (page: PAGE) => {
+                console.info("Got new page. Set cache");
+                successCallback( page );
+                this.setCache( cache_id, page );
+            }, errorCallback, completeCallback );
+        }
     }
 
 

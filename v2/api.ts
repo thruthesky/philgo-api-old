@@ -336,6 +336,13 @@ export class Api {
   setCache( cache_id:string, data:any ) {
     return this.saveCache( cache_id, data );
   }
+  /**
+   * 
+   */
+  deleteCache( cache_id ) {
+    localStorage.removeItem( cache_id );
+    localStorage.removeItem( cache_id + '.stamp' );
+  }
 
   /**
    *  
@@ -344,6 +351,10 @@ export class Api {
    * 
    * @param id - can be any string.
    * @param expire - seconds in number. If it is 0, then it does not delete the cache. default is 0.
+   * 
+   * @code
+   * let page = this.getCache( cache_id, 20 ); // delete cache data if it's more than 20 seconds.
+   * @endcode
    */
   getCache( cache_id:string, expire:number = 0 ) {
     let raw = localStorage.getItem( cache_id );
@@ -356,15 +367,30 @@ export class Api {
       return null;
     }
     if ( expire == 0 ) return data;
+    if ( this.isCacheExpired( cache_id, expire) ) this.deleteCache( cache_id );
+    return data; // even though cache expired and deleted, return the cache data. so, next time, it will return null.
+
+    // let cache_stamp = + localStorage.getItem( cache_id + '.stamp' );
+    // let stamp = Math.floor(Date.now() / 1000);
+    // if ( expire + cache_stamp < stamp ) { // if cache expired, delete cache.
+    //   console.info('cache removed');
+    //   localStorage.removeItem( cache_id );
+    //   localStorage.removeItem( cache_id + '.stamp' );
+    // }
+    // console.log('cached data will be returned');
+    // return data; // even though cache expired and deleted, return the cache data. so, next time, it will return null.
+  }
+
+  /**
+   * Returns true if the cache is already expired.
+   */
+  isCacheExpired( cache_id: string, expire: number ) : boolean {
     let cache_stamp = + localStorage.getItem( cache_id + '.stamp' );
     let stamp = Math.floor(Date.now() / 1000);
-    if ( expire + cache_stamp < stamp ) { // if cache expired, delete cache.
-      console.info('cache removed');
-      localStorage.removeItem( cache_id );
-      localStorage.removeItem( cache_id + '.stamp' );
+    if ( expire + cache_stamp < stamp ) { // if cache expired, return true;
+      return true;
     }
-    console.log('cached data will be returned');
-    return data; // even though cache expired and deleted, return the cache data. so, next time, it will return null.
+    else return false;
   }
 
 
