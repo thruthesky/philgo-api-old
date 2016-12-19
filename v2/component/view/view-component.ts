@@ -13,8 +13,6 @@ import { ViewService } from './view-service';
 })
 export class ViewComponent {
     @ViewChild('editComponent') editComponent: EditComponent;
-    showPostCreateForm: boolean = false;
-    showEditComponent  = {};
     isPost: boolean = false;
     isComment: boolean = false;
     hideContent: boolean = false;
@@ -115,11 +113,6 @@ export class ViewComponent {
         this.hideContent = false;
     }
 
-    closeAllOpenForms() {
-        // this.view_service.hideContent = {};
-        // this.view_service.showEditComponent = {};
-        this.showPostCreateForm = false;
-    }
 
 
 
