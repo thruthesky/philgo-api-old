@@ -1,5 +1,6 @@
 /**
  * @see ../../../README.md
+ * 
  */
 import { Component, Input } from '@angular/core';
 import { Post, PAGE, PAGE_OPTION, POSTS } from '../../post';
