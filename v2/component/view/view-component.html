@@ -1,6 +1,6 @@
 <article class="" [class.post]=" isPost "
-                  [class.comment]=" isComment "   
-                  [attr.depth]=" post.depth "  
+            [class.comment]=" isComment "   
+            [attr.depth]=" post.depth "  
 >
     <!--Header & content-->
     <h2 *ngIf=" isPost " >{{ post.subject }}</h2>
@@ -12,7 +12,7 @@
     <div class="content" [hidden]="hideContent" innerHTML="{{ post.content }}"></div>
 
     <!--list images -->
-    <div *ngIf=" post.photos.length " class="uploaded-files" [hidden]="hideContent">
+    <div *ngIf=" post.photos.length " class="uploaded-files" [attr.no-files]=" post.photos.length " [hidden]="hideContent">
         <img *ngFor=" let photo of post.photos " [src]=" photo.url_thumbnail ">
     </div>
 

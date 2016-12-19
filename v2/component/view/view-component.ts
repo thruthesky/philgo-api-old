@@ -31,8 +31,14 @@ export class ViewComponent {
     }
     ngOnInit() {
         if ( this.post === null ) return alert("View Component Error: post is null");
-        this.isPost = this.post.idx_parent == '0';
-        this.isComment = ! this.isPost;
+        if ( this.post.idx_parent ) {
+            this.isPost = this.post.idx_parent == '0';
+            this.isComment = ! this.isPost;
+        }
+        else {
+            alert("ViewComponent::gOnInit() no post.idx_parent");
+        }
+
         
         // if ( this.option['show-reply-form'] ) {
         //     if ( this.isPost ) this.mode = 'create-post';
