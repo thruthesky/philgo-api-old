@@ -44,8 +44,6 @@ export class ViewComponent {
             console.info("CATCH : ViewComponent::ngOnInit() idx_parent failed?");
         }
 
-
-        
         // if ( this.option['show-reply-form'] ) {
         //     if ( this.isPost ) this.mode = 'create-post';
         //     else this.mode = 'create-comment';
