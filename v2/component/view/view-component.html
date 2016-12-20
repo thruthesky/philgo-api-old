@@ -1,4 +1,4 @@
-<article class="" [class.post]=" isPost "
+<article *ngIf="post" class="" [class.post]=" isPost "
             [class.comment]=" isComment "   
             [attr.depth]=" post.depth "  
 >

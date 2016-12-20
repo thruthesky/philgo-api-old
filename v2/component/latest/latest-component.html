@@ -1,4 +1,6 @@
 {{ title }}
-<div *ngFor=" let post of posts ">
-    <div routerLink="{{ post.url }}">{{ post.subject }}</div>
+<div *ngIf=" posts ">
+    <div *ngFor=" let post of posts ">
+        <div routerLink="{{ post.url }}">{{ post.subject }}</div>
+    </div>
 </div>

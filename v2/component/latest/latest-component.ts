@@ -32,7 +32,7 @@ export class LatestComponent {
                 }, i * 50 );
             } );
         },
-        error => alert( error ),
+        error => alert( "Latest error: " + error ),
         () => {});
     }
 }
