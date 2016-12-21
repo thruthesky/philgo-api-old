@@ -1,3 +1,11 @@
+export const ONE_MINUTE_STAMP = 60;
+export const ONE_HOUR_STAMP = 3600;
+export const ONE_DAY_STAMP = 86400;
+export const ONE_WEEK_STAMP = 604800;
+export const ONE_MONTH_STAMP = 2678400;
+
+
+
 export const CODE_PRIMARY_PHOTO = 'primary_photo';
 
 export interface PHILGO_API_RESPONSE {

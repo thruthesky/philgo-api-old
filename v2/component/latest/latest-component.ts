@@ -3,8 +3,7 @@
  * 
  */
 import { Component, Input } from '@angular/core';
-import { Post, PAGE, PAGE_OPTION, POSTS } from '../../post';
-import { ONE_HOUR_STAMP } from '../../../../../etc/share';
+import { Post, PAGE, PAGE_OPTION, POSTS, ONE_HOUR_STAMP } from '../../post';
 @Component({
     selector: 'latest-component',
     templateUrl: 'latest-component.html'
