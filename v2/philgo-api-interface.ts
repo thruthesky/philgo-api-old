@@ -177,6 +177,13 @@ export interface PAGE_DATA {
 
 export interface PAGE_OPTION extends PAGE_DATA {}
 
+
+export interface PHOTO_OPTION {
+    post_id?: string;
+    limit?: number;
+};
+
+
 export interface POST_AD {
     deleted: string;
     done_htmlspecialchars: number;
@@ -282,7 +289,7 @@ export interface POST {
 };
 
 /**
- * 2016-12-16 POSTS 를 PAGES 로 변경.
+ * 2016-12-16 기존 POSTS interface 의 이름이 잘못되었음. 그래서 POSTS 를 PAGES 로 변경하고, 새로운 POSTS 를 만들었음.
  */
 export type POSTS = Array<POST>;
 export interface PAGE extends PHILGO_API_RESPONSE {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Api } from './api';
-import { PAGE, POST_DATA, PAGE_OPTION, POST_RESPONSE } from './philgo-api-interface';
+import { PAGE, POST_DATA, PAGE_OPTION, POST_RESPONSE, POSTS, PHOTO_OPTION } from './philgo-api-interface';
 export * from './philgo-api-interface';
 // import * as _ from 'lodash';
 
@@ -267,6 +267,9 @@ export class Post extends Api {
             completeCallback();
             return;
         }
+        /**
+         * If this code runs, successCallback() may be called again but only once every expire.
+         */
         if ( this.isCacheExpired( cache_id, option.expire ) ) {
             console.info("Cache expired. Going to cache");
             let url = this.getUrl() + 'post-list&post_id=' + option.post_id + '&page_no=' + option.page_no + '&limit=' + option.limit + '&fields=' +option.fields;
@@ -299,12 +302,7 @@ export class Post extends Api {
         // check if it has cached data.
         let url = this.getUrl('forums');
         console.log('url:', url);
-        this.get( url, re => {
-            if ( +re['code'] ) errorCallback( re['message'] );
-            else successCallback( re );
-        },
-        errorCallback,
-        completeCallback );
+        this.get( url, successCallback, errorCallback, completeCallback );
 
         /*
         this.http.get( url )
@@ -314,6 +312,32 @@ export class Post extends Api {
             */
     }
 
+
+    /**
+     * 
+     * @code
+            post.latestPhotos( { limit: 3 }, (posts: POSTS) => {
+                console.log("posts: ", posts);
+                this.photos = posts;
+            })
+
+            // template
+            <div *ngIf=" photos ">
+                <div *ngFor = " let post of photos ">
+                <img [src]="post.photos[0].url_thumbnail">
+                </div>
+            </div>
+
+     * @endcode
+     */
+    latestPhotos( option: PHOTO_OPTION, successCallback: ( posts: POSTS ) => void, errorCallback?: ( error: string ) => void, completeCallback?: () => void ) {
+        let url = this.getUrl('latest-photo');
+        if ( option.post_id ) url += '&post_id=' + option.post_id;
+        if ( option.limit ) url += '&limit=' + option.limit;
+        this.get( url, ( data: PAGE ) => {
+            successCallback( data.posts );
+        }, errorCallback, completeCallback );
+    }
 
     getPermalink( post ) {
         let full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
