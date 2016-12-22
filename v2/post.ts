@@ -92,7 +92,9 @@ export class Post extends Api {
      * @note this method name has changed from 'get()' to 'load()'.
      */
     load( idx, successCallback: ( re: POST_RESPONSE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
-        let url = this.getUrl( 'post_get_submit&idx=' + idx );
+        let i = parseInt( idx );
+        if ( ! i ) alert("wrong idx_post. it is not a number");
+        let url = this.getUrl( 'post_get_submit&idx=' + i );
         super.get( url,
             successCallback,
             errorCallback,
@@ -258,11 +260,11 @@ export class Post extends Api {
      * 
      */
     pageCache( option: PAGE_OPTION, successCallback: ( page: PAGE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
-        console.log("pageCache() : ", option);
+        // console.log("pageCache() : ", option);
         let cache_id = 'cache-' + option.post_id + '-' + option.page_no;
         let page = this.getCache( cache_id, option.expire );
         if ( page ) {
-            console.info("use cached data");
+            // console.info("use cached data");
             successCallback( <PAGE> page );
             completeCallback();
             return;
@@ -271,7 +273,7 @@ export class Post extends Api {
          * If this code runs, successCallback() may be called again but only once every expire.
          */
         if ( this.isCacheExpired( cache_id, option.expire ) ) {
-            console.info("Cache expired. Going to cache");
+            // console.info("Cache expired. Going to cache");
             let url = this.getUrl() + 'post-list&post_id=' + option.post_id + '&page_no=' + option.page_no + '&limit=' + option.limit + '&fields=' +option.fields;
             this.get( url, (page: PAGE) => {
                 console.info("Got new page. Set cache");
@@ -298,10 +300,10 @@ export class Post extends Api {
      * @endcode
      */
     getForums( successCallback: (data: any) => void, errorCallback?: (error: string) => void, completeCallback?: () => void ) {
-        console.log('getForums()');
+        // console.log('getForums()');
         // check if it has cached data.
         let url = this.getUrl('forums');
-        console.log('url:', url);
+        // console.log('url:', url);
         this.get( url, successCallback, errorCallback, completeCallback );
 
         /*

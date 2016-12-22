@@ -37,7 +37,7 @@ export class ViewComponent {
                 this.isComment = ! this.isPost;
             }
             else {
-                alert("ViewComponent::gOnInit() no post.idx_parent");
+                // alert("ViewComponent::ngOnInit() no post.idx_parent");
             }
         }
         catch ( e ) {
