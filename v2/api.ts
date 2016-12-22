@@ -45,6 +45,7 @@ export class Api {
   }
   getLoginData() : MEMBER_LOGIN_DATA {
     let data = localStorage.getItem( PHILGO_MEMBER_LOGIN );
+    if ( ! data ) return null;
     try {
       let login = JSON.parse( data );
       return login;

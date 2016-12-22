@@ -36,11 +36,11 @@ export interface PHILGO_RESPONSE extends PHILGO_API_RESPONSE {};
 export interface MEMBER_DATA extends PHILGO_API_RESPONSE {
     idx?: string;
     stamp?: string;
-  id : string;
-  nickname : string;
-  password: string;
-  name: string;
-  email: string;
+  id?: string;
+  nickname?: string;
+  password?: string;
+  name?: string;
+  email?: string;
   mobile?: string;
   landline?: string;
   gender?: string;
