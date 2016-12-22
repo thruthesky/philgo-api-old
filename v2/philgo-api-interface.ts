@@ -296,17 +296,20 @@ export interface POST {
     url?: string;
 };
 
+export type ADS = Array<POST_AD>;
+export type POST_TOP_ADS = Array<POST_TOP_AD>;
+export type POST_TOP_PREMIUM_ADS = Array<POST_TOP_PREMIUM_AD>;
 /**
  * 2016-12-16 기존 POSTS interface 의 이름이 잘못되었음. 그래서 POSTS 를 PAGES 로 변경하고, 새로운 POSTS 를 만들었음.
  */
 export type POSTS = Array<POST>;
 export interface PAGE extends PHILGO_API_RESPONSE {
-    ads: Array<POST_AD>;
+    ads: ADS;
     page_no: number;
     post_id: string;
     post_name: string;
-    post_top_ad: Array<POST_TOP_AD>;
-    post_top_premium_ad: Array<POST_TOP_PREMIUM_AD>;
+    post_top_ad: POST_TOP_ADS;
+    post_top_premium_ad: POST_TOP_PREMIUM_ADS;
     posts: POSTS;
 };
 //export interface PAGE extends POSTS {} // correct naming.
