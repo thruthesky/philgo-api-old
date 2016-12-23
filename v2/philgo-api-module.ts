@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { Post } from './post';
 import { Member } from './member';
 import { Data } from './data';
-
+import { Message } from './message';
 
 import { SampleHomePage } from '../sample-pages/home/home';
 import { SampleLoginPage } from '../sample-pages/login/login';
@@ -46,7 +46,7 @@ export let ROUTES = [
     LatestComponent
     
   ],
-  providers : [ Member, Post, Data ]
+  providers : [ Member, Post, Data, Message ]
 })
 
 
