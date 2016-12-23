@@ -100,10 +100,13 @@ export class ViewComponent {
         this.postService.vote( this.post.idx, re => {
             console.log('delete: re: ', re);
             // alert("You have reported a post. Thank you.");
+             this.post['inLike'] = false;
             this.post.good = (parseInt( this.post.good ) + 1).toString();
         },
         error => {
+
             alert("like error: " + error );
+              this.post['inLike'] = false;
             console.log("like error: " + error );
         },
         () => {
