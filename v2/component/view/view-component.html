@@ -22,7 +22,7 @@
         <span (click)="onClickEdit()">Edit</span>
         <span *ngIf=" ! post.inDeleting " (click)="onClickDelete()">Delete</span>
         <i *ngIf=" post.inDeleting " class="fa fa-spinner fa-spin"></i>
-        <span *ngIf=" !post.inLike " (click)="onClickLike()">Like({{ post.good }})</span>
+        <span  (click)="onClickLike()">Like <span *ngIf=" !post.inLike ">({{ post.good }})</span></span>
         <i *ngIf=" post.inLike " class="fa fa-spinner fa-spin"></i>
         <span *ngIf=" !post.inReport " (click)="onClickReport()">Report</span>
         <i *ngIf=" post.inReport " class="fa fa-spinner fa-spin"></i>
