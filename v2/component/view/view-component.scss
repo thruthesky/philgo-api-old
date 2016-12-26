@@ -1,27 +1,31 @@
 view-component {
-    article.post {    
+    article.post {
         margin-top : 1em;
         margin-bottom: 0.5em;
         padding: 1em;
         border-radius: 5px;
 
         background:  darkgray;
-       
+
         .content {
-          
+
         }
     }
+    p {
+      display: table-column-group;
+    }
 
-    article.comment {          
+
+    article.comment {
         margin-top : 1em;
         padding: 1em;
         border-radius: 5px;
 
         background:  dimgray;
         color : black;
-       
+
         .content {
-          
+
         }
 
         button{
