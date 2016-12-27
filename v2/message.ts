@@ -42,11 +42,20 @@ export class Message extends Api {
     }
 
     list( option: MESSAGE_LIST_OPTION, successCallback: ( data: MESSAGE_LIST ) => void, errorCallback: (error: string) => void, completeCallback?: () => void ) {
-
+        
+        let login = this.getLoginData();
+        if ( login === void 0 || login.id === void 0 ) {
+            errorCallback('login-first');
+            completeCallback();
+            return;
+        }
+        
         if ( option.page_no === void 0 ) option.page_no = 1;
-        let url: string = this.getUrl( 'message' ) + '&page_no=' + option.page_no;
+        let url: string = this.getUrl( 'message' );
+        url = url + '&id=' + login.id;
+        url = url + '&session_id=' + login.session_id;
+        url = url + '&page_no=' + option.page_no;
         this.get( url, successCallback, errorCallback, completeCallback );
-
     }
 
 }
