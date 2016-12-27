@@ -222,6 +222,7 @@ export class Post extends Api {
      *      - 이 때, expire 해도 데이터를 삭제하지 않는다. 즉, 계속 기존 데이터를 사용하는데,
      *      - expire 하면, 인터넷으로 새로운 데이터를 가져와서 캐시를 덮어쓴다.
      *          - 만약, 인터넷이 안되면, 기존의 캐시를 계속 쓴다.
+     *          - expire 된 경우, 캐시만 업데이트하고, successCallback() 은 두번 호출하지않는다.
      * 
      * 
      * @note but you can still use "Post.page()"" to call Post.pageCache(). @see Post.page()
@@ -267,7 +268,6 @@ export class Post extends Api {
             // console.info("use cached data");
             successCallback( <PAGE> page );
             completeCallback();
-            return;
         }
         /**
          * If this code runs, successCallback() may be called again but only once every expire.
@@ -277,7 +277,7 @@ export class Post extends Api {
             let url = this.getUrl() + 'post-list&post_id=' + option.post_id + '&page_no=' + option.page_no + '&limit=' + option.limit + '&fields=' +option.fields;
             this.get( url, (page: PAGE) => {
                 console.info("Got new page. Set cache");
-                successCallback( page );
+                if ( ! page ) successCallback( page ); // does not recall successCallback() if already called.
                 this.setCache( cache_id, page );
             }, errorCallback, completeCallback );
         }
