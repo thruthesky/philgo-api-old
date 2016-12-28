@@ -9,6 +9,11 @@ export interface MESSAGE_LIST_OPTION {
     page_no?: number;
     mode?: string;
 };
+export interface MESSAGE_FORM {
+    id_recv: string;
+    subject: string;
+    content: string;
+};
 
 export interface MESSAGE {
     idx: string;
@@ -63,13 +68,22 @@ export class Message extends Api {
         let url: string = this.getUrl( 'message' );
         url += '&mode=read';
         url += '&idx=' + idx;
-        
-        
         let login = this.getLoginData();
         url = url + '&id=' + login.id;
         url = url + '&session_id=' + login.session_id;
-
         this.get( url, successCallback, errorCallback, completeCallback );
+    }
+
+
+    send( idx, successCallback: ( data: any ) => void, errorCallback: (error: string) => void, completeCallback?: () => void ) {
+
+        // let url: string = this.getUrl( 'message' );
+        // url += '&mode=read';
+        // url += '&idx=' + idx;
+        // let login = this.getLoginData();
+        // url = url + '&id=' + login.id;
+        // url = url + '&session_id=' + login.session_id;
+        // this.get( url, successCallback, errorCallback, completeCallback );
     }
 
 }
