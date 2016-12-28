@@ -7,12 +7,19 @@ export * from './philgo-api-interface';
 
 export interface MESSAGE_LIST_OPTION {
     page_no?: number;
+    limit?: number;
+    key?: string;
     mode?: string;
 };
 export interface MESSAGE_FORM {
     id_recv: string;
-    subject: string;
     content: string;
+};
+export interface MESSAGE_CREATE_REQUEST extends MESSAGE_FORM {
+    id: string;
+    session_id: string;
+    action: string;
+    mode: string;
 };
 
 export interface MESSAGE {
@@ -57,9 +64,15 @@ export class Message extends Api {
         
         if ( option.page_no === void 0 ) option.page_no = 1;
         let url: string = this.getUrl( 'message' );
-        url = url + '&id=' + login.id;
-        url = url + '&session_id=' + login.session_id;
-        url = url + '&page_no=' + option.page_no;
+        url += '&id=' + login.id;
+        url += '&session_id=' + login.session_id;
+        url += '&page_no=' + option.page_no;
+        url += option.limit ? '&limit=' + option.limit : '';
+        if ( option.key ) {
+            url += '&mode=search';
+            url += '&field=subject_content';
+            url += '&key=' + option.key;
+        }
         this.get( url, successCallback, errorCallback, completeCallback );
     }
 
@@ -69,21 +82,82 @@ export class Message extends Api {
         url += '&mode=read';
         url += '&idx=' + idx;
         let login = this.getLoginData();
-        url = url + '&id=' + login.id;
-        url = url + '&session_id=' + login.session_id;
+        url += '&id=' + login.id;
+        url += '&session_id=' + login.session_id;
         this.get( url, successCallback, errorCallback, completeCallback );
     }
 
 
-    send( idx, successCallback: ( data: any ) => void, errorCallback: (error: string) => void, completeCallback?: () => void ) {
+    /**
+     * 
+     * @code example
+     
+        this.form.id_recv = "newsman";
+        this.form.content = "Oo...This is the content. okay";
+        this.message.send( this.form, re => {
+            console.log("message send success: ", re);
+        },
+        error => alert("message sending error: " + error ),
+        () => { }
+        );
 
-        // let url: string = this.getUrl( 'message' );
-        // url += '&mode=read';
-        // url += '&idx=' + idx;
-        // let login = this.getLoginData();
-        // url = url + '&id=' + login.id;
-        // url = url + '&session_id=' + login.session_id;
-        // this.get( url, successCallback, errorCallback, completeCallback );
+     * @endcode
+     */
+    send( form: MESSAGE_FORM, successCallback: ( data: any ) => void, errorCallback: (error: string) => void, completeCallback?: () => void ) {
+
+
+        let login = this.getLoginData();
+        if ( login === void 0 || login.id === void 0 ) {
+            errorCallback('login-first');
+            completeCallback();
+            return;
+        }
+        
+        let data: MESSAGE_CREATE_REQUEST = {
+            action: 'message',
+            mode: 'send',
+            id: login.id,
+            session_id: login.session_id,
+            id_recv: form.id_recv,
+            content: form.content
+        };
+
+        this.post( data,
+            successCallback,
+            errorCallback,
+            completeCallback );
+    }
+
+    makeAllRead(successCallback: ( data: any ) => void, errorCallback: (error: string) => void, completeCallback?: () => void ) {
+        let url: string = this.getUrl('message');
+        url += '&mode=make-all-read';
+        
+        let login = this.getLoginData();
+        if ( login === void 0 || login.id === void 0 ) {
+            errorCallback('login-first');
+            completeCallback();
+            return;
+        }
+
+        url += '&id=' + login.id;
+        url += '&session_id=' + login.session_id;
+        this.get( url, successCallback, errorCallback, completeCallback );
+    }
+
+
+    delete( idx, successCallback: ( data: any ) => void, errorCallback: (error: string) => void, completeCallback?: () => void ) {
+        let url: string = this.getUrl('message');
+        url += '&mode=delete';
+        url += '&idx=' + idx;
+        let login = this.getLoginData();
+        if ( login === void 0 || login.id === void 0 ) {
+            errorCallback('login-first');
+            completeCallback();
+            return;
+        }
+        url += '&id=' + login.id;
+        url += '&session_id=' + login.session_id;
+        this.get( url, successCallback, errorCallback, completeCallback );
     }
 
 }
