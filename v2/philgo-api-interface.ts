@@ -189,6 +189,7 @@ export interface PAGE_OPTION extends PAGE_DATA {}
 export interface PHOTO_OPTION {
     post_id?: string;
     limit?: number;
+    page_no?: number;
 };
 
 
