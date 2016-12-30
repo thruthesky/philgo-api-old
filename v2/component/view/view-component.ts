@@ -27,7 +27,7 @@ export class ViewComponent {
     constructor(
         private postService : Post
     ) {
-        console.log("ViewComponent()");
+        // console.log("ViewComponent()");
     }
     ngOnInit() {
         try {

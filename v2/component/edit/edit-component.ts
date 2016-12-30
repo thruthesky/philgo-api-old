@@ -58,7 +58,7 @@ export class EditComponent {
         private data: Data,
         private sanitizer: DomSanitizer
         ) {
-        console.log("EditComponent::constructor()");
+        //console.log("EditComponent::constructor()");
         
     }
 
@@ -96,8 +96,8 @@ export class EditComponent {
         this.temp = <POST_DATA> {};
         this.temp.gid = this.post.uniqid(); // generate new gid for new post/comment.
 
-        console.log("EditComponent::initForm() current: ", this.current);
-        console.log("mode: ", this.mode);
+        //console.log("EditComponent::initForm() current: ", this.current);
+        //console.log("mode: ", this.mode);
 
         if ( this.mode == 'edit-post' || this.mode == 'edit-comment' ) { //
             // console.log('without loading. mode: ', this.mode);
@@ -113,7 +113,7 @@ export class EditComponent {
      */
     onActivateForm() {
         if ( this.active ) return; // active 할 때 마다, 내용을 초기화 하므로, 그냥 리턴한다.
-        console.log("onActivateForm: ", this.temp);
+        // console.log("onActivateForm: ", this.temp);
         this.initForm( 'create-comment' ); // onActivateForm() 에서는 무조건 'create-comment' 를 하면 된다.
         this.active = true; // add CSS class
     }
@@ -147,7 +147,7 @@ export class EditComponent {
 
     createPost() {
         this.temp.post_id = this.post_id;
-        console.log("temp:", this.temp);
+        // console.log("temp:", this.temp);
         this.post.create( this.temp,
             s => this.successCallback( s ),
             e => this.errorCallback( e ),
@@ -168,7 +168,7 @@ export class EditComponent {
         this.temp.idx_parent = this.current.idx;
         
         this.temp.post_id = this.post_id;
-        console.log("createComment() temp:", this.temp);
+        // console.log("createComment() temp:", this.temp);
 
         this.post.createComment( this.temp,
             s => this.successCallback( s ),
