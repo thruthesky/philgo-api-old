@@ -56,6 +56,7 @@ export class Message extends Api {
     list( option: MESSAGE_LIST_OPTION, successCallback: ( data: MESSAGE_LIST ) => void, errorCallback: (error: string) => void, completeCallback?: () => void ) {
         
         let login = this.getLoginData();
+        console.log(login);
         if ( login === void 0 || login.id === void 0 ) {
             errorCallback('login-first');
             completeCallback();
