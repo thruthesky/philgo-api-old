@@ -336,7 +336,7 @@ export class Post extends Api {
         let url = this.getUrl('latest-photo');
         if ( option.post_id ) url += '&post_id=' + option.post_id;
         if ( option.limit ) url += '&limit=' + option.limit;
-        console.log('url', url);
+        //console.log('url', url);
         this.get( url, ( data: PAGE ) => {
             successCallback( data.posts );
         }, errorCallback, completeCallback );
