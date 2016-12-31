@@ -181,6 +181,7 @@ export interface PAGE_DATA {
     fields?: string;
     limit?: number;
     expire?: number;
+    comment?: number;
 };
 
 export interface PAGE_OPTION extends PAGE_DATA {}
