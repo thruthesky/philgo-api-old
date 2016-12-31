@@ -23,10 +23,10 @@ export class LatestComponent {
             expire: ONE_HOUR_STAMP,
             fields: 'idx,idx_parent,subject,deleted,gid,good,no_of_comment,no_of_view,post_id,stamp'
         };
-        // console.log("latest-component::ngOnInit() ", this.title, this.post_id, option);
-        // this.post.debug = true;
+        //console.log("latest-component::ngOnInit() ", this.title, this.post_id, option);
+        //this.post.debug = true;
         this.post.page( option, ( page: PAGE ) => {
-            // console.log("latest: ", page);
+            console.log("latest: ", page);
             this.posts = [];
             page.posts.map( ( v, i ) => {
                 setTimeout( () => {

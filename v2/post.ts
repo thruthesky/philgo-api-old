@@ -178,12 +178,15 @@ export class Post extends Api {
         data.limit = data.limit ? data.limit : 30;
         data.fields = data.fields ? data.fields : '';
 
-        if ( data.expire !== void 0 ) return this.pageCache( data, successCallback, errorCallback, completeCallback );
 
+        if ( data.expire !== void 0 ) return this.pageCache( data, successCallback, errorCallback, completeCallback );
         let url = this.getUrl() + 'post-list&post_id=' + data.post_id + '&page_no=' + data.page_no + '&limit=' + data.limit + '&fields=' + data.fields;
         if ( this.debug ) console.log("page() url: ", url);
+        // console.log('data:', data);
+        
         if ( data.page_no == 1 ) {
             // console.log("page no: 1");
+            //console.log("page() url: ", url);
             this.cacheCallback( data.post_id, successCallback );
         }
 
@@ -261,23 +264,23 @@ export class Post extends Api {
      * 
      */
     pageCache( option: PAGE_OPTION, successCallback: ( page: PAGE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
-        // console.log("pageCache() : ", option);
+        //console.log("pageCache() : ", option);
         let cache_id = 'cache-' + option.post_id + '-' + option.page_no;
-        let page = this.getCache( cache_id, option.expire );
-        if ( page ) {
-            // console.info("use cached data");
-            successCallback( <PAGE> page );
+        let cache_page = this.getCache( cache_id, option.expire );
+        if ( cache_page ) {
+            //console.info("use cached data");
+            successCallback( <PAGE> cache_page );
             completeCallback();
         }
         /**
          * If this code runs, successCallback() may be called again but only once every expire.
          */
         if ( this.isCacheExpired( cache_id, option.expire ) ) {
-            // console.info("Cache expired. Going to cache");
+            //console.info("Cache expired. Going to cache");
             let url = this.getUrl() + 'post-list&post_id=' + option.post_id + '&page_no=' + option.page_no + '&limit=' + option.limit + '&fields=' +option.fields;
             this.get( url, (page: PAGE) => {
-                console.info("Got new page. Set cache");
-                if ( ! page ) successCallback( page ); // does not recall successCallback() if already called.
+                //console.info("Got new page. Set cache:", page);
+                if ( ! cache_page ) successCallback( page ); // does not recall successCallback() if already called.
                 this.setCache( cache_id, page );
             }, errorCallback, completeCallback );
         }
@@ -338,7 +341,7 @@ export class Post extends Api {
         if ( option.limit ) url += '&limit=' + option.limit;
 
         if ( option.page_no ) url += '&page_no=' + option.page_no;
-        console.log('url', url);
+//        console.log('url', url);
         this.get( url, ( data: PAGE ) => {
             successCallback( data.posts );
         }, errorCallback, completeCallback );
