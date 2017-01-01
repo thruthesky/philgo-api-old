@@ -180,6 +180,7 @@ export interface PAGE_DATA {
     page_no?: number;
     fields?: string;
     limit?: number;
+    limit_comment?: number;
     expire?: number;
     comment?: number;
 };
@@ -190,6 +191,8 @@ export interface PAGE_OPTION extends PAGE_DATA {}
 export interface PHOTO_OPTION {
     post_id?: string;
     limit?: number;
+    limit_comment?: number;
+    comment?: number;
     page_no?: number;
 };
 

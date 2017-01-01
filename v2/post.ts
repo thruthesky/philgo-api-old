@@ -344,6 +344,8 @@ export class Post extends Api {
         let url = this.getUrl('latest-photo');
         if ( option.post_id ) url += '&post_id=' + option.post_id;
         if ( option.limit ) url += '&limit=' + option.limit;
+        if ( option.limit_comment ) url += '&limit_comment=' + option.limit_comment;
+        if ( option.comment ) url += '&comment=' + option.comment;
 
         option['page_no'] = option['page_no'] ? option['page_no'] : 1;
         url += '&page_no=' + option.page_no;
