@@ -320,6 +320,11 @@ export class Post extends Api {
 
     /**
      * 
+     * latesetPhotos 는 첫번째 페이지인 경우, 1시간 캐시를 한다.
+     * 
+     * @param option[expire] - use cached data until expires.
+     * 
+     * 
      * @code
             post.latestPhotos( { limit: 3 }, (posts: POSTS) => {
                 console.log("posts: ", posts);
@@ -340,9 +345,13 @@ export class Post extends Api {
         if ( option.post_id ) url += '&post_id=' + option.post_id;
         if ( option.limit ) url += '&limit=' + option.limit;
 
-        if ( option.page_no ) url += '&page_no=' + option.page_no;
+        option['page_no'] = option['page_no'] ? option['page_no'] : 1;
+        url += '&page_no=' + option.page_no;
 //        console.log('url', url);
-        this.get( url, ( data: PAGE ) => {
+
+        let o = { url: url };
+        if ( option.page_no == 1 ) o['expire'] = option['expire'] ?  option['expire'] : 3600;
+        this.get( o, ( data: PAGE ) => {
             successCallback( data.posts );
         }, errorCallback, completeCallback );
     }

@@ -8,6 +8,7 @@ import { Post } from './post';
 import { Member } from './member';
 import { Data } from './data';
 import { Message } from './message';
+import { Philgo } from './philgo';
 
 import { SampleHomePage } from '../sample-pages/home/home';
 import { SampleLoginPage } from '../sample-pages/login/login';
@@ -46,7 +47,7 @@ export let ROUTES = [
     LatestComponent
     
   ],
-  providers : [ Member, Post, Data, Message ]
+  providers : [ Member, Post, Data, Message, Philgo ]
 })
 
 

@@ -61,11 +61,17 @@ export class Api {
 
 
   /**
-   * This does the same as 'http.get()' but in callback.
+   * This does the same as 'http.get()' but it works with callbacks.
+   * 
+   * @param url - if url is not string, then it considers to get cached data.
    *
    */
-  get( url, successCallback: (data:any) => void, errorCallback?: ( e:any ) => void, completeCallback?: () => void ) {
-    this._get( url, successCallback, errorCallback, completeCallback );
+  get( url: any, successCallback: (data:any) => void, errorCallback?: ( e:any ) => void, completeCallback?: () => void ) {
+    if ( typeof url == 'string' || url['expire'] === void 0 ) {
+      if ( typeof url != 'string' ) url = url['url'];
+      this._get( url, successCallback, errorCallback, completeCallback );
+    }
+    else this._getCacheData( url, successCallback, errorCallback, completeCallback );
   }
   _get( url, successCallback: (data:any) => void, errorCallback?: ( e:any ) => void, completeCallback?: () => void ) {
     if ( this.debug ) console.info("get: ", url);
@@ -77,6 +83,41 @@ export class Api {
         completeCallback );
   }
 
+  _getCacheData( option, successCallback: (data:any) => void, errorCallback?: ( e:any ) => void, completeCallback?: () => void ) {
+
+    let url = option['url'];
+    let expire = option['expire'];
+    let cache_id = url;
+
+    let cache_data = this.getCache( cache_id, expire );
+    if ( cache_data ) {
+        //console.info("use cached data");
+        successCallback( cache_data );
+        if ( completeCallback ) completeCallback();
+    }
+    /**
+     * If this code runs, successCallback() may be called again but only once every expire.
+     */
+    if ( this.isCacheExpired( cache_id, option.expire ) ) {
+        //console.info("Cache expired. Going to cache");
+      this.http.get( url )
+        .subscribe( data => {
+          try {
+            let re = JSON.parse( data['_body'] );
+            if ( ! cache_data ) {
+              successCallback( re ); // does not recall successCallback() if already called.
+              if ( completeCallback ) completeCallback();
+            }
+            this.setCache( cache_id, re );
+          }
+          catch( e ) {
+            errorCallback( 'api get cache url error' );
+            if ( completeCallback ) completeCallback();
+            console.error( data['_body']);
+          }
+        });
+    }
+  }
 
 
   /**
@@ -349,6 +390,9 @@ export class Api {
    *  
    * Returns cached data after JSON.parse() if exists.
    *
+   * @note even though cache expired and deleted, return the cache data. so, next time, it will return null.
+   *      유효 기간이 지나서 캐시가 삭제되어도, 그 (삭제된) 캐시 값을 리턴한다.
+   *      하지만, 다음 번에 캐시 데이터를 찾으려 한다면 캐시가 삭제되어 null 이 리턴된다.
    * 
    * @param id - can be any string.
    * @param expire - seconds in number. If it is 0, then it does not delete the cache. default is 0.
@@ -356,6 +400,10 @@ export class Api {
    * @code
    * let page = this.getCache( cache_id, 20 ); // delete cache data if it's more than 20 seconds.
    * @endcode
+   * 
+   * @return
+   *    - cached data after json.parse
+   *    - null if no data cached.
    */
   getCache( cache_id:string, expire:number = 0 ) {
     let raw = localStorage.getItem( cache_id );
@@ -369,7 +417,7 @@ export class Api {
     }
     if ( expire == 0 ) return data;
     if ( this.isCacheExpired( cache_id, expire) ) this.deleteCache( cache_id );
-    return data; // even though cache expired and deleted, return the cache data. so, next time, it will return null.
+    return data; //
 
     // let cache_stamp = + localStorage.getItem( cache_id + '.stamp' );
     // let stamp = Math.floor(Date.now() / 1000);
