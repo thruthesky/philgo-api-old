@@ -3,7 +3,7 @@
     <div *ngIf=" posts " class="posts">
         <div *ngFor=" let post of posts " class="post" routerLink="{{ post.url }}">
             {{ post.subject }}
-            <span class='no-of-comment' [attr.no]="post.no_of_comment"><i>{{post.no_of_comment}}</i></span>
+            <span class='no-of-comment' [attr.no]="post.no_of_comment" [attr.length]="post.length"><i>{{post.no_of_comment}}</i></span>
         </div>
     </div>
 </div>
