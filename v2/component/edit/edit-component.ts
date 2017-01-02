@@ -3,7 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Post, POST_RESPONSE, POST_DATA, POST, COMMENT } from '../../../../../api/philgo-api/v2/post';
 import { Data, FILE_UPLOAD_RESPONSE, DATA_UPLOAD_OPTIONS } from '../../../../../api/philgo-api/v2/data';
 import * as _ from 'lodash';
-import * as app from '../../../../../etc/app.helper';
+
 
 declare let navigator: any;
 declare var Camera;
@@ -49,7 +49,7 @@ export class EditComponent {
     //files: Array<FILE_UPLOAD_DATA> = <Array<FILE_UPLOAD_DATA>>[];
     temp = <POST_DATA> {};
     
-    cordova: boolean = app.isCordova();
+    cordova: boolean = false;
     inDeleting: boolean = false;
     inPosting: boolean = false;
     constructor(
@@ -59,7 +59,7 @@ export class EditComponent {
         private sanitizer: DomSanitizer
         ) {
         //console.log("EditComponent::constructor()");
-        
+        this.cordova = post.isCordova();
     }
 
     renderPage() {

@@ -177,10 +177,13 @@ export class Post extends Api {
         data.page_no = data.page_no ? data.page_no : 1;
         data.limit = data.limit ? data.limit : 30;
         data.fields = data.fields ? data.fields : '';
-
+        let url = this.getUrl() + 'post-list&post_id=' + data.post_id + '&page_no=' + data.page_no + '&limit=' + data.limit + '&fields=' + data.fields;
+        if ( typeof data.comment !== void 0 ) url += "&comment=" + data.comment;
+        if ( typeof data.limit_comment !== void 0 ) url += "&limit_comment=" + data.limit_comment;
+        data['url'] = url;
 
         if ( data.expire !== void 0 ) return this.pageCache( data, successCallback, errorCallback, completeCallback );
-        let url = this.getUrl() + 'post-list&post_id=' + data.post_id + '&page_no=' + data.page_no + '&limit=' + data.limit + '&fields=' + data.fields;
+        
         if ( this.debug ) console.log("page() url: ", url);
         // console.log('data:', data);
         
@@ -277,8 +280,8 @@ export class Post extends Api {
          */
         if ( this.isCacheExpired( cache_id, option.expire ) ) {
             //console.info("Cache expired. Going to cache");
-            let url = this.getUrl() + 'post-list&post_id=' + option.post_id + '&page_no=' + option.page_no + '&limit=' + option.limit + '&fields=' +option.fields;
-            this.get( url, (page: PAGE) => {
+            //let url = this.getUrl() + 'post-list&post_id=' + option.post_id + '&page_no=' + option.page_no + '&limit=' + option.limit + '&fields=' +option.fields;
+            this.get( option['url'], (page: PAGE) => {
                 //console.info("Got new page. Set cache:", page);
                 if ( ! cache_page ) successCallback( page ); // does not recall successCallback() if already called.
                 this.setCache( cache_id, page );
@@ -368,4 +371,6 @@ export class Post extends Api {
         let full = '/article/' + post.idx;
         return full;
     }
+    
+
 }

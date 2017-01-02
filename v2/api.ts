@@ -621,5 +621,13 @@ export class Api {
     return time;
   }
 
+  
+    isCordova () { 
+        if ( !! window['cordova'] ) return true;
+        if ( document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1 ) return true;
+        return false;
+    }
+    
+
 }
 
