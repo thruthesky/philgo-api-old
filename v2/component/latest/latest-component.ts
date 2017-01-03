@@ -25,9 +25,9 @@ export class LatestComponent {
             fields: 'idx,idx_parent,subject,deleted,gid,good,no_of_comment,no_of_view,post_id,stamp'
         };
         //console.log("latest-component::ngOnInit() ", this.title, this.post_id, option);
-        this.post.debug = true;
+        //this.post.debug = true;
         this.post.page( option, ( page: PAGE ) => {
-            console.log("latest page: ", page);
+            //console.log("latest page: ", page);
             this.posts = [];
             page.posts.map( ( v, i ) => {
                 setTimeout( () => {
