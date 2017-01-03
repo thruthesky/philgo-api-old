@@ -179,6 +179,7 @@ export interface PAGE_DATA {
     post_id: string;
     page_no?: number;
     fields?: string;
+    file?: number;
     limit?: number;
     limit_comment?: number;
     expire?: number;

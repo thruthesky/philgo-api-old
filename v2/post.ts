@@ -176,17 +176,18 @@ export class Post extends Api {
     page( data: PAGE_OPTION, successCallback: ( page: PAGE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
         data.page_no = data.page_no ? data.page_no : 1;
         data.limit = data.limit ? data.limit : 30;
-        data.fields = data.fields ? data.fields : '';
+        data.fields = data.fields ? encodeURIComponent( data.fields ) : '';
         let url = this.getUrl() + 'post-list&post_id=' + data.post_id + '&page_no=' + data.page_no + '&limit=' + data.limit + '&fields=' + data.fields;
-        if ( typeof data.comment !== void 0 ) url += "&comment=" + data.comment;
-        if ( typeof data.limit_comment !== void 0 ) url += "&limit_comment=" + data.limit_comment;
+        if ( typeof data.comment != 'undefined'  ) url += "&comment=" + data.comment;
+        if ( typeof data.limit_comment != 'undefined' ) url += "&limit_comment=" + data.limit_comment;
+        if ( typeof data.file != 'undefined' ) url += "&file=" + data.file;
         data['url'] = url;
-
+        // if ( data.post_id == 'news' ) console.log('url: ', url);
         if ( data.expire !== void 0 ) return this.pageCache( data, successCallback, errorCallback, completeCallback );
         
         if ( this.debug ) console.log("page() url: ", url);
         // console.log('data:', data);
-        
+
         if ( data.page_no == 1 ) {
             // console.log("page no: 1");
             //console.log("page() url: ", url);
