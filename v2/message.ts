@@ -54,10 +54,9 @@ export class Message extends Api {
     }
 
     list( option: MESSAGE_LIST_OPTION, successCallback: ( data: MESSAGE_LIST ) => void, errorCallback: (error: string) => void, completeCallback?: () => void ) {
-        
-        let login: MEMBER_LOGIN = this.getLoginData();
-        console.log(login);
-        if ( login === void 0 || login.id === void 0 ) {
+
+        let login = this.getLoginData();
+        if ( ! login ) {
             errorCallback('login-first');
             completeCallback();
             return;
@@ -132,9 +131,9 @@ export class Message extends Api {
     makeAllRead(successCallback: ( data: any ) => void, errorCallback: (error: string) => void, completeCallback?: () => void ) {
         let url: string = this.getUrl('message');
         url += '&mode=make-all-read';
-        
+
         let login = this.getLoginData();
-        if ( login === void 0 || login.id === void 0 ) {
+        if ( ! login ) {
             errorCallback('login-first');
             completeCallback();
             return;
