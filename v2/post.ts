@@ -362,15 +362,14 @@ export class Post extends Api {
         }, errorCallback, completeCallback );
     }
 
-    getPermalink( post ) {
+    getPermalink( post, tag = 'article' ) {
         let full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
-        full += '/article/' + post.idx;
+        full += this.getLink( post, tag );
         return full;
     }
 
-    getLink( post ) {
-        let full = '/article/' + post.idx;
-        return full;
+    getLink( post, tag='article' ) {
+        return '/' + tag + '/' + post.idx;
     }
     
 
