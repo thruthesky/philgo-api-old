@@ -9,7 +9,7 @@
                     idx: {{ post.idx }}
                     {{ post.date }}
 
-    <div class="content" [hidden]="hideContent" innerHTML="{{ post.content }}"></div>
+    <div class="content" [hidden]="hideContent" innerHTML="{{ safeHtml( post.content ) }}"></div>
 
     <!--list images -->
     <div *ngIf=" post.photos.length " class="uploaded-files" [attr.no-files]=" post.photos.length " [hidden]="hideContent">

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Api } from './api';
-import { Member, MEMBER_LOGIN } from './member';
+import { Member } from './member';
 import { PHILGO_API_RESPONSE } from './philgo-api-interface';
 export * from './philgo-api-interface';
 
