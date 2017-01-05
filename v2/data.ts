@@ -127,7 +127,7 @@ export class Data extends Api {
             }
         }
         catch (e) {
-            alert("Please inform admin for this error: Data::upload() - no file error.");
+            this.member.error("Please inform admin for this error: Data::upload() - no file error.");
             return;
         }
         
@@ -219,7 +219,7 @@ export class Data extends Api {
                     }
                     this.uploadData = null;
                 }, error => {
-                    alert( error );
+                    this.member.error( error );
                 } );
      * @endcode
      */
@@ -291,18 +291,18 @@ export class Data extends Api {
                 //console.log("onProgressItem: ", per );
             }
             catch ( e ) {
-                console.error( progress );
+                // console.error( progress );
             }
         };
         this.uploader.onCompleteAll = () => {
-            console.log("uploader.onCompleteAll()");
+            // console.log("uploader.onCompleteAll()");
             // this.onBrowserUploadComplete();
             let re: FILE_UPLOAD_RESPONSE = null;
             try {
                 re = JSON.parse( this.result['response'] );
             }
             catch ( e ) {
-                console.error("upload error: ", this.result['response'], e);
+                // console.error("upload error: ", this.result['response'], e);
                 failureCallback( 'json-parse-error' );
                 if ( completeCallback ) completeCallback( 1 );
                 return 0;
@@ -552,7 +552,7 @@ export class Data extends Api {
             successCallback( re );
             if ( completeCallback ) completeCallback( 0 );
         }, e => {
-            // alert("An error has occurred: Code = " + e.code);
+            // this.member.error("An error has occurred: Code = " + e.code);
             console.log("upload error source " + e.source);
             console.log("upload error target " + e.target);
             failureCallback( e.code );

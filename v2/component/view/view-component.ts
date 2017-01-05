@@ -34,13 +34,13 @@ export class ViewComponent {
     }
     ngOnInit() {
         try {
-            if ( this.post === null ) return alert("View Component Error: post is null");
+            if ( this.post === null ) return this.postService.error("View Component Error: post is null");
             if ( this.post.idx_parent !== void 0 ) {
                 this.isPost = this.post.idx_parent == '0';
                 this.isComment = ! this.isPost;
             }
             else {
-                // alert("ViewComponent::ngOnInit() no post.idx_parent");
+                // this.postService.error("ViewComponent::ngOnInit() no post.idx_parent");
             }
         }
         catch ( e ) {
@@ -80,7 +80,7 @@ export class ViewComponent {
             // this.post['subject'] = "deleted";
             // this.post['content'] = "deleted";
             },
-            error => alert("delete error: " + error ),
+            error => this.postService.error("delete error: " + error ),
             () => this.post['inDeleting'] = false
         );
     }
@@ -92,9 +92,9 @@ export class ViewComponent {
         this.post['inReport'] = true;
         this.postService.report( this.post.idx, re => {
             // console.log('delete: re: ', re);
-            alert("You have reported a post. Thank you.");
+            this.postService.error("You have reported a post. Thank you.");
         },
-        error => alert("report error: " + error ),
+        error => this.postService.error( error ),
         () => {
             this.post['inReport'] = false;
         });
@@ -105,13 +105,12 @@ export class ViewComponent {
         this.post['inLike'] = true;
         this.postService.vote( this.post.idx, re => {
             console.log('delete: re: ', re);
-            // alert("You have reported a post. Thank you.");
+            // this.postService.error("You have reported a post. Thank you.");
              this.post['inLike'] = false;
             this.post.good = (parseInt( this.post.good ) + 1).toString();
         },
         error => {
-
-            alert("like error: " + error );
+            this.postService.error("like error: " + error );
               this.post['inLike'] = false;
             console.log("like error: " + error );
         },

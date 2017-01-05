@@ -91,13 +91,13 @@ export class Post extends Api {
      * @attention - It does not do 'GET' request. it gets data of a post.
      * @note this method name has changed from 'get()' to 'load()'.
      */
-    load( idx, successCallback: ( re: POST_RESPONSE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
+    load( idx, successCallback: ( re: POST_RESPONSE ) => void, failureCallback: ( error: string ) => void, completeCallback?: () => void ) {
         let i = parseInt( idx );
-        if ( ! i ) alert("wrong idx_post. it is not a number");
+        if ( ! i ) return failureCallback("wrong idx_post. it is not a number");
         let url = this.getUrl( 'post_get_submit&idx=' + i );
         super.get( url,
             successCallback,
-            errorCallback,
+            failureCallback,
             completeCallback );
     }
 
@@ -167,7 +167,7 @@ export class Post extends Api {
             console.log('point ad title: ', posts.ads[0].subject);
             console.log('comment user name: ', posts.posts[0].comments[0].member.name);
         }, e => {
-            alert(e);
+            this.error(e);
         });
 
      * @endcode
@@ -261,7 +261,7 @@ export class Post extends Api {
             console.log("latest: ", page);
             this.posts = page.posts;
         },
-        error => alert( error ),
+        error => this.error( error ),
         () => {});
         
      * @endcode
@@ -296,7 +296,7 @@ export class Post extends Api {
      * 게시판 종류를 리턴한다.
      * 
      * @code simple example
-     *      this.post.getForums( re => console.log(re), e => alert(e) );
+     *      this.post.getForums( re => console.log(re), e => this.error(e) );
      * @endcode
      * @code example code
         this.post.getForums( data => {

@@ -33,6 +33,7 @@ export class SampleHomePage {
     this.member.logout();
     this.checkLogin();
   }
+
   onClickProfile() {
     this.member.data( data => {
       this.userData = data;

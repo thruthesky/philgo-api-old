@@ -97,7 +97,7 @@ export class Message extends Api {
         this.message.send( this.form, re => {
             console.log("message send success: ", re);
         },
-        error => alert("message sending error: " + error ),
+        error => this.message.error("message sending error: " + error ),
         () => { }
         );
 

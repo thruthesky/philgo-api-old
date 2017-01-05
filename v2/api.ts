@@ -3,14 +3,16 @@ import { MEMBER_LOGIN_DATA, SEARCH_QUERY_DATA, MEMBER_DATA } from './philgo-api-
 import 'rxjs/add/operator/timeout';
 declare let global; // for php-js. uniqid()
 export const PHILGO_MEMBER_LOGIN = 'philgo-login';
+export const NO_INTERNET = "No Internet! Please connect to internet.";
+export const PHILGO_API_CONNECTION_TIMEOUT = 2500;
 export class Api {
   self: Api = null;
   http: Http;
   debug: boolean = false;
   // apiEndpoint = "http://test.philgo.com/index.php";
-  //  apiEndpoint = "http://philgo.org/index.php";
+    apiEndpoint = "http://philgo.org/index.php";
   //  apiEndpoint = "http://www.philgo.com/index.php";
-    apiEndpoint = "http://w8.philgo.com/index.php"; // fastest server from db.
+  //  apiEndpoint = "http://w8.philgo.com/index.php"; // fastest server from db.
   constructor( http ) {
     this.http = http;
     // console.log('Api::constructor()', http);
@@ -76,7 +78,7 @@ export class Api {
   _get( url, successCallback: (data:any) => void, errorCallback?: ( e:any ) => void, completeCallback?: () => void ) {
     if ( this.debug ) console.info("get: ", url);
     this.http.get( url )
-      .timeout( 25000, new Error('timeout exceeded') )
+      .timeout( PHILGO_API_CONNECTION_TIMEOUT, new Error('timeout exceeded') )
       .subscribe(
         re => this.responseData( re, successCallback, errorCallback ),
         er => this.responseConnectionError( er, errorCallback ),
@@ -113,7 +115,7 @@ export class Api {
           catch( e ) {
             errorCallback( 'api get cache url error' );
             if ( completeCallback ) completeCallback();
-            console.error( data['_body']);
+            //console.error( data['_body']);
           }
         });
     }
@@ -133,7 +135,7 @@ export class Api {
       console.info("post: ", url);
     }
     this.http.post( this.serverUrl, data, this.requestOptions )
-      .timeout( 25000, new Error('timeout exceeded') )
+      .timeout( PHILGO_API_CONNECTION_TIMEOUT, new Error('timeout exceeded') )
       .subscribe(
         re => this.responseData( re, successCallback, errorCallback ),
         er => this.responseConnectionError( er, errorCallback ),
@@ -187,8 +189,8 @@ export class Api {
       data = JSON.parse( re['_body'] );
     }
     catch( e ) {
-      console.error(e);
-      console.info(re);
+      //console.error(e);
+      //console.info(re);
       if ( errorCallback ) return errorCallback('json-parse-error');
     }
     if ( this.isRequestError(data) ) {
@@ -206,8 +208,8 @@ export class Api {
    * @warning the error message "No Internet!" NOT only means for 'no internet' but also for 'no connection' to server maybe because of slow internet or wrong domain or server script error etc.
    */
   responseConnectionError( error: Response | any, errorCallback: ( error : string ) => void ) {
-    console.error(Response);
-    if ( errorCallback ) errorCallback("No Internet! Please connect to internet.");
+    //console.error(Response);
+    if ( errorCallback ) errorCallback( NO_INTERNET );
   }
 
   get requestOptions() : RequestOptions {
@@ -334,7 +336,7 @@ export class Api {
       }
       catch (e) {
         // error. no callback.
-        console.error( "error on parsing data of localstroage.");
+        // console.error( "error on parsing data of localstroage.");
       }
       try {
         if ( data ) {
@@ -343,7 +345,7 @@ export class Api {
         }
       }
       catch ( e ) {
-        console.error("error on cacheCallback() ==> callback()");
+        // console.error("error on cacheCallback() ==> callback()");
       }
     }
     else {
@@ -577,7 +579,7 @@ export class Api {
       }
     }
     catch( e ) {
-      console.error('birthday error: ', e );
+      // console.error('birthday error: ', e );
     }
 
     return str;
@@ -629,5 +631,15 @@ export class Api {
     }
     
 
+  /**
+   * It shows( alerts ) error message based on philgo error which is returned from philgo api server.
+   */
+  error( error, obj?: any ) {
+    let str = '';
+    if ( error == NO_INTERNET ) str = "You have no internet. Or your internet is too slow.";
+    else if ( error == "User not found. Wrong idx_member.") str = "Please, login ...";
+    else str = error;
+    alert("ERROR!\n\n" + str);
+  }
 }
 

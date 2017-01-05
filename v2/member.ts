@@ -44,7 +44,7 @@ export class Member extends Api {
      * @code example
             this.member.login( this.loginData,
                 login => console.log('login success: ', login),
-                er => alert("login error:" + er),
+                er => this.member.error("login error:" + er),
                 () => console.log('login complete!')
             );
      * @endcode

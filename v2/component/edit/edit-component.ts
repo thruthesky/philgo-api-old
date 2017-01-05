@@ -164,14 +164,19 @@ export class EditComponent {
         );
     }
 
+
     createComment() {
         this.temp.idx_parent = this.current.idx;
         
         this.temp.post_id = this.post_id;
         // console.log("createComment() temp:", this.temp);
 
+        this.post.debug = true;
         this.post.createComment( this.temp,
-            s => this.successCallback( s ),
+            s => {
+                this.sendPushNotification( s );
+                this.successCallback( s );
+            },
             e => this.errorCallback( e ),
             () => this.completeCallback()
         );
@@ -223,14 +228,14 @@ export class EditComponent {
                     this.posts.unshift( re.post );
                 }
             }
-            catch ( e ) { alert("Please restart the app."); }
+            catch ( e ) { this.post.error( "Caught in EditComponent::successCallback() 'create-post'", e ); }
         }
         this.active = false; // remove '.show' css class.  it cannot be inside this.clear()
         this.temp = {};
         this.success.emit();
     }
     errorCallback( error ) {
-        alert( error );
+        this.post.error( "EditComponent::errorCallback(): " + error );
     }
     completeCallback() {
         this.inPosting = false;
@@ -290,7 +295,7 @@ export class EditComponent {
             this.fileTransfer( path ); // transfer the photo to the server.
         }, e => {
             // console.error( 'camera error: ', e );
-            alert("camera error");
+            this.post.error("EditComponent::onCameraConfirm() : camera error");
         }, options);
     }
     
@@ -322,7 +327,7 @@ export class EditComponent {
     }
     onFailureFileUpload ( error ) {
         this.showProgress = false;
-        alert( error );
+        this.post.error( "Error: EditComponent::onFailureFileUpload()");// error );
     }
     onCompleteFileUpload( completeCode ) {
         // console.log("completeCode: ", completeCode);
@@ -356,10 +361,14 @@ export class EditComponent {
             // console.log( this.temp.photos );
         }, error => {
             this.inDeleting = false;
-            alert( error );
+            this.post.error( "EditComponent::onClickDeleteFile(): " + error );
         } );
 
     }
 
+
+    sendPushNotification( re ) {
+        console.log("result of comment create: ", re);
+    }
 
 }

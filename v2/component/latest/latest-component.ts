@@ -2,7 +2,7 @@
  * @see ../../../README.md
  * 
  */
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Post, PAGE, PAGE_OPTION, POSTS, ONE_HOUR_STAMP } from '../../post';
 @Component({
     selector: 'latest-component',
@@ -12,6 +12,7 @@ export class LatestComponent {
     @Input() title: string = null;
     @Input() post_id: string = null;
     @Input() limit: number = 0;
+    @Output() error = new EventEmitter();
     posts: POSTS = <POSTS> [];
     constructor( private post: Post ) {
         //console.log("LatestComponent::constructor()");
@@ -37,7 +38,10 @@ export class LatestComponent {
                 }, i * 50 );
             } );
         },
-        error => alert( "latest-component error: " + error ),
+        error => {
+            this.error.emit( error );
+            //this.post.error( "latest-component error: " + error );
+        },
         () => {});
     }
 }
