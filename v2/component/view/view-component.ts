@@ -6,6 +6,8 @@ import { POST } from '../../philgo-api-interface';
 import { Post } from '../../post';
 import { EditComponent } from '../edit/edit-component';
 
+import { DomSanitizer } from '@angular/platform-browser'
+
 
 @Component({
     selector: 'view-component',
@@ -25,6 +27,7 @@ export class ViewComponent {
     active: boolean = false; // "active==true" means, the use is in editing.
 
     constructor(
+        private sanitized: DomSanitizer,
         private postService : Post
     ) {
         // console.log("ViewComponent()");
@@ -50,6 +53,9 @@ export class ViewComponent {
         // }
     }
     
+    safeHtml( html ) {
+        return this.sanitized.bypassSecurityTrustHtml( html );
+    }
     onClickReply() {
         this.active = true;
         this.mode = 'create-comment';
