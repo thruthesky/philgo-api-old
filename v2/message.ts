@@ -150,7 +150,7 @@ export class Message extends Api {
         url += '&mode=delete';
         url += '&idx=' + idx;
         let login = this.getLoginData();
-        if ( login === void 0 || login.id === void 0 ) {
+        if ( ! login ) {
             errorCallback('login-first');
             completeCallback();
             return;
