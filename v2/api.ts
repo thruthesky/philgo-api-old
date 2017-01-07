@@ -13,6 +13,7 @@ export class Api {
   //  apiEndpoint = "http://philgo.org/index.php";
   //  apiEndpoint = "http://www.philgo.com/index.php";
     apiEndpoint = "http://w8.philgo.com/index.php"; // fastest server from db.
+  apiEndpointFileServer = "http://file.philgo.com/index.php";
   constructor( http ) {
     this.http = http;
     // console.log('Api::constructor()', http);

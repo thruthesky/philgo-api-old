@@ -34,7 +34,7 @@ declare var FileTransfer;
 export class Data extends Api {
     private uploader: FileUploader = Object();
     private result:FileUploadResponse = <FileUploadResponse> {};
-    private urlFileServer: string = "http://file.philgo.com/index.php?module=ajax&submit=1&action=";
+    private urlFileServer: string = this.apiEndpointFileServer + "?module=ajax&submit=1&action=";
     constructor( http: Http, private member: Member ) {
         super( http );
     }

@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, NgZone } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Post, POST_RESPONSE, POST_DATA, POST, COMMENT } from '../../../../../api/philgo-api/v2/post';
 import { Data, FILE_UPLOAD_RESPONSE, DATA_UPLOAD_OPTIONS } from '../../../../../api/philgo-api/v2/data';
+import { IonicApi, PUSH_MESSAGE } from '../../../../../providers/ionic-api-0.2/ionic-api';
 import * as _ from 'lodash';
 
 
@@ -56,7 +57,8 @@ export class EditComponent {
         private ngZone: NgZone,
         private post: Post,
         private data: Data,
-        private sanitizer: DomSanitizer
+        private sanitizer: DomSanitizer,
+        private ionic: IonicApi
         ) {
         //console.log("EditComponent::constructor()");
         this.cordova = post.isCordova();
@@ -165,6 +167,9 @@ export class EditComponent {
     }
 
 
+    /**
+     * Going to create a comment.
+     */
     createComment() {
         this.temp.idx_parent = this.current.idx;
         
@@ -173,9 +178,9 @@ export class EditComponent {
 
         this.post.debug = true;
         this.post.createComment( this.temp,
-            s => {
-                this.sendPushNotification( s );
-                this.successCallback( s );
+            re => {
+                this.sendPushNotifications( re );
+                this.successCallback( re );
             },
             e => this.errorCallback( e ),
             () => this.completeCallback()
@@ -367,8 +372,29 @@ export class EditComponent {
     }
 
 
-    sendPushNotification( re ) {
-        console.log("result of comment create: ", re);
+    sendPushNotifications( re ) { 
+        console.log("result of comment create: ", re.parents);
+        let parents = re.parents;
+        for ( let parent of parents ) {
+            if ( parent.varchar_9 ) {
+                console.log("Going to send push notification!");
+                this.sendPushNotification( parent.varchar_9 );
+            }
+        }
+    }
+    
+    sendPushNotification( token ) {
+        let option: PUSH_MESSAGE = {
+            token: token,
+            title: "New Comment",
+            content: "You have a new comment under your post. Please open your comment list."
+        };
+        this.ionic.sendPushNotification( option, () => {
+            console.info("push notification OK");
+        }, err => {
+            console.error("push notification error: ", err);
+        });
+
     }
 
 }
