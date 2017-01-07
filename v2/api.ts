@@ -4,7 +4,7 @@ import 'rxjs/add/operator/timeout';
 declare let global; // for php-js. uniqid()
 export const PHILGO_MEMBER_LOGIN = 'philgo-login';
 export const NO_INTERNET = "No Internet! Please connect to internet.";
-export const PHILGO_API_CONNECTION_TIMEOUT = 2500;
+export const PHILGO_API_CONNECTION_TIMEOUT = 32500;
 export class Api {
   self: Api = null;
   http: Http;
@@ -209,7 +209,7 @@ export class Api {
    * @warning the error message "No Internet!" NOT only means for 'no internet' but also for 'no connection' to server maybe because of slow internet or wrong domain or server script error etc.
    */
   responseConnectionError( error: Response | any, errorCallback: ( error : string ) => void ) {
-    //console.error(Response);
+    // console.error(Response);
     if ( errorCallback ) errorCallback( NO_INTERNET );
   }
 
