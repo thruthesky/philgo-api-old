@@ -3,7 +3,7 @@ import { MEMBER_LOGIN_DATA, SEARCH_QUERY_DATA, MEMBER_DATA } from './philgo-api-
 import 'rxjs/add/operator/timeout';
 declare let global; // for php-js. uniqid()
 export const PHILGO_MEMBER_LOGIN = 'philgo-login';
-export const NO_INTERNET = "No Internet! Please connect to internet.";
+export const NO_INTERNET = "Internet Problem. You have no Internet or very slow Internet!"; // Just change this messgae and every will work.
 export const PHILGO_API_CONNECTION_TIMEOUT = 1000;
 export class Api {
   self: Api = null;
