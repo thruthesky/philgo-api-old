@@ -4,7 +4,7 @@ import 'rxjs/add/operator/timeout';
 declare let global; // for php-js. uniqid()
 export const PHILGO_MEMBER_LOGIN = 'philgo-login';
 export const NO_INTERNET = "No Internet! Please connect to internet.";
-export const PHILGO_API_CONNECTION_TIMEOUT = 32500;
+export const PHILGO_API_CONNECTION_TIMEOUT = 1000;
 export class Api {
   self: Api = null;
   http: Http;
