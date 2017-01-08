@@ -640,7 +640,7 @@ export class Api {
     if ( error == NO_INTERNET ) str = "You have no internet. Or your internet is too slow.";
     else if ( error == "User not found. Wrong idx_member.") str = "Please, login ...";
     else str = error;
-    alert("ERROR!\n\n" + str);
+    alert("api.ts error() ERROR!\n\n" + str);
   }
 }
 
