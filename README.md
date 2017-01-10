@@ -1,6 +1,7 @@
 # PhilGo Restful API
 
-Philgo Restful API
+Philgo Restful API v2.
+
 
 
 # TODO
