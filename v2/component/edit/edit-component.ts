@@ -36,6 +36,15 @@ export class EditComponent {
      */
     @Input() post_id: string = null;
     @Input() current: POST;
+
+    /**
+     * If 'active' is set to true, then the form should be in full editing mode.
+     *      - textarea is wide and taller enough.
+     * If 'active' is set to false, then the form should be in minimal editing mode.
+     *      - textarea should be in one line.
+     *      - there may be camera button.
+     *      - submit button may be hidden.
+     */
     @Input() active: boolean = false; // adding '.show' CSS Class to FORM
     @Input() mode: 'create-post' | 'edit-post' | 'create-comment' | 'edit-comment';
     @Output() postLoad = new EventEmitter();
@@ -144,6 +153,7 @@ export class EditComponent {
         else {
             // this.error.emit("wrong mode");
         }
+        
     }
 
 
@@ -240,7 +250,7 @@ export class EditComponent {
         this.success.emit();
     }
     errorCallback( error ) {
-        this.post.error( "EditComponent::errorCallback(): " + error );
+        this.post.error( error );
     }
     completeCallback() {
         this.inPosting = false;
@@ -332,7 +342,7 @@ export class EditComponent {
     }
     onFailureFileUpload ( error ) {
         this.showProgress = false;
-        this.post.error( "Error: EditComponent::onFailureFileUpload()");// error );
+        this.post.error( "Error: EditComponent::onFailureFileUpload()" + error );// error );
     }
     onCompleteFileUpload( completeCode ) {
         // console.log("completeCode: ", completeCode);

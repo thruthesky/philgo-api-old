@@ -6,7 +6,7 @@ import { POST } from '../../philgo-api-interface';
 import { Post } from '../../post';
 import { EditComponent } from '../edit/edit-component';
 
-import { DomSanitizer } from '@angular/platform-browser'
+// import { DomSanitizer } from '@angular/platform-browser'
 
 
 @Component({
@@ -27,7 +27,7 @@ export class ViewComponent {
     active: boolean = false; // "active==true" means, the use is in editing.
 
     constructor(
-        private sanitized: DomSanitizer,
+        // private sanitized: DomSanitizer,
         private postService : Post
     ) {
         // console.log("ViewComponent()");
@@ -47,15 +47,23 @@ export class ViewComponent {
             console.info("CATCH : ViewComponent::ngOnInit() idx_parent failed?");
         }
 
+        // try {
+        //     this.post.content = this.safeHtml( this.post.content );
+        // }
+        // catch ( e ) {
+        //     alert("Failed on putting safe html");
+        // }
+
         // if ( this.option['show-reply-form'] ) {
         //     if ( this.isPost ) this.mode = 'create-post';
         //     else this.mode = 'create-comment';
         // }
     }
     
-    safeHtml( html ) {
-        return this.sanitized.bypassSecurityTrustHtml( html );
-    }
+    // safeHtml( html ) : string {
+    //     return <string> this.sanitized.bypassSecurityTrustHtml( html );
+    // }
+
     onClickReply() {
         this.active = true;
         this.mode = 'create-comment';

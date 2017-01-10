@@ -50,7 +50,11 @@ export class Post extends Api {
             data.id = login.id;
             data.session_id = login.session_id;
         }
-        if ( this.hasError( data ) ) return errorCallback( this.getError( data ) );
+        if ( this.hasError( data ) ) {
+            errorCallback( this.getError( data ) );
+            if ( completeCallback ) completeCallback();
+            return;
+        }
         this.post( data,
             successCallback,
             errorCallback,
@@ -63,7 +67,11 @@ export class Post extends Api {
             data.id = login.id;
             data.session_id = login.session_id;
         }
-        if ( this.hasError( data ) ) return errorCallback( this.getError( data ) );
+        if ( this.hasError( data ) ) {
+            errorCallback( this.getError( data ) );
+            if ( completeCallback ) completeCallback();
+            return;
+        }
         this.post( data,
             successCallback,
             errorCallback,
@@ -80,7 +88,11 @@ export class Post extends Api {
         if ( ! login ) return errorCallback('login first');
         data.id = login.id;
         data.session_id = login.session_id;
-        if ( this.hasError( data ) ) return errorCallback( this.getError( data ) );
+        if ( this.hasError( data ) ) {
+            errorCallback( this.getError( data ) );
+            if ( completeCallback ) completeCallback();
+            return;
+        }
         this.post( data,
             successCallback,
             errorCallback,
@@ -93,7 +105,11 @@ export class Post extends Api {
      */
     load( idx, successCallback: ( re: POST_RESPONSE ) => void, failureCallback: ( error: string ) => void, completeCallback?: () => void ) {
         let i = parseInt( idx );
-        if ( ! i ) return failureCallback("wrong idx_post. it is not a number");
+        if ( ! i ) {
+            failureCallback("wrong idx_post. it is not a number");
+            if ( completeCallback ) completeCallback();
+            return;
+        }
         let url = this.getUrl( 'post_get_submit&idx=' + i );
         super.get( url,
             successCallback,
@@ -110,7 +126,11 @@ export class Post extends Api {
             data['id'] = login.id;
             data['session_id'] = login.session_id;
         }
-        if ( this.hasError( data ) ) return errorCallback( this.getError( data ) );
+        if ( this.hasError( data ) ) {
+            errorCallback( this.getError( data ) );
+            if ( completeCallback ) completeCallback();
+            return;
+        }
         this.post( data,
             successCallback,
             errorCallback,
@@ -126,7 +146,11 @@ export class Post extends Api {
             data['id'] = login.id;
             data['session_id'] = login.session_id;
         }
-        if ( this.hasError( data ) ) return errorCallback( this.getError( data ) );
+        if ( this.hasError( data ) ) {
+            errorCallback( this.getError( data ) );
+            if ( completeCallback ) completeCallback();
+            return;
+        }
         this.post( data,
             successCallback,
             errorCallback,
@@ -142,7 +166,11 @@ export class Post extends Api {
             data['id'] = login.id;
             data['session_id'] = login.session_id;
         }
-        if ( this.hasError( data ) ) return errorCallback( this.getError( data ) );
+        if ( this.hasError( data ) ) {
+            errorCallback( this.getError( data ) );
+            if ( completeCallback ) completeCallback();
+            return;
+        }
         this.post( data,
             successCallback,
             errorCallback,
