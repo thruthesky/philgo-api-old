@@ -25,13 +25,20 @@
     <!--like edit etc. buttons-->
     <span class="buttons" [hidden]="hideContent">
         <span *ngIf=" isComment " (click)="onClickReply()">Reply</span>
-        <span (click)="onClickEdit( post )">Edit</span>
-        <span *ngIf=" ! post.inDeleting " (click)="onClickDelete()">Delete</span>
-        <i *ngIf=" post.inDeleting " class="fa fa-spinner fa-spin"></i>
-        <span  (click)="onClickLike()">Like <span *ngIf=" !post.inLike ">({{ post.good }})</span></span>
-        <i *ngIf=" post.inLike " class="fa fa-spinner fa-spin"></i>
-        <span *ngIf=" !post.inReport " (click)="onClickReport()">Report</span>
-        <i *ngIf=" post.inReport " class="fa fa-spinner fa-spin"></i>
+
+
+        <ng-container *ngIf=" post.mine ">
+            <span (click)="onClickEdit( post )">Edit</span>
+            <span *ngIf=" ! post.inDeleting " (click)="onClickDelete()">Delete</span>
+            <i *ngIf=" post.inDeleting " class="fa fa-spinner fa-spin"></i>
+        </ng-container>
+        <ng-container *ngIf=" ! post.mine ">
+            <span  (click)="onClickLike()">Like <span *ngIf=" !post.inLike ">({{ post.good }})</span></span>
+            <i *ngIf=" post.inLike " class="fa fa-spinner fa-spin"></i>
+            <span *ngIf=" !post.inReport " (click)="onClickReport()">Report</span>
+            <i *ngIf=" post.inReport " class="fa fa-spinner fa-spin"></i>
+        </ng-container>
+        
     </span>
 
     <!-- create/edit post or comment-->

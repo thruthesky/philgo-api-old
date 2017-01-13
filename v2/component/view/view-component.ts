@@ -23,6 +23,7 @@ export class ViewComponent {
     @Input() mode: string = null;
     @Input() post: POST = null; // it is comment or post.
     @Input() root: POST = null;
+    @Input() login_id: string = null;
     
     active: boolean = false; // "active==true" means, the use is in editing.
 
@@ -34,6 +35,7 @@ export class ViewComponent {
         // console.log("ViewComponent()");
     }
     ngOnInit() {
+        if ( this.post.user_id == this.login_id ) this.post['mine'] = true;
         try {
             if ( this.post === null ) return this.postService.error("View Component Error: post is null");
             if ( this.post.idx_parent !== void 0 ) {
@@ -79,7 +81,6 @@ export class ViewComponent {
         if ( this.post.idx == '0' ) this.mode = 'post-edit';
         else this.mode = 'edit-comment';
         this.editComponent.initForm( this.mode );
-        
     }
 
     onClickDelete() {

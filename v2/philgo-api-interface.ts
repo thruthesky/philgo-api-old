@@ -298,6 +298,7 @@ export interface POST {
     post_id: string;
     stamp: string;
     subject: string;
+    user_id: string;
     user_name: string;
     url?: string;
 };
