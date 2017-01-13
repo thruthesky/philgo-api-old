@@ -14,9 +14,9 @@
                 </div><!--/file-upload-button-->
             </td>
             <td width="98%">
-                <span *ngIf= " !active "  (click)="onActivateForm()" class="fake-textarea"> &nbsp;</span>
+                <span *ngIf= " !active " (click)="onActivateForm()" class="fake-textarea"> &nbsp;</span>
                 <!-- show uploaded files while creating a post/comment -->
-                <section *ngIf=" temp.photos " class="files">
+                <section *ngIf=" active && temp.photos " class="files">
                     <div *ngIf=" inDeleting " class="loader">
                         <i class="fa fa-spinner fa-spin"></i> Deleting ...
                     </div>

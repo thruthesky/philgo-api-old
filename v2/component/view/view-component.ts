@@ -1,7 +1,7 @@
 /**
  * @see ./README.md
  */
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { POST } from '../../philgo-api-interface';
 import { Post } from '../../post';
 import { EditComponent } from '../edit/edit-component';
@@ -26,6 +26,7 @@ export class ViewComponent {
     
     active: boolean = false; // "active==true" means, the use is in editing.
 
+    @Output() edit = new EventEmitter();
     constructor(
         // private sanitized: DomSanitizer,
         private postService : Post
@@ -70,13 +71,15 @@ export class ViewComponent {
         this.editComponent.initForm( this.mode );
     }
 
-    onClickEdit() {
-        console.log("ViewComponent::onClickEdit()", this.editComponent );
+    onClickEdit( post ) {
+        console.log("ViewComponent::onClickEdit()" );
+        this.edit.emit( post );
         this.active = true;
         this.hideContent = true;
         if ( this.post.idx == '0' ) this.mode = 'post-edit';
         else this.mode = 'edit-comment';
         this.editComponent.initForm( this.mode );
+        
     }
 
     onClickDelete() {

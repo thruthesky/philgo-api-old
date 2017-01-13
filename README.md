@@ -117,6 +117,10 @@ This shows in three format.
 
 ## view component
 
+### Event
+
+* view component will emit 'edit' event if edit button clicked.
+
 
 ### view page url.
 
@@ -141,6 +145,10 @@ This shows in three format.
 * 'mode' 를 결정하는 것은
     * (가짜) form box 를 클릭하거나
     * post create button, edit/reply 등을 클릭 할 때 결정된다.
+
+
+
+
 
 ### property
 
