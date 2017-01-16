@@ -28,6 +28,9 @@ export class ViewComponent {
     active: boolean = false; // "active==true" means, the use is in editing.
 
     @Output() edit = new EventEmitter();
+
+    //
+    showLink: boolean = false;
     constructor(
         // private sanitized: DomSanitizer,
         private postService : Post

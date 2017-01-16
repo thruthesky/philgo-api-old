@@ -8,11 +8,14 @@
     <h2 *ngIf=" isPost " >{{ post.subject }}</h2>
     <nav class="article-header">
         <div class="meta">
-            <span class="nickname">{{ post.member?.nickname }}</span>
-            <span class="idx">idx: {{ post.idx }}</span>
-            <span>{{ post.date }}</span>
+            <span class="nickname">Author: <b>{{ post.member?.nickname }}</b></span>
+            <span class="idx">No.: <b>{{ post.idx }}</b></span>
+            <span class="date">Date: <b>{{ post.date }}</b></span>
+            <span class="url" *ngIf=" ! cordova && post.url ">
+                <b *ngIf=" ! showLink " (click)=" showLink = true " class="text">copy link</b>
+                <i *ngIf=" showLink " class="link">{{ post.url }}</i>
+            </span>
         </div>
-        <div class="url" *ngIf=" ! cordova && post.url " routerLink=" post.url ">{{ post.url }}</div>
     </nav>
 
     <div class="content" [hidden]="hideContent" innerHTML="{{ post.content }}"></div>
@@ -25,7 +28,6 @@
     <!--like edit etc. buttons-->
     <span class="buttons" [hidden]="hideContent">
         <span *ngIf=" isComment " (click)="onClickReply()">Reply</span>
-
 
         <ng-container *ngIf=" post.mine ">
             <span (click)="onClickEdit( post )">Edit</span>
