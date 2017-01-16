@@ -35,7 +35,13 @@ export class ViewComponent {
         // console.log("ViewComponent()");
     }
     ngOnInit() {
-        if ( this.post.user_id == this.login_id ) this.post['mine'] = true;
+        if ( this.post.user_id ) {
+            if ( this.post.user_id == this.login_id ) this.post['mine'] = true;
+        }
+        try {
+            this.post['date'] = this.postService.getDateTime( this.post['stamp'] );
+        }
+        catch (e) {}
         try {
             if ( this.post === null ) return this.postService.error("View Component Error: post is null");
             if ( this.post.idx_parent !== void 0 ) {

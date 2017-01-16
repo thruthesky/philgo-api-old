@@ -272,6 +272,7 @@ export interface COMMENT {
     photos?: Array<PHOTOS>;
     post_id?: string;
     stamp?: string;
+    date?: string;
     user_name?: string;
 };
 
@@ -297,6 +298,7 @@ export interface POST {
     photos: Array< PHOTOS >;
     post_id: string;
     stamp: string;
+    date?: string;
     subject: string;
     user_id: string;
     user_name: string;

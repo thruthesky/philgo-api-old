@@ -7,12 +7,12 @@
     <!--Header & content-->
     <h2 *ngIf=" isPost " >{{ post.subject }}</h2>
     <nav class="article-header">
-        <ul>
-            <li *ngIf=" ! cordova " routerLink=" post.url ">{{ post.url }}</li>
-            <li>{{ post.member?.nickname }}</li>
-            <li>idx: {{ post.idx }}</li>
-            <li>{{ post.date }}</li>
-        </ul>
+        <div class="meta">
+            <span class="nickname">{{ post.member?.nickname }}</span>
+            <span class="idx">idx: {{ post.idx }}</span>
+            <span>{{ post.date }}</span>
+        </div>
+        <div class="url" *ngIf=" ! cordova && post.url " routerLink=" post.url ">{{ post.url }}</div>
     </nav>
 
     <div class="content" [hidden]="hideContent" innerHTML="{{ post.content }}"></div>
