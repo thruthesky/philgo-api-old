@@ -23,12 +23,12 @@ export class EditComponent {
      *      - It is needed to 'create-comment'.
      *          - More specifically, it will be used to insert the created comment into view.
      *      - It is not needed on 'edit-comment' and post create/edit.
-     * 
+     *
      */
     @Input() root: POST = null;
     /**
      *  @Attention - variable 'current' is the current post or current comment.
-     * 
+     *
      *  If you want to reply of a post, 'current' is the post.
      *  If you want to edit post, 'current' is the post.
      *  If you want to reply of a comment, 'parent' is the comment you want to leave a comment on.
@@ -52,16 +52,17 @@ export class EditComponent {
     @Output() success = new EventEmitter();
     @Output() cancel = new EventEmitter();
 
-    
+
     showProgress: boolean = false;
     progress: number = 0;
     widthProgress: any;
     //files: Array<FILE_UPLOAD_DATA> = <Array<FILE_UPLOAD_DATA>>[];
     temp = <POST_DATA> {};
-    
+
     cordova: boolean = false;
     inDeleting: boolean = false;
     inPosting: boolean = false;
+    inputFileValue: string = null;
     constructor(
         private ngZone: NgZone,
         private post: Post,
@@ -78,32 +79,32 @@ export class EditComponent {
             // console.log('ngZone.run()');
         });
     }
-    
+
     ngOnInit() {
         this.initForm();
     }
 
     /**
-     * 
+     *
      * 폼 데이터 초기화
-     * 
+     *
      *      - 새 글/코멘트 쓰기에서는 gid 값만 초기화
      *      - 글/코멘트 수정에서는 내용 및 기타 필드를 temp 에 복사한다.
-     * 
+     *
      * @param mode -
-     * 
+     *
      *      "@Input() mode" 로 지정되어져 있고, parent 클래스에서 mode 의 값을 지정하지만, 값의 반영 속도가 좀 느린 것 같다.
      *      그래서 입력 값으로 mode 를 받아서, 바로 반영하고,
      *      폼의 데이터를 초기화 한다.
-     *  
+     *
      *      특히 상위 컴포넌트( view-component ) 에서 수정 버튼을 클릭 했을 때, 이 함수를 직접 호출하면서, mode 값을 지정한다.
      *      mode 를 지정하는 이유는 @Input() 바인딩에서 값 전달 속도가 느려서 인 것 같다.
-     *      
-     * 
+     *
+     *
      */
     initForm( mode? ) {
         if ( mode ) this.mode = mode;
-        
+
         this.temp = <POST_DATA> {};
         this.temp.gid = this.post.uniqid(); // generate new gid for new post/comment.
 
@@ -115,7 +116,7 @@ export class EditComponent {
             this.temp = _.cloneDeep( this.current );
             this.temp.content = this.post.strip_tags( this.temp.content );
         }
-        
+
     }
 
 
@@ -128,7 +129,7 @@ export class EditComponent {
         this.initForm( 'create-comment' ); // onActivateForm() 에서는 무조건 'create-comment' 를 하면 된다.
         this.active = true; // add CSS class
     }
-    
+
     onClickCancel() {
         this.active = false;
         this.cancel.emit();
@@ -153,7 +154,7 @@ export class EditComponent {
         else {
             // this.error.emit("wrong mode");
         }
-        
+
     }
 
 
@@ -182,7 +183,7 @@ export class EditComponent {
      */
     createComment() {
         this.temp.idx_parent = this.current.idx;
-        
+
         this.temp.post_id = this.post_id;
         // console.log("createComment() temp:", this.temp);
 
@@ -277,7 +278,7 @@ export class EditComponent {
             p => this.onProgressFileUpload(p)
         );
     }
-    
+
     /**
      * This is for camera.
      */
@@ -318,14 +319,14 @@ export class EditComponent {
             this.post.error("EditComponent::onCameraConfirm() : camera error");
         }, options);
     }
-    
+
     fileTransfer( fileURL: string ) {
         this.showProgress = true;
         let options: DATA_UPLOAD_OPTIONS = {
             module_name: 'post',
             gid: this.temp.gid
         };
-        
+
         this.data.transfer( options,
             fileURL,
             x => this.onSuccessFileUpload( x ),
@@ -336,7 +337,7 @@ export class EditComponent {
     }
 
 
-    
+
     onSuccessFileUpload (re: FILE_UPLOAD_RESPONSE) {
         // console.log('re.data: ', re.data);
         if ( this.temp.photos === void 0 ) this.temp['photos'] = [];
@@ -359,8 +360,8 @@ export class EditComponent {
         this.renderPage();
         this.renderPage();
     }
-    
-    
+
+
     onClickDeleteFile( file ) {
 
         let re = confirm("Do you want to delete?");
@@ -387,7 +388,7 @@ export class EditComponent {
     }
 
 
-    sendPushNotifications( re ) { 
+    sendPushNotifications( re ) {
         console.log("result of comment create: ", re.parents);
         let parents = re.parents;
         for ( let parent of parents ) {
@@ -397,7 +398,7 @@ export class EditComponent {
             }
         }
     }
-    
+
     sendPushNotification( token ) {
         let option: PUSH_MESSAGE = {
             token: token,
