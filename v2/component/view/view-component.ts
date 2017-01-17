@@ -40,16 +40,24 @@ export class ViewComponent {
     }
     ngOnInit() {
 
+        if ( this.post === void 0 || ! this.post ) return this.error.emit("View Component Error: post is null or empty.");
+
+
+
+        // check if it is my post.
         if ( this.post.user_id !== void 0 ) {
             if ( this.post.user_id == this.login_id ) this.post['mine'] = true;
         }
 
+        // date of the post
         try {
             this.post['date'] = this.postService.getDateTime( this.post['stamp'] );
         }
         catch (e) {}
+
+
+        // check if the post is 'post' or 'comment'
         try {
-            if ( this.post === null ) return this.error.emit("View Component Error: post is null");
             if ( this.post.idx_parent !== void 0 ) {
                 this.isPost = this.post.idx_parent == '0';
                 this.isComment = ! this.isPost;
@@ -62,17 +70,23 @@ export class ViewComponent {
             console.info("CATCH : ViewComponent::ngOnInit() idx_parent failed?");
         }
 
-        // try {
-        //     this.post.content = this.safeHtml( this.post.content );
-        // }
-        // catch ( e ) {
-        //     alert("Failed on putting safe html");
-        // }
 
-        // if ( this.option['show-reply-form'] ) {
-        //     if ( this.isPost ) this.mode = 'create-post';
-        //     else this.mode = 'create-comment';
-        // }
+        if ( this.post.photos && this.post.photos.length ) {
+            console.log("phtos: ", this.post.photos);
+            let newArray = [];
+            for( let photo of this.post.photos ) {
+                let arr = this.postService.explode( '/', photo.url );
+                let no = arr[ arr.length -1 ];
+                let re = this.post.content.indexOf( no );
+                if ( re == -1 ) newArray.push( photo );
+                else {
+                    console.log("skip matched: ", no);
+                }
+            }
+            this.post.photos = newArray;
+        }
+
+
     }
     
     // safeHtml( html ) : string {

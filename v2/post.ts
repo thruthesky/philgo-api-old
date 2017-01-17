@@ -396,7 +396,9 @@ export class Post extends Api {
         return full;
     }
 
-    getLink( post, tag='article' ) {
+    getLink( post, tag='article' ) : string {
+        if ( post === void 0 ) { console.error("getLink() : post is void"); return ''; }
+        if ( post.idx === void 0 ) { console.error("getLink() : post.idx is void"); return null; }
         return '/' + tag + '/' + post.idx;
     }
     
