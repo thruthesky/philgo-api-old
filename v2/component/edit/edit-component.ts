@@ -249,8 +249,13 @@ export class EditComponent {
         this.temp = {};
         this.success.emit();
     }
+
+    /**
+     * propagate to parent component.
+     */
     errorCallback( error ) {
-        this.post.error( error );
+        // this.post.error( error );
+        this.error.emit( error );
     }
     completeCallback() {
         this.inPosting = false;

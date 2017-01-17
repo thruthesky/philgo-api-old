@@ -28,6 +28,7 @@ export class ViewComponent {
     active: boolean = false; // "active==true" means, the use is in editing.
 
     @Output() edit = new EventEmitter();
+    @Output() error = new EventEmitter();
 
     //
     showLink: boolean = false;
@@ -38,15 +39,17 @@ export class ViewComponent {
         // console.log("ViewComponent()");
     }
     ngOnInit() {
-        if ( this.post.user_id ) {
+
+        if ( this.post.user_id !== void 0 ) {
             if ( this.post.user_id == this.login_id ) this.post['mine'] = true;
         }
+
         try {
             this.post['date'] = this.postService.getDateTime( this.post['stamp'] );
         }
         catch (e) {}
         try {
-            if ( this.post === null ) return this.postService.error("View Component Error: post is null");
+            if ( this.post === null ) return this.error.emit("View Component Error: post is null");
             if ( this.post.idx_parent !== void 0 ) {
                 this.isPost = this.post.idx_parent == '0';
                 this.isComment = ! this.isPost;
@@ -101,7 +104,7 @@ export class ViewComponent {
             // this.post['subject'] = "deleted";
             // this.post['content'] = "deleted";
             },
-            error => this.postService.error("delete error: " + error ),
+            error => this.error.emit("delete error: " + error ),
             () => this.post['inDeleting'] = false
         );
     }
@@ -113,9 +116,9 @@ export class ViewComponent {
         this.post['inReport'] = true;
         this.postService.report( this.post.idx, re => {
             // console.log('delete: re: ', re);
-            this.postService.error("You have reported a post. Thank you.");
+            this.error.emit("You have reported a post. Thank you.");
         },
-        error => this.postService.error( error ),
+        error => this.error.emit( error ),
         () => {
             this.post['inReport'] = false;
         });
@@ -131,7 +134,7 @@ export class ViewComponent {
             this.post.good = (parseInt( this.post.good ) + 1).toString();
         },
         error => {
-            this.postService.error("like error: " + error );
+            this.error.emit("like error: " + error );
               this.post['inLike'] = false;
             console.log("like error: " + error );
         },
@@ -141,13 +144,17 @@ export class ViewComponent {
     }
 
 
-    editComponentOnSuccess() {
+    onEditComponentSuccess() {
         this.active = false;
         this.hideContent = false;
     }
-    editComponentOnCancel() {
+    onEditComponentCancel() {
         this.active = false;
         this.hideContent = false;
+    }
+
+    onEditComponentError( error ) {
+        this.error.emit( error );
     }
 
 
