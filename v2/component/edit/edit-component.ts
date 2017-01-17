@@ -2,7 +2,8 @@ import { Component, Input, Output, EventEmitter, NgZone } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Post, POST_RESPONSE, POST_DATA, POST, COMMENT } from '../../../../../api/philgo-api/v2/post';
 import { Data, FILE_UPLOAD_RESPONSE, DATA_UPLOAD_OPTIONS } from '../../../../../api/philgo-api/v2/data';
-import { IonicApi, PUSH_MESSAGE } from '../../../../../providers/ionic-api-0.2/ionic-api';
+import { IonicApi } from '../../../../../providers/ionic-api-0.2/ionic-api';
+import { IONIC_PUSH_MESSAGE } from '../../../../../providers/ionic-api-0.2/ionic-share';
 import * as _ from 'lodash';
 
 
@@ -399,7 +400,7 @@ export class EditComponent {
     }
     
     sendPushNotification( token ) {
-        let option: PUSH_MESSAGE = {
+        let option: IONIC_PUSH_MESSAGE = {
             token: token,
             title: "New Comment",
             content: "You have a new comment under your post. Please open your comment list."
