@@ -70,9 +70,9 @@ export class ViewComponent {
             console.info("CATCH : ViewComponent::ngOnInit() idx_parent failed?");
         }
 
-
+        // don't show photos that are already shown in the content.
         if ( this.post.photos && this.post.photos.length ) {
-            console.log("phtos: ", this.post.photos);
+            // console.log("phtos: ", this.post.photos);
             let newArray = [];
             for( let photo of this.post.photos ) {
                 let arr = this.postService.explode( '/', photo.url );
@@ -80,11 +80,15 @@ export class ViewComponent {
                 let re = this.post.content.indexOf( no );
                 if ( re == -1 ) newArray.push( photo );
                 else {
-                    console.log("skip matched: ", no);
+                    // console.log("skip matched: ", no);
                 }
             }
             this.post.photos = newArray;
         }
+
+        // make complete url.
+        this.post.content = this.post.content.replace( new RegExp('src="data/', 'g'), 'src="http://file.philgo.com/data/');
+
 
 
     }
