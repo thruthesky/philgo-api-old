@@ -122,6 +122,15 @@ This shows in three format.
 * view component will emit 'edit' event if edit button clicked.
 
 
+
+### broken image
+
+* for broken thumbnail images, most likely, GIF images can have thumbnail, we show original image.
+
+````
+    <img *ngFor=" let photo of post.photos " [src]=" photo.url_thumbnail " (error)="photoImg.src = photo.url " #photoImg>
+````
+
 ### view page url.
 
 * if 'post.url' has a value, it assumes it is a permanent url of a post, so, it displays.
