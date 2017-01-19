@@ -2,7 +2,7 @@
             [class.post]=" isPost "
             [class.comment]=" isComment "
             [attr.idx] = " post.idx "
-            [attr.depth]=" post.depth "  
+            [attr.depth]=" post.depth "
 >
     <!--Header & content-->
     <h2 *ngIf=" isPost " >{{ post.subject }}</h2>
@@ -22,7 +22,7 @@
 
     <!--list images -->
     <div *ngIf=" post.photos.length " class="uploaded-files" [attr.no-files]=" post.photos.length " [hidden]="hideContent">
-        <img *ngFor=" let photo of post.photos " [src]=" photo.url_thumbnail ">
+        <img *ngFor=" let photo of post.photos " [src]=" photo.url_thumbnail " (error)="photoImg.src = photo.url " #photoImg>
     </div>
 
     <!--like edit etc. buttons-->
@@ -40,7 +40,7 @@
             <span *ngIf=" !post.inReport " (click)="onClickReport()">Report</span>
             <i *ngIf=" post.inReport " class="fa fa-spinner fa-spin"></i>
         </ng-container>
-        
+
     </span>
 
     <!-- create/edit post or comment-->

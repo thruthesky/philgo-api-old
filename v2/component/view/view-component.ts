@@ -24,7 +24,7 @@ export class ViewComponent {
     @Input() post: POST = null; // it is comment or post.
     @Input() root: POST = null;
     @Input() login_id: string = null;
-    
+
     active: boolean = false; // "active==true" means, the use is in editing.
 
     @Output() edit = new EventEmitter();
@@ -90,9 +90,8 @@ export class ViewComponent {
         this.post.content = this.post.content.replace( new RegExp('src="data/', 'g'), 'src="http://file.philgo.com/data/');
 
 
-
     }
-    
+
     // safeHtml( html ) : string {
     //     return <string> this.sanitized.bypassSecurityTrustHtml( html );
     // }
@@ -126,7 +125,7 @@ export class ViewComponent {
             () => this.post['inDeleting'] = false
         );
     }
-    
+
 
     onClickReport() {
         //console.log("onClickReport()");

@@ -12,7 +12,8 @@ export class Api {
   // apiEndpoint = "http://test.philgo.com/index.php";
   //  apiEndpoint = "http://philgo.org/index.php";
   //  apiEndpoint = "http://www.philgo.com/index.php";
-    apiEndpoint = "http://w8.philgo.com/index.php"; // fastest server from db.
+  //  apiEndpoint = "http://w8.philgo.com/index.php"; // fastest server from db.
+  apiEndpoint = "http://hello.philgo.com/index.php"; // fastest server from db.
   apiEndpointFileServer = "http://file.philgo.com/index.php";
   constructor( http ) {
     this.http = http;
@@ -65,7 +66,7 @@ export class Api {
 
   /**
    * This does the same as 'http.get()' but it works with callbacks.
-   * 
+   *
    * @param url - if url is not string, then it considers to get cached data.
    *
    */
@@ -204,7 +205,7 @@ export class Api {
    * Response on http.get() / http.post()
    * @note responseData() 가 서버로 부터 올바른 값이 넘어 온 경우, 처리를 한다면,
    *          responseError() 는 서버로 부터 올바른 값이 넘어 오지 않은 경우를 처리한다.
-   * 
+   *
    * @update 2016-12-17 error message change from "http-request-error maybe no-internet or wrong-domain or timeout or server-down" to "No Internet!..."
    * @warning the error message "No Internet!" NOT only means for 'no internet' but also for 'no connection' to server maybe because of slow internet or wrong domain or server script error etc.
    */
@@ -317,9 +318,9 @@ export class Api {
 
   /**
    *
-   * 
    *
-   * 
+   *
+   *
    * @attenion the cached data must be in JSON string format.
    *
    * @param expire - if set true, it will delete the cached data if the cache interval is expired.
@@ -354,13 +355,13 @@ export class Api {
     }
   }
   /**
-   * 
+   *
    * Saves data into 'localStorage'.
-   * It also saves timestamp to mark when the data was saved. 
-   * 
+   * It also saves timestamp to mark when the data was saved.
+   *
    * @param id - can be any string.
    * @param data - Javascript raw value. NOT JSON string.
-   * 
+   *
    * @attention the data must not be JSON format string because it does by itself.
    *
    * @code example
@@ -382,7 +383,7 @@ export class Api {
     return this.saveCache( cache_id, data );
   }
   /**
-   * 
+   *
    */
   deleteCache( cache_id ) {
     localStorage.removeItem( cache_id );
@@ -390,20 +391,20 @@ export class Api {
   }
 
   /**
-   *  
+   *
    * Returns cached data after JSON.parse() if exists.
    *
    * @note even though cache expired and deleted, return the cache data. so, next time, it will return null.
    *      유효 기간이 지나서 캐시가 삭제되어도, 그 (삭제된) 캐시 값을 리턴한다.
    *      하지만, 다음 번에 캐시 데이터를 찾으려 한다면 캐시가 삭제되어 null 이 리턴된다.
-   * 
+   *
    * @param id - can be any string.
    * @param expire - seconds in number. If it is 0, then it does not delete the cache. default is 0.
-   * 
+   *
    * @code
    * let page = this.getCache( cache_id, 20 ); // delete cache data if it's more than 20 seconds.
    * @endcode
-   * 
+   *
    * @return
    *    - cached data after json.parse
    *    - null if no data cached.
@@ -600,7 +601,7 @@ export class Api {
   }
 
   getDateTime( stamp ) {
-    
+
     let m = parseInt(stamp) * 1000;
     let d = new Date( m );
 
@@ -624,13 +625,13 @@ export class Api {
     return time;
   }
 
-  
-    isCordova () { 
+
+    isCordova () {
         if ( !! window['cordova'] ) return true;
         if ( document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1 ) return true;
         return false;
     }
-    
+
 
   /**
    * It shows( alerts ) error message based on philgo error which is returned from philgo api server.
