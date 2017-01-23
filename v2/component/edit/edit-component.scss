@@ -1,9 +1,4 @@
 edit-component {
-    .fake-textarea {
-        display: inline-block;
-        background-color: white;
-        width: 100%
-    }
     .file-upload-button {
         position: relative;
         overflow: hidden;
@@ -22,6 +17,10 @@ edit-component {
         height: 10em;
     }
 
+    .files {
+        min-height: 2em;
+        background-color: #eff3f3;
+    }
     .files > .file {
         position: relative;
         width: 33.33%;
@@ -35,7 +34,32 @@ edit-component {
             bottom: .6em;
         }
     }
-    .fake-textarea {
-        background-color: white;
+
+
+
+    .post-edit-form .bottom {
+        position: relative;
+        .left {
+            float: left;
+        }
+
+        .fake-textarea {
+            margin-left: 3em;
+            background-color: white;
+            
+        }
+        
+    }
+    .post-edit-form.active .bottom {
+        
+        .center {
+            margin-left: 3em;
+            margin-right: 8em;
+        }
+        .right {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
     }
 }

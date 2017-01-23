@@ -1,22 +1,23 @@
-<section class="post-form-full-width">
+<section class="post-edit-form" [class.active]=" active " >
     
     <textarea *ngIf= " active " name="content" [(ngModel)]="temp.content"></textarea>
 
-    <table width="100%" cellpadding='0' cellspacing='0'>
-        <tr valign="top">
-            <td width="1%" (click)="onActivateForm()">
-                <div class="file-upload-button" (click)="onClickFileUploadButton()">
+    <div class="bottom">
+        <div class="left file-upload" (click)="onActivateForm()">
+            <div class="file-upload-button" (click)="onClickFileUploadButton()">
                     <span class="camera fa-stack fa-lg">
                         <i class="fa fa-circle fa-stack-2x"></i>
                         <i class="fa fa-camera fa-stack-1x fa-inverse"></i>
                     </span>
                     <input *ngIf=" ! cordova " type="file" name="inputFile" [(ngModel)]="inputFileValue" #file (change)="onChangeFile($event)">
                 </div><!--/file-upload-button-->
-            </td>
-            <td width="98%">
-                <span *ngIf= " !active " (click)="onActivateForm()" class="fake-textarea"> &nbsp;</span>
+        </div>
+        <div class="center uploaded-files">
+            <div *ngIf= " !active " (click)="onActivateForm()" class="fake-textarea"> &nbsp;</div>
+                
+                
                 <!-- show uploaded files while creating a post/comment -->
-                <section *ngIf=" active && temp.photos " class="files">
+                <section *ngIf=" active " class="files">
                     <div *ngIf=" inDeleting " class="loader">
                         <i class="fa fa-spinner fa-spin"></i> Deleting ...
                     </div>
@@ -28,6 +29,8 @@
                         </span>
                     </div>
                 </section>
+
+
                 <!-- This supports IE 9. IE 9 does not support HTML 5 -->
                 <progress *ngIf=" !cordova && showProgress " class="progress" value="{{ progress }}" max="100">
                     <div class="progress">
@@ -37,9 +40,9 @@
                 <div *ngIf=" cordova && showProgress" class="progress loader">
                     <i class="fa fa-spinner fa-spin"></i> Uploading ...
                 </div>
-            </td>
-            <td *ngIf=" active " width="1%" nowrap>
-                <button (click)="onClickCancel()">
+        </div>
+        <div class="right buttons" *ngIf=" active " >
+            <button (click)="onClickCancel()">
                     Cancel
                 </button>
                 <button (click)="onClickSubmit()">
@@ -47,7 +50,7 @@
                 </button>
                 
                 <i *ngIf=" inPosting " class="fa fa-spinner fa-spin"></i>
-            </td>
-        </tr>
-    </table>
+        </div>
+    </div>
+    
 </section>
