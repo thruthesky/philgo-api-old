@@ -32,7 +32,7 @@ export class LatestComponent {
             this.posts = [];
             page.posts.map( ( v, i ) => {
                 setTimeout( () => {
-                    v.url = this.post.getLink( v );
+                    v.url = this.post.getPostUri( v );
                     v['length'] = ('' + v.no_of_comment).length;
                     this.posts.push( v );
                 }, i * 50 );

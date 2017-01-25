@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Api } from './api';
-import { PAGE, POST_DATA, PAGE_OPTION, POST_RESPONSE, POSTS, PHOTO_OPTION } from './philgo-api-interface';
+import { PAGE, POST_DATA, PAGE_OPTION, POST_RESPONSE, POST, POSTS, PHOTO_OPTION } from './philgo-api-interface';
 export * from './philgo-api-interface';
 // import * as _ from 'lodash';
 
@@ -390,15 +390,39 @@ export class Post extends Api {
         }, errorCallback, completeCallback );
     }
 
-    getPermalink( post, tag = 'article' ) {
-        let full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
-        full += this.getLink( post, tag );
+    getSiteUrl() {
+        return location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+    }
+
+    /**
+     * Returns URL in the form of "http://www.abc.com/article/123456";
+     * @code
+     * 
+     * 
+      post['url'] = this.post.getPermalink( post );
+      
+     * @endcode 
+     * 
+     */
+    getPermalink( post: POST, tag = 'article' ) {
+        let full = this.getSiteUrl();
+        full += this.getPostUri( post, tag );
         return full;
     }
 
-    getLink( post, tag='article' ) : string {
+    /**
+     * Returns URL in the form of "http://www.abc.com/forum/forum-name/123456";
+     * 
+     */
+    getPermalinkWithForumId( post: POST ) {
+        return this.getSiteUrl() + this.getPostUri( post, 'forum/' + post.post_id );
+    }
+
+    getPostUri( post: POST, tag? ) : string {
         if ( post === void 0 ) { console.error("getLink() : post is void"); return ''; }
         if ( post.idx === void 0 ) { console.error("getLink() : post.idx is void"); return null; }
+
+        if ( tag === void 0 ) tag = 'forum/' + post.post_id;
         return '/' + tag + '/' + post.idx;
     }
     
