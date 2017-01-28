@@ -42,14 +42,13 @@
                 </div>
         </div>
         <div class="right buttons" *ngIf=" active " >
+            <button (click)="onClickSubmit()">
+                Submit
+            </button>
             <button (click)="onClickCancel()">
-                    Cancel
-                </button>
-                <button (click)="onClickSubmit()">
-                    SUBMIT
-                </button>
-                
-                <i *ngIf=" inPosting " class="fa fa-spinner fa-spin"></i>
+                Cancel
+            </button>
+            <i *ngIf=" inPosting " class="fa fa-spinner fa-spin"></i>
         </div>
     </div>
     

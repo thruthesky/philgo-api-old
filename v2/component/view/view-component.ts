@@ -20,6 +20,7 @@ export class ViewComponent {
     hideContent: boolean = false;
 
     @Input() show: boolean = false; // if set true, the create/edit form box shows.
+    show_backup: boolean = false; // it remembers the first option of 'show'
     @Input() mode: string = null;
     @Input() post: POST = null; // it is comment or post.
     @Input() root: POST = null;
@@ -39,6 +40,8 @@ export class ViewComponent {
         // console.log("ViewComponent()");
     }
     ngOnInit() {
+
+        this.show_backup = this.show;
 
         if ( this.post === void 0 || ! this.post ) return this.error.emit("View Component Error: post is null or empty.");
 
@@ -97,6 +100,7 @@ export class ViewComponent {
     // }
 
     onClickReply() {
+        this.show = true;
         this.active = true;
         this.mode = 'create-comment';
         this.editComponent.initForm( this.mode );
@@ -166,6 +170,7 @@ export class ViewComponent {
         this.hideContent = false;
     }
     onEditComponentCancel() {
+        this.show = this.show_backup;
         this.active = false;
         this.hideContent = false;
     }
