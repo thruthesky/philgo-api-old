@@ -10,10 +10,10 @@ export class Api {
   http: Http;
   debug: boolean = false;
   // apiEndpoint = "http://test.philgo.com/index.php";
-  //  apiEndpoint = "http://philgo.org/index.php";
+    apiEndpoint = "http://philgo.org/index.php";
   //  apiEndpoint = "http://www.philgo.com/index.php";
-  //  apiEndpoint = "http://w8.philgo.com/index.php"; // fastest server from db.
-  apiEndpoint = "http://hello.philgo.com/index.php"; // fastest server from db.
+  //  apiEndpoint = "http://w8.philgo.com/index.php";
+  // apiEndpoint = "http://hello.philgo.com/index.php"; // fastest server from db. // this must be realy service for CORS. it can only connect to origin domain.
   apiEndpointFileServer = "http://file.philgo.com/index.php";
   constructor( http ) {
     this.http = http;
@@ -193,7 +193,7 @@ export class Api {
     catch( e ) {
       //console.error(e);
       //console.info(re);
-      if ( errorCallback ) return errorCallback('json-parse-error');
+      if ( errorCallback ) return errorCallback('json-parse-error. Debug Tip: try to access the original url.');
     }
     if ( this.isRequestError(data) ) {
       if ( errorCallback ) return errorCallback( data.message )
