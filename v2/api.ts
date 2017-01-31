@@ -10,10 +10,10 @@ export class Api {
   http: Http;
   debug: boolean = false;
   // apiEndpoint = "http://test.philgo.com/index.php";
-    apiEndpoint = "http://philgo.org/index.php";
+  //  apiEndpoint = "http://philgo.org/index.php";
   //  apiEndpoint = "http://www.philgo.com/index.php";
   //  apiEndpoint = "http://w8.philgo.com/index.php";
-  // apiEndpoint = "http://hello.philgo.com/index.php"; // fastest server from db. // this must be realy service for CORS. it can only connect to origin domain.
+   apiEndpoint = "http://hello.philgo.com/index.php"; // fastest server from db. // this must be realy service for CORS. it can only connect to origin domain.
   apiEndpointFileServer = "http://file.philgo.com/index.php";
   constructor( http ) {
     this.http = http;
