@@ -45,7 +45,7 @@ export let ROUTES = [
     EditComponent,
     ViewComponent,
     LatestComponent
-    
+
   ],
   providers : [ Member, Post, Data, Message, Philgo ]
 })

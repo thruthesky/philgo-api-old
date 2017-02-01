@@ -44,7 +44,7 @@
     </span>
 
     <!-- create/edit post or comment-->
-    <edit-component #editComponent *ngIf=" show "
+    <edit-component #editComponent [hidden]=" ! show "
         [root] = " root "
         [current]=" post "
         [mode]="  mode "

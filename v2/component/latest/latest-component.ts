@@ -1,6 +1,6 @@
 /**
  * @see ../../../README.md
- * 
+ *
  */
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Post, PAGE, PAGE_OPTION, POSTS, ONE_HOUR_STAMP } from '../../post';
@@ -30,7 +30,7 @@ export class LatestComponent {
         this.post.page( option, ( page: PAGE ) => {
             //console.log("latest page: ", page);
             this.posts = [];
-            page.posts.map( ( v, i ) => {
+            page.posts.map( ( v:any, i ) => {
                 setTimeout( () => {
                     v.url = this.post.getPostUri( v );
                     v['length'] = ('' + v.no_of_comment).length;
