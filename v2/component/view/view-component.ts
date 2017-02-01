@@ -30,6 +30,7 @@ export class ViewComponent {
 
     @Output() edit = new EventEmitter();
     @Output() error = new EventEmitter();
+    @Output() showImage = new EventEmitter();
 
     //
     showLink: boolean = false;
@@ -177,6 +178,10 @@ export class ViewComponent {
 
     onEditComponentError( error ) {
         this.error.emit( error );
+    }
+
+    onClickFullView( url ) {
+        this.showImage.emit( url );
     }
 
 

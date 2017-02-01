@@ -22,7 +22,7 @@
 
     <!--list images -->
     <div *ngIf=" post.photos.length " class="uploaded-files" [attr.no-files]=" post.photos.length " [hidden]="hideContent">
-        <img *ngFor=" let photo of post.photos " [src]=" photo.url_thumbnail " (error)="photoImg.src = photo.url " #photoImg>
+        <img *ngFor=" let photo of post.photos " [src]=" photo.url_thumbnail " (error)="photoImg.src = photo.url " (click)="onClickFullView( photo.url )"  #photoImg>
     </div>
 
     <!--like edit etc. buttons-->
