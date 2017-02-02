@@ -620,7 +620,7 @@ export class Api {
       time = d.getHours() + ':' + d.getMinutes();
     }
     else {
-      time = post_year + '-' + post_month + '-' + post_date;
+      time = post_year + '-' + ( post_month + 1 ) + '-' + post_date;
     }
     return time;
   }
