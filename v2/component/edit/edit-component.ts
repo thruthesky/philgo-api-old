@@ -47,7 +47,7 @@ export class EditComponent {
      *      - submit button may be hidden.
      */
     @Input() active: boolean = false; // adding '.show' CSS Class to FORM
-    @Input() mode: 'create-post' | 'edit-post' | 'create-comment' | 'edit-comment';
+    @Input() mode: 'create-post' | 'edit-post' | 'create-comment' | 'edit-comment' = null;
     @Output() postLoad = new EventEmitter();
     @Output() error = new EventEmitter();
     @Output() success = new EventEmitter();
@@ -82,7 +82,7 @@ export class EditComponent {
     }
 
     ngOnInit() {
-        this.initForm();
+        this.initForm( this.mode );
     }
 
     /**

@@ -14,7 +14,6 @@ import { EditComponent } from '../edit/edit-component';
     templateUrl: 'view-component.html',
 })
 export class ViewComponent {
-    @ViewChild('editComponent') editComponent: EditComponent;
     isPost: boolean = false;
     isComment: boolean = false;
     hideContent: boolean = false;
@@ -100,12 +99,16 @@ export class ViewComponent {
     //     return <string> this.sanitized.bypassSecurityTrustHtml( html );
     // }
 
-    onClickReply() {
+    onClickReply( ) {
         this.show = true;
         this.active = true;
         this.mode = 'create-comment';
-        this.editComponent.initForm( this.mode ); // this may be a bug. DOM of editComponent does not exist but to call.
+        // editComponent.initForm( this.mode ); // this may be a bug. DOM of editComponent does not exist but to call.
     }
+
+
+
+
 
     onClickEdit( post ) {
         console.log("ViewComponent::onClickEdit()" );
@@ -114,7 +117,7 @@ export class ViewComponent {
         this.hideContent = true;
         if ( this.post.idx == '0' ) this.mode = 'post-edit';
         else this.mode = 'edit-comment';
-        this.editComponent.initForm( this.mode );
+    // this.editComponent.initForm( this.mode );
     }
 
     onClickDelete() {
