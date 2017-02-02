@@ -103,7 +103,7 @@ export class ViewComponent {
         this.show = true;
         this.active = true;
         this.mode = 'create-comment';
-        this.editComponent.initForm( this.mode );
+        this.editComponent.initForm( this.mode ); // this may be a bug. DOM of editComponent does not exist but to call.
     }
 
     onClickEdit( post ) {
