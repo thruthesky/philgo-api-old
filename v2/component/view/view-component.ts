@@ -1,10 +1,10 @@
 /**
  * @see ./README.md
  */
-import { Component, Input, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { POST } from '../../philgo-api-interface';
 import { Post } from '../../post';
-import { EditComponent } from '../edit/edit-component';
+// import { EditComponent } from '../edit/edit-component';
 
 // import { DomSanitizer } from '@angular/platform-browser'
 
