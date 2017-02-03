@@ -1,32 +1,41 @@
 <article *ngIf="post?.idx" class=""
-            [class.post]=" isPost "
-            [class.comment]=" isComment "
-            [attr.idx] = " post.idx "
-            [attr.depth]=" post.depth "
+         [class.post]=" isPost "
+         [class.comment]=" isComment "
+         [attr.idx] = " post.idx "
+         [attr.depth]=" post.depth "
 >
-    <!--Header & content-->
-    <h2 *ngIf=" isPost " >{{ post.subject }}</h2>
-    <nav class="article-header">
-        <div class="meta">
-            <span class="nickname">Author: <b>{{ post.member?.nickname }}</b></span>
-            <span class="idx">No.: <b>{{ post.idx }}</b></span>
-            <span class="date">Date: <b>{{ post.date }}</b></span>
-            <span class="url" *ngIf=" ! cordova && post.url ">
+  <!--Header & content-->
+  <h2 *ngIf=" isPost " >{{ post.subject }}</h2>
+  <nav class="article-header">
+    <div class="meta">
+
+      <template #popContent>
+        <div>{{post.member?.nickname}}</div>
+        <hr>
+        <div>Send Message</div>
+        <div>List post of this user</div>
+        <div>Level :</div>
+        <div>Reg Date :</div>
+      </template>
+      <span class="nickname">Author: <b [ngbPopover]="popContent" triggers="click:mouseleave" placement="right">{{ post.member?.nickname }}</b></span>
+      <span class="idx">No.: <b>{{ post.idx }}</b></span>
+      <span class="date">Date: <b>{{ post.date }}</b></span>
+      <span class="url" *ngIf=" ! cordova && post.url ">
                 <b *ngIf=" ! showLink " (click)=" showLink = true " class="text">copy link</b>
                 <i *ngIf=" showLink " class="link">{{ post.url }}</i>
             </span>
-        </div>
-    </nav>
-
-    <div class="content" [hidden]="hideContent" innerHTML="{{ post.content }}"></div>
-
-    <!--list images -->
-    <div *ngIf=" post.photos.length " class="uploaded-files" [attr.no-files]=" post.photos.length " [hidden]="hideContent">
-        <img *ngFor=" let photo of post.photos " [src]=" photo.url_thumbnail " (error)="photoImg.src = photo.url " (click)="onClickFullView( photo.url )"  #photoImg>
     </div>
+  </nav>
 
-    <!--like edit etc. buttons-->
-    <span class="buttons" [hidden]="hideContent">
+  <div class="content" [hidden]="hideContent" innerHTML="{{ post.content }}"></div>
+
+  <!--list images -->
+  <div *ngIf=" post.photos.length " class="uploaded-files" [attr.no-files]=" post.photos.length " [hidden]="hideContent">
+    <img *ngFor=" let photo of post.photos " [src]=" photo.url_thumbnail " (error)="photoImg.src = photo.url " (click)="onClickFullView( photo.url )"  #photoImg>
+  </div>
+
+  <!--like edit etc. buttons-->
+  <span class="buttons" [hidden]="hideContent">
         <span *ngIf=" isComment " (click)="onClickReply()">Reply</span>
 
         <ng-container *ngIf=" post.mine ">
@@ -43,16 +52,16 @@
 
     </span>
 
-    <!-- create/edit post or comment-->
-    <edit-component #editComponent *ngIf=" show "
-        [root] = " root "
-        [current]=" post "
-        [mode]="  mode "
-        [active]=" active "
-        (error) = " onEditComponentError( $event ) "
-        (cancel) = " onEditComponentCancel() "
-        (success) = " onEditComponentSuccess() "
-    ></edit-component>
+  <!-- create/edit post or comment-->
+  <edit-component #editComponent *ngIf=" show "
+                  [root] = " root "
+                  [current]=" post "
+                  [mode]="  mode "
+                  [active]=" active "
+                  (error) = " onEditComponentError( $event ) "
+                  (cancel) = " onEditComponentCancel() "
+                  (success) = " onEditComponentSuccess() "
+  ></edit-component>
 
 
 </article>

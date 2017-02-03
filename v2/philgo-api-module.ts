@@ -3,6 +3,7 @@ import { HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { Post } from './post';
 import { Member } from './member';
@@ -39,7 +40,8 @@ export let ROUTES = [
     BrowserModule,
     HttpModule,
     RouterModule,
-    FormsModule
+    FormsModule,
+    NgbModule.forRoot()
   ],
   exports: [
     EditComponent,
