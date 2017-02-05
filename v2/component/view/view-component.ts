@@ -29,6 +29,7 @@ export class ViewComponent {
 
     @Output() edit = new EventEmitter();
     @Output() error = new EventEmitter();
+    @Output() notice = new EventEmitter();
     @Output() showImage = new EventEmitter();
 
     //
@@ -136,14 +137,17 @@ export class ViewComponent {
 
 
     onClickReport() {
-        //console.log("onClickReport()");
+        console.log("onClickReport()");
         //this.post.debug = true;
         this.post['inReport'] = true;
         this.postService.report( this.post.idx, re => {
-            // console.log('delete: re: ', re);
-            this.error.emit("You have reported a post. Thank you.");
+            console.log('report succes: re: ', re);
+            this.notice.emit("report-success");
         },
-        error => this.error.emit( error ),
+        error => {
+            console.log("report failed: ", error);
+            this.error.emit( error );
+        },
         () => {
             this.post['inReport'] = false;
         });
