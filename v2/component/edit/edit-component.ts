@@ -66,7 +66,7 @@ export class EditComponent {
     inputFileValue: string = null;
     constructor(
         private ngZone: NgZone,
-        private post: Post,
+        public post: Post,
         private data: Data,
         private sanitizer: DomSanitizer
 //        private ionic: IonicApi

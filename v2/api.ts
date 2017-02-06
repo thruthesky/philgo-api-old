@@ -9,6 +9,8 @@ export class Api {
   self: Api = null;
   http: Http;
   debug: boolean = false;
+  language = {};
+  languageCode = 'en';
   // apiEndpoint = "http://test.philgo.com/index.php";
   //  apiEndpoint = "http://philgo.org/index.php";
   //  apiEndpoint = "http://www.philgo.com/index.php";
@@ -19,6 +21,21 @@ export class Api {
     this.http = http;
     // console.log('Api::constructor()', http);
   }
+
+  setLanguage ( code, language ) {
+    this.language = language;
+    this.languageCode = code;
+  }
+
+  /**
+   * @note this may be called every time it redraws.
+   */
+  t( code, post ) {
+    console.log('lang: ', post, this.languageCode, code, this.language[ code ] );
+    if ( this.language[ code ] === void 0 || this.language[ code ][ this.languageCode ] === void 0 ) return code;
+    return this.language[ code ][ this.languageCode ];
+  }
+
 
   /**
    *
