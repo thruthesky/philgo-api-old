@@ -8,16 +8,7 @@
   <h2 *ngIf=" isPost " >{{ post.subject }}</h2>
   <nav class="article-header">
     <div class="meta">
-
-      <template #popContent>
-        <div>{{post.member?.nickname}}</div>
-        <hr>
-        <div>Send Message</div>
-        <div>List post of this user</div>
-        <div>Level :</div>
-        <div>Reg Date :</div>
-      </template>
-      <span class="nickname">Author: <b [ngbPopover]="popContent" triggers="click:mouseleave" placement="right">{{ post.member?.nickname }}</b></span>
+      <span class="nickname">Author: <b>{{ post.member?.nickname }}</b></span>
       <span class="idx">No.: <b>{{ post.idx }}</b></span>
       <span class="date">Date: <b>{{ post.date }}</b></span>
       <span class="url" *ngIf=" ! cordova && post.url ">
