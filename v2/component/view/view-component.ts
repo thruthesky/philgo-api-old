@@ -31,6 +31,7 @@ export class ViewComponent {
     @Output() error = new EventEmitter();
     @Output() notice = new EventEmitter();
     @Output() showImage = new EventEmitter();
+    @Output() memberInfo = new EventEmitter();
 
     //
     showLink: boolean = false;
@@ -191,7 +192,9 @@ export class ViewComponent {
         this.showImage.emit( url );
     }
 
-
+    onClickNickname( post ){
+        this.memberInfo.emit( post );
+    }
 
 
 }
