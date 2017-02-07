@@ -205,7 +205,7 @@ export class Post extends Api {
         data.page_no = data.page_no ? data.page_no : 1;
         data.limit = data.limit ? data.limit : 30;
         data.fields = data.fields ? encodeURIComponent( data.fields ) : '';
-        let url = this.getUrl() + 'post-list&post_id=' + data.post_id + '&page_no=' + data.page_no + '&limit=' + data.limit + '&fields=' + data.fields;
+        let url = this.getUrl() + 'post-list&post_id=' + data.post_id + '&user_id='+ data.user_id +'&page_no=' + data.page_no + '&limit=' + data.limit + '&fields=' + data.fields;
         if ( typeof data.comment != 'undefined'  ) url += "&comment=" + data.comment;
         if ( typeof data.limit_comment != 'undefined' ) url += "&limit_comment=" + data.limit_comment;
         if ( typeof data.file != 'undefined' ) url += "&file=" + data.file;

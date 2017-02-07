@@ -183,7 +183,8 @@ export interface SEARCH_QUERY_DATA {
 };
 
 export interface PAGE_DATA {
-    post_id: string;
+    post_id?: string;
+    user_id?: string;
     page_no?: number;
     fields?: string;
     file?: number;
