@@ -18,6 +18,8 @@
     </div>
   </nav>
 
+
+  <div *ngIf=" post['int_10'] > 0 " class="point">획득 포인트 : {{ post.int_10 }} !!</div>
   <div class="content" [hidden]="hideContent" innerHTML="{{ post.content }}"></div>
 
   <!--list images -->
