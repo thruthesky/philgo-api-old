@@ -179,15 +179,15 @@ export class Post extends Api {
 
 
     /**
-     * 
-     * 
+     *
+     *
      * @note first page automatically cache.
      *  when 'data.page_no' == 1,
      *      1. load from cache & return data.
      *      2. load from server & cache & return data.
-     * 
+     *
      * @param If 'data.cache' is set, then it calls Post.pageCahce().
-     * 
+     *
      * @code example
 
         this.post.page( {post_id: this.post_id, page_no: 1}, (posts: POSTS) => {
@@ -199,20 +199,22 @@ export class Post extends Api {
         });
 
      * @endcode
-     * 
+     *
      */
     page( data: PAGE_OPTION, successCallback: ( page: PAGE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
         data.page_no = data.page_no ? data.page_no : 1;
         data.limit = data.limit ? data.limit : 30;
         data.fields = data.fields ? encodeURIComponent( data.fields ) : '';
-        let url = this.getUrl() + 'post-list&post_id=' + data.post_id + '&user_id='+ data.user_id +'&page_no=' + data.page_no + '&limit=' + data.limit + '&fields=' + data.fields;
+        let url = this.getUrl() + 'post-list&page_no=' + data.page_no + '&limit=' + data.limit + '&fields=' + data.fields;
+        if ( typeof data.user_id != 'undefined'  ) url += "&user_id=" + data.user_id;
+        if ( typeof data.post_id != 'undefined'  ) url += "&post_id=" + data.post_id;
         if ( typeof data.comment != 'undefined'  ) url += "&comment=" + data.comment;
         if ( typeof data.limit_comment != 'undefined' ) url += "&limit_comment=" + data.limit_comment;
         if ( typeof data.file != 'undefined' ) url += "&file=" + data.file;
         data['url'] = url;
         // if ( data.post_id == 'news' ) console.log('url: ', url);
         if ( data.expire !== void 0 ) return this.pageCache( data, successCallback, errorCallback, completeCallback );
-        
+
         if ( this.debug ) console.log("page() url: ", url);
         // console.log('data:', data);
 
@@ -246,11 +248,11 @@ export class Post extends Api {
 
 
     /**
-     * 
+     *
      * This gets posts of a page.
      * It's mostly the same except it caches the posts of the page until 'option.expire' expires.
      * This method is separated to reduce the complexity of page().
-     * 
+     *
      * @note (ko) 이 함수는 기본적으로 page() 함수와 동일하다.
      *  다만,
      *      - option.expire 가 될 때까지 기존의 캐시 데이터를 사용한다.
@@ -258,12 +260,12 @@ export class Post extends Api {
      *      - expire 하면, 인터넷으로 새로운 데이터를 가져와서 캐시를 덮어쓴다.
      *          - 만약, 인터넷이 안되면, 기존의 캐시를 계속 쓴다.
      *          - expire 된 경우, 캐시만 업데이트하고, successCallback() 은 두번 호출하지않는다.
-     * 
-     * 
+     *
+     *
      * @note but you can still use "Post.page()"" to call Post.pageCache(). @see Post.page()
      *
      * @note cache option
-     * 
+     *
      *  IF option.expire = seconds
      *      1. see if there is cache on that 'option.page_no'
      *      2. if yes,
@@ -275,10 +277,10 @@ export class Post extends Api {
      *          3.2 callback the page.
      *          3.3 cache the page
      *          3.4 RETURN.
-     * 
-     * 
+     *
+     *
      * @code
-     *         
+     *
         let option: PAGE_OPTION = {
             post_id: this.post_id,
             limit: 6,
@@ -291,9 +293,9 @@ export class Post extends Api {
         },
         error => this.error( error ),
         () => {});
-        
+
      * @endcode
-     * 
+     *
      */
     pageCache( option: PAGE_OPTION, successCallback: ( page: PAGE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
         //console.log("pageCache() : ", option);
@@ -322,7 +324,7 @@ export class Post extends Api {
     /**
      * Returns forum category
      * 게시판 종류를 리턴한다.
-     * 
+     *
      * @code simple example
      *      this.post.getForums( re => console.log(re), e => this.error(e) );
      * @endcode
@@ -351,12 +353,12 @@ export class Post extends Api {
 
 
     /**
-     * 
+     *
      * latesetPhotos 는 첫번째 페이지인 경우, 1시간 캐시를 한다.
-     * 
+     *
      * @param option[expire] - use cached data until expires.
-     * 
-     * 
+     *
+     *
      * @code
             post.latestPhotos( { limit: 3 }, (posts: POSTS) => {
                 console.log("posts: ", posts);
@@ -397,12 +399,12 @@ export class Post extends Api {
     /**
      * Returns URL in the form of "http://www.abc.com/article/123456";
      * @code
-     * 
-     * 
+     *
+     *
       post['url'] = this.post.getPermalink( post );
-      
-     * @endcode 
-     * 
+
+     * @endcode
+     *
      */
     getPermalink( post: POST, tag = 'article' ) {
         let full = this.getSiteUrl();
@@ -412,7 +414,7 @@ export class Post extends Api {
 
     /**
      * Returns URL in the form of "http://www.abc.com/forum/forum-name/123456";
-     * 
+     *
      */
     getPermalinkWithForumId( post: POST ) {
         return this.getSiteUrl() + this.getPostUri( post, 'forum/' + post.post_id );
@@ -425,6 +427,6 @@ export class Post extends Api {
         if ( tag === void 0 ) tag = 'forum/' + post.post_id;
         return '/' + tag + '/' + post.idx;
     }
-    
+
 
 }
