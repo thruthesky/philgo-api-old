@@ -64,6 +64,7 @@ export class EditComponent {
     inDeleting: boolean = false;
     inPosting: boolean = false;
     inputFileValue: string = null;
+    ln: string = null;
     constructor(
         private ngZone: NgZone,
         public post: Post,
@@ -73,6 +74,7 @@ export class EditComponent {
         ) {
         //console.log("EditComponent::constructor()");
         this.cordova = post.isCordova();
+        this.ln = post.languageCode;
     }
 
     renderPage() {

@@ -35,11 +35,14 @@ export class ViewComponent {
 
     //
     showLink: boolean = false;
+    ln: string = null;
     constructor(
         // private sanitized: DomSanitizer,
         private postService : Post
     ) {
         // console.log("ViewComponent()");
+        this.ln = postService.languageCode;
+        console.log('ln: ', this.ln);
     }
     ngOnInit() {
 
@@ -196,5 +199,9 @@ export class ViewComponent {
         this.memberInfo.emit( post );
     }
 
+
+    // t( code ) {
+    //     return this.postService.t( code, this.post );
+    // }
 
 }

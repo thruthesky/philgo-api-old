@@ -19,7 +19,7 @@
                 <!-- show uploaded files while creating a post/comment -->
                 <section *ngIf=" active " class="files">
                     <div *ngIf=" inDeleting " class="loader">
-                        <i class="fa fa-spinner fa-spin"></i> Deleting ...
+                        <i class="fa fa-spinner fa-spin"></i> {{ ln == 'en' ? 'Deleting' : '삭제 중' }} ...
                     </div>
                     <div class="file" *ngFor=" let file of temp.photos " (click)="onClickDeleteFile( file )">
                         <img [src]=" file.url_thumbnail ">
@@ -38,15 +38,15 @@
                     </div>
                 </progress>
                 <div *ngIf=" cordova && showProgress" class="progress loader">
-                    <i class="fa fa-spinner fa-spin"></i> Uploading ...
+                    <i class="fa fa-spinner fa-spin"></i> {{ ln == 'en' ? 'Uploading' : '업로드 중' }} ...
                 </div>
         </div>
         <div class="right buttons" *ngIf=" active " >
             <button (click)="onClickSubmit()">
-                {{ post.t('Submit') }}
+                {{ ln == 'en' ? 'Submit' : '코멘트 등록' }}
             </button>
             <button (click)="onClickCancel()">
-                Cancel
+                {{ ln == 'en' ? 'Cancel' : '취소' }}
             </button>
             <i *ngIf=" inPosting " class="fa fa-spinner fa-spin"></i>
         </div>
