@@ -167,7 +167,7 @@ export class ViewComponent {
             this.post.good = (parseInt( this.post.good ) + 1).toString();
         },
         error => {
-            this.error.emit("like error: " + error );
+            this.error.emit( error );
               this.post['inLike'] = false;
             console.log("like error: " + error );
         },
