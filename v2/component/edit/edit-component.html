@@ -1,5 +1,5 @@
-<section class="post-edit-form" [class.active]=" active " >
-    
+<section class="post-edit-form" [class.active]=" active "  (click)="$event.stopPropagation()">
+
     <textarea *ngIf= " active " name="content" [(ngModel)]="temp.content"></textarea>
 
     <div class="bottom">
@@ -14,8 +14,8 @@
         </div>
         <div class="center uploaded-files">
             <div *ngIf= " !active " (click)="onActivateForm()" class="fake-textarea"> &nbsp;</div>
-                
-                
+
+
                 <!-- show uploaded files while creating a post/comment -->
                 <section *ngIf=" active " class="files">
                     <div *ngIf=" inDeleting " class="loader">
@@ -37,7 +37,8 @@
                         <span class="progress-bar" [style.width]="widthProgress"></span>
                     </div>
                 </progress>
-                <div *ngIf=" cordova && showProgress" class="progress loader">
+                <!--div *ngIf=" cordova && showProgress" class="progress loader"-->
+                <div *ngIf=" showProgress " class="progress loader">
                     <i class="fa fa-spinner fa-spin"></i> {{ ln == 'en' ? 'Uploading' : '업로드 중' }} ...
                 </div>
         </div>
@@ -51,5 +52,5 @@
             <i *ngIf=" inPosting " class="fa fa-spinner fa-spin"></i>
         </div>
     </div>
-    
+
 </section>

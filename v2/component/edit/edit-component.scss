@@ -32,6 +32,7 @@ edit-component {
             position: absolute;
             left: .6em;
             bottom: .6em;
+            cursor: pointer;
         }
     }
 
@@ -46,12 +47,12 @@ edit-component {
         .fake-textarea {
             margin-left: 3em;
             background-color: white;
-            
+            cursor: pointer;
         }
-        
+
     }
     .post-edit-form.active .bottom {
-        
+
         .center {
             margin-left: 3em;
             margin-right: 8em;
@@ -60,6 +61,9 @@ edit-component {
             position: absolute;
             top: 0;
             right: 0;
+          button {
+            cursor: pointer;
+          }
         }
     }
 }
