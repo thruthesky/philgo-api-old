@@ -5,7 +5,7 @@
          [attr.depth]=" post.depth "
 >
   <!--Header & content-->
-  <h2 *ngIf=" isPost " >{{ post.subject }}</h2>
+  <h2 *ngIf=" isPost " >{{ post.subject }}{{post.no_of_comment > 0 ? "(" + post.no_of_comment +")" : "" }}</h2>
   <nav class="article-header">
     <div class="meta">
       <span class="nickname">{{ ln == 'en' ? 'Author' : '글쓴이' }}: <b (click)="onClickNickname( post )">{{ post.member?.nickname }}</b></span>
