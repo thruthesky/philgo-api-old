@@ -42,7 +42,7 @@ export class ViewComponent {
     ) {
         // console.log("ViewComponent()");
         this.ln = postService.languageCode;
-        console.log('ln: ', this.ln);
+        //console.log('ln: ', this.ln);
     }
     ngOnInit() {
 

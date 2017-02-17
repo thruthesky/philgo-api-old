@@ -299,7 +299,7 @@ export class Post extends Api {
      */
     pageCache( option: PAGE_OPTION, successCallback: ( page: PAGE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
         //console.log("pageCache() : ", option);
-        let cache_id = 'cache-' + option.post_id + '-' + option.page_no;
+        let cache_id = 'cache-' + option.post_id + '-' + option.page_no + '-' + option.limit;
         let cache_page = this.getCache( cache_id, option.expire );
         if ( cache_page ) {
             //console.info("use cached data");
