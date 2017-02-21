@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Api } from './api';
+import { Member } from './member';
 import { PAGE, POST_DATA, PAGE_OPTION, POST_RESPONSE, POST, POSTS, PHOTO_OPTION } from './philgo-api-interface';
 export * from './philgo-api-interface';
 // import * as _ from 'lodash';
@@ -8,7 +9,7 @@ export * from './philgo-api-interface';
 @Injectable()
 export class Post extends Api {
 
-    constructor( http: Http ) {
+    constructor( http: Http, private member: Member ) {
         super( http );
     }
 
@@ -211,6 +212,9 @@ export class Post extends Api {
         if ( typeof data.comment != 'undefined'  ) url += "&comment=" + data.comment;
         if ( typeof data.limit_comment != 'undefined' ) url += "&limit_comment=" + data.limit_comment;
         if ( typeof data.file != 'undefined' ) url += "&file=" + data.file;
+        
+        let login = this.member.logged();
+        if ( login ) url += '&id=' + login.id + '&session_id=' + login.session_id;
         data['url'] = url;
         // if ( data.post_id == 'news' ) console.log('url: ', url);
         if ( data.expire !== void 0 ) return this.pageCache( data, successCallback, errorCallback, completeCallback );
