@@ -212,7 +212,7 @@ export class Post extends Api {
         if ( typeof data.comment != 'undefined'  ) url += "&comment=" + data.comment;
         if ( typeof data.limit_comment != 'undefined' ) url += "&limit_comment=" + data.limit_comment;
         if ( typeof data.file != 'undefined' ) url += "&file=" + data.file;
-        
+
         let login = this.member.logged();
         if ( login ) url += '&id=' + login.id + '&session_id=' + login.session_id;
         data['url'] = url;
@@ -384,6 +384,8 @@ export class Post extends Api {
         if ( option.limit ) url += '&limit=' + option.limit;
         if ( option.limit_comment ) url += '&limit_comment=' + option.limit_comment;
         if ( option.comment ) url += '&comment=' + option.comment;
+        let login = this.member.logged();
+        if ( login ) url += '&id=' + login.id + '&session_id=' + login.session_id;
 
         option['page_no'] = option['page_no'] ? option['page_no'] : 1;
         url += '&page_no=' + option.page_no;
