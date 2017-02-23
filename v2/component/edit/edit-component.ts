@@ -319,7 +319,7 @@ export class EditComponent {
             this.fileTransfer( path ); // transfer the photo to the server.
         }, e => {
             // console.error( 'camera error: ', e );
-            this.post.error("EditComponent::onCameraConfirm() : camera error");
+            //this.post.error("EditComponent::onCameraConfirm() : camera error");
         }, options);
     }
 
