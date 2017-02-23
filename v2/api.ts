@@ -280,9 +280,12 @@ export class Api {
    *
    *
    */
-  version( successCallback: (version:string) => void, errorCallback?: (error: string) => void, completeCallback?: () => void ) {
+  version( successCallback: (version:any) => void, errorCallback?: (error: string) => void, completeCallback?: () => void ) {
+    let url = this.getUrl('version');
+    let login = this.getLoginData();
+    if ( login ) url += '&id=' + login.id + '&session_id=' + login.session_id;
     this.get(
-      this.getUrl('version'),
+      url,
       successCallback,
       errorCallback,
       completeCallback
