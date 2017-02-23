@@ -180,6 +180,10 @@ export class Post extends Api {
 
 
     /**
+     * 
+     * Get a page of posts from a forum. You can set cache option.
+     * 
+     * @use this to load posts of forum.
      *
      *
      * @note first page automatically cache.
@@ -187,7 +191,7 @@ export class Post extends Api {
      *      1. load from cache & return data.
      *      2. load from server & cache & return data.
      *
-     * @param If 'data.cache' is set, then it calls Post.pageCahce().
+     * @param If 'data.expire' is set, then it calls Post.pageCahce().
      *
      * @code example
 
@@ -202,7 +206,7 @@ export class Post extends Api {
      * @endcode
      *
      */
-    page( data: PAGE_OPTION, successCallback: ( page: PAGE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
+    page( data: PAGE_OPTION, successCallback: ( page: PAGE ) => void, errorCallback: ( error: string ) => void, completeCallback: () => void ) {
         data.page_no = data.page_no ? data.page_no : 1;
         data.limit = data.limit ? data.limit : 30;
         data.fields = data.fields ? encodeURIComponent( data.fields ) : '';
@@ -270,7 +274,7 @@ export class Post extends Api {
      *
      * @note cache option
      *
-     *  IF option.expire = seconds
+     *  IF option.expire = seconds to use cached data.
      *      1. see if there is cache on that 'option.page_no'
      *      2. if yes,
      *          2.1 callback the cache data

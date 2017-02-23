@@ -190,7 +190,7 @@ export interface PAGE_DATA {
     file?: number;
     limit?: number;
     limit_comment?: number;
-    expire?: number;
+    expire?: number;                // @see post.pageCache.
     comment?: number;
 };
 
