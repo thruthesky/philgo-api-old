@@ -73,6 +73,7 @@ export class Post extends Api {
             if ( completeCallback ) completeCallback();
             return;
         }
+        // this.debug = true;
         this.post( data,
             successCallback,
             errorCallback,
@@ -226,10 +227,11 @@ export class Post extends Api {
         if ( this.debug ) console.log("page() url: ", url);
         // console.log('data:', data);
 
+        let cache_id = this.getPostListCacheId( data );
         if ( data.page_no == 1 ) {
             // console.log("page no: 1");
             //console.log("page() url: ", url);
-            this.cacheCallback( data.post_id, successCallback );
+            this.cacheCallback( cache_id, successCallback );
         }
 
         // console.log('page(): url: ', url);
@@ -249,7 +251,7 @@ export class Post extends Api {
             });
         */
         this.get( url, (page: PAGE) => {
-            if ( data.page_no == 1 ) this.saveCache( data.post_id, page );
+            if ( data.page_no == 1 ) this.saveCache( cache_id, page );
             successCallback( page );
         }, errorCallback, completeCallback );
     }
@@ -307,7 +309,7 @@ export class Post extends Api {
      */
     pageCache( option: PAGE_OPTION, successCallback: ( page: PAGE ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
         //console.log("pageCache() : ", option);
-        let cache_id = 'cache-' + option.post_id + '-' + option.page_no + '-' + option.limit;
+        let cache_id = this.getPostListCacheId( option );
         let cache_page = this.getCache( cache_id, option.expire );
         if ( cache_page ) {
             //console.info("use cached data");
@@ -328,6 +330,11 @@ export class Post extends Api {
         }
     }
 
+    getPostListCacheId( option: PAGE_OPTION ) {
+        let id = 'cache-' + option.post_id + '-' + option.page_no + '-' + option.limit + '-';
+        if ( option.user_id ) id = id + option.user_id;
+        return id;
+    }
 
     /**
      * Returns forum category

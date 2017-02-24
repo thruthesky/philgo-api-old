@@ -33,6 +33,9 @@ export class ViewComponent {
     @Output() showImage = new EventEmitter();
     @Output() memberInfo = new EventEmitter();
 
+    // is Cordova?
+    cordova = true;
+
     //
     showLink: boolean = false;
     ln: string = null;
@@ -43,6 +46,8 @@ export class ViewComponent {
         // console.log("ViewComponent()");
         this.ln = postService.languageCode;
         //console.log('ln: ', this.ln);
+
+        this.cordova = this.postService.isCordova();
     }
     ngOnInit() {
 

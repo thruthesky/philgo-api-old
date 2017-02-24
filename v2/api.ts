@@ -350,6 +350,7 @@ export class Api {
    *
    */
   cacheCallback( cache_id, callback ) {
+    //console.info('cacheCallback: ', cache_id);
     let re = localStorage.getItem( cache_id );
     if ( re ) {
       let data = null;
