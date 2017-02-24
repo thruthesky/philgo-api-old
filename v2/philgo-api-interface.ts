@@ -30,6 +30,7 @@ export interface PHILGO_API_RESPONSE {
     user_url_primary_photo?: string; // for user primary photo.
     version?: string;
     idx?: any; // for post/comment update.
+    deleted?: string;
 };
 export interface PHILGO_RESPONSE extends PHILGO_API_RESPONSE {};
 
