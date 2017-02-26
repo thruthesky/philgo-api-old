@@ -6,7 +6,9 @@
 >
   <!--Header & content-->
   <div *ngIf="post.photos.length" class="image-preview">
-    <img  [src]=" post.photos[0].url_thumbnail " (error)="photoImg.src = post[0].photos.url " #photoImg>
+    <img  [src]=" post.photos[0].url_thumbnail "
+      (error)="photoImg.src = post.photos[0].url "
+      #photoImg>
   </div>
   <div class="header" [ngClass]= "{ 'with-image' : post?.photos?.length }">
     <h2 *ngIf=" isPost " >{{ post.subject }}
