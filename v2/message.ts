@@ -84,6 +84,7 @@ export class Message extends Api {
         let login = this.getLoginData();
         url += '&id=' + login.id;
         url += '&session_id=' + login.session_id;
+
         this.get( url, successCallback, errorCallback, completeCallback );
     }
 

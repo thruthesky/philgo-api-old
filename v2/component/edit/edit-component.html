@@ -1,6 +1,6 @@
 <section class="post-edit-form" [class.active]=" active "  (click)="$event.stopPropagation()">
 
-    <textarea *ngIf= " active " name="content" [(ngModel)]="temp.content"></textarea>
+    <textarea *ngIf= " active " #contentTextarea name="content" [(ngModel)]="temp.content"></textarea>
 
     <div class="bottom">
         <div class="left file-upload" (click)="onActivateForm()">

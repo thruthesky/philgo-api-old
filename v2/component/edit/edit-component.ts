@@ -1,10 +1,12 @@
-import { Component, Input, Output, EventEmitter, NgZone } from '@angular/core';
+import { Component, Input, Output, EventEmitter, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Post, POST_RESPONSE, POST_DATA, POST, COMMENT } from '../../../../../api/philgo-api/v2/post';
 import { Data, FILE_UPLOAD_RESPONSE, DATA_UPLOAD_OPTIONS } from '../../../../../api/philgo-api/v2/data';
 //import { IonicApi } from '../../../../../providers/ionic-api-0.2/ionic-api';
 //import { IONIC_PUSH_MESSAGE } from '../../../../../providers/ionic-api-0.2/ionic-share';
 import * as _ from 'lodash';
+
+
 
 
 declare let navigator: any;
@@ -14,6 +16,8 @@ declare var Camera;
     templateUrl: 'edit-component.html'
 })
 export class EditComponent {
+
+    @ViewChild('contentTextarea') contentTextarea: ElementRef;
 
     /**
      * This is needed to put newly created post on top of post list.
@@ -75,6 +79,8 @@ export class EditComponent {
         //console.log("EditComponent::constructor()");
         this.cordova = post.isCordova();
         this.ln = post.languageCode;
+
+
     }
 
     renderPage() {
@@ -85,6 +91,12 @@ export class EditComponent {
 
     ngOnInit() {
         this.initForm( this.mode );
+        if ( this.active ) {
+            setTimeout( () => this.contentTextarea.nativeElement.focus(), 100 );
+        }
+    }
+
+    ngAfterViewInit() {
     }
 
     /**
@@ -131,6 +143,13 @@ export class EditComponent {
         // console.log("onActivateForm: ", this.temp);
         this.initForm( 'create-comment' ); // onActivateForm() 에서는 무조건 'create-comment' 를 하면 된다.
         this.active = true; // add CSS class
+        // console.log("activated");
+        //
+
+
+        setTimeout( () => this.contentTextarea.nativeElement.focus(), 100 );
+            
+
     }
 
     onClickCancel() {
