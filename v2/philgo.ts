@@ -50,7 +50,7 @@ export class Philgo extends Api {
         if ( ! login ) return errorCallback('login first');
         data.id = login.id;
         data.session_id = login.session_id;
-        this.debug = true;
+        // this.debug = true;
         this.post( data,
             successCallback,
             errorCallback,
