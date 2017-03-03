@@ -123,6 +123,7 @@ export class ViewComponent {
     onClickEdit( post ) {
         console.log("ViewComponent::onClickEdit()" );
         this.edit.emit( post );
+        this.show = true;
         this.active = true;
         this.hideContent = true;
         if ( this.post.idx == '0' ) this.mode = 'post-edit';
