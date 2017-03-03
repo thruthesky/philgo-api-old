@@ -209,7 +209,7 @@ export class EditComponent {
         this.temp.post_id = this.post_id;
         // console.log("createComment() temp:", this.temp);
 
-        this.post.debug = true;
+        // this.post.debug = true;
         this.post.createComment( this.temp,
             re => {
                 this.sendPushNotifications( re );
@@ -309,11 +309,24 @@ export class EditComponent {
         //
         // console.log("onClickCommentFileUploadButton()");
 
+        let message = 'Please select how you want to take photo.';
+        let camera = 'Camera';
+        let gallery = 'Gallery';
+        let cancel = 'Cancel';
+        let title = 'Take Photo';
+        if ( this.ln == 'ko' ) {
+            message = '카메라에서 사진 찍기 또는 갤러리에서 가져오기를 선택하세요.';
+            camera = '카메라';
+            gallery = '갤러리';
+            cancel = '취소';
+            title = '사진 선택';
+        }
+
         navigator.notification.confirm(
-            'Please select how you want to take photo.', // message
+            message,
             i => this.onCameraConfirm( i ),
-            'Take Photo',           // title
-            ['Camera','Cancel', 'Gallery']     // buttonLabels
+            title,           // title
+            [camera, cancel, gallery]     // buttonLabels
         );
 
 

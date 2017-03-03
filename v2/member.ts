@@ -53,7 +53,7 @@ export class Member extends Api {
     login( loginData: MEMBER_LOGIN_DATA, successCallback: (login:MEMBER_LOGIN_DATA) => void, errorCallback: (error:string) => void, completeCallback?: () => void ) {
         let body = this.getLoginBody( loginData );
         this.post( body, ( data: PHILGO_RESPONSE ) => {
-            console.log("login() : data : ", data );
+            // console.log("login() : data : ", data );
             let login: MEMBER_LOGIN_DATA = {
                 id: data.user_id,
                 session_id: data.session_id,
@@ -170,7 +170,7 @@ export class Member extends Api {
         let login = this.logged();
         if ( login ) {
             let url = this.getUrl('version&user_extra=1&id=' + login.id + '&session_id=' + login.session_id );
-            console.log('member.data() url: ', url);
+            // console.log('member.data() url: ', url);
             this.get( url, successCallback, errorCallback, completeCallback );
             /*
             console.log('data: ', url);
