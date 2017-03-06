@@ -13,10 +13,10 @@ export class Api {
   languageCode = 'en';
   // apiEndpoint = "http://test.philgo.com/index.php";
   //  apiEndpoint = "http://philgo.org/index.php";
-  apiEndpoint = "https://www.philgo.com/index.php";
+  //apiEndpoint = "https://www.philgo.com/index.php";
   //  apiEndpoint = "http://w8.philgo.com/index.php";
-  //   apiEndpoint = "http://hello.philgo.com/index.php"; // fastest server from db. // this must be realy service for CORS. it can only connect to origin domain.
-  apiEndpointFileServer = "https://file.philgo.com/index.php";
+     apiEndpoint = "http://hello.philgo.com/index.php"; // fastest server from db. // this must be realy service for CORS. it can only connect to origin domain.
+  apiEndpointFileServer = "http://file.philgo.com/index.php";
   apiEndpointLocation = 'https://www.philgo.com/etc/location/philippines/json.php';
   constructor(http) {
     this.http = http;
