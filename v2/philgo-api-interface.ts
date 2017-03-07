@@ -433,6 +433,8 @@ export interface POST_DATA {
     text_8?: string;
     text_9?: string;
     text_10?: string;
+
+    member?: MEMBER;
 };
 
 export interface POST_RESPONSE extends PHILGO_API_RESPONSE {
