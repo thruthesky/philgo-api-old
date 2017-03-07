@@ -13,16 +13,17 @@ export class Api {
   languageCode = 'en';
   // apiEndpoint = "http://test.philgo.com/index.php";
   //  apiEndpoint = "http://philgo.org/index.php";
-  //  apiEndpoint = "http://www.philgo.com/index.php";
+  //apiEndpoint = "https://www.philgo.com/index.php";
   //  apiEndpoint = "http://w8.philgo.com/index.php";
-   apiEndpoint = "http://hello.philgo.com/index.php"; // fastest server from db. // this must be realy service for CORS. it can only connect to origin domain.
+     apiEndpoint = "http://hello.philgo.com/index.php"; // fastest server from db. // this must be realy service for CORS. it can only connect to origin domain.
   apiEndpointFileServer = "http://file.philgo.com/index.php";
-  constructor( http ) {
+  apiEndpointLocation = 'https://www.philgo.com/etc/location/philippines/json.php';
+  constructor(http) {
     this.http = http;
     // console.log('Api::constructor()', http);
   }
 
-  setLanguage ( code ) {
+  setLanguage(code) {
     //this.language = language;
     this.languageCode = code;
   }
@@ -58,25 +59,25 @@ export class Api {
    * @endcode
    *
    */
-  getLogin( callback: ( login: MEMBER_LOGIN_DATA ) => void ) : void {
-    setTimeout( () => {
+  getLogin(callback: (login: MEMBER_LOGIN_DATA) => void): void {
+    setTimeout(() => {
       let login = this.getLoginData();
-      if ( login ) callback( login  );
-    }, 1 );
+      if (login) callback(login);
+    }, 1);
   }
-  getLoginData() : MEMBER_LOGIN_DATA {
-    let data = localStorage.getItem( PHILGO_MEMBER_LOGIN );
-    if ( ! data ) return null;
+  getLoginData(): MEMBER_LOGIN_DATA {
+    let data = localStorage.getItem(PHILGO_MEMBER_LOGIN);
+    if (!data) return null;
     try {
-      let login = JSON.parse( data );
+      let login = JSON.parse(data);
       return login;
     }
-    catch ( e ) {
+    catch (e) {
       return null;
     }
   }
 
-  get serverUrl() : string {
+  get serverUrl(): string {
     return this.apiEndpoint;
   }
 
@@ -87,53 +88,53 @@ export class Api {
    * @param url - if url is not string, then it considers to get cached data.
    *
    */
-  get( url: any, successCallback: (data:any) => void, errorCallback?: ( e:any ) => void, completeCallback?: () => void ) {
-    if ( typeof url == 'string' || url['expire'] === void 0 ) {
-      if ( typeof url != 'string' ) url = url['url'];
-      this._get( url, successCallback, errorCallback, completeCallback );
+  get(url: any, successCallback: (data: any) => void, errorCallback?: (e: any) => void, completeCallback?: () => void) {
+    if (typeof url == 'string' || url['expire'] === void 0) {
+      if (typeof url != 'string') url = url['url'];
+      this._get(url, successCallback, errorCallback, completeCallback);
     }
-    else this._getCacheData( url, successCallback, errorCallback, completeCallback );
+    else this._getCacheData(url, successCallback, errorCallback, completeCallback);
   }
-  _get( url, successCallback: (data:any) => void, errorCallback?: ( e:any ) => void, completeCallback?: () => void ) {
-    if ( this.debug ) console.info("get: ", url);
-    this.http.get( url )
-      .timeout( PHILGO_API_CONNECTION_TIMEOUT, new Error('timeout exceeded') )
+  _get(url, successCallback: (data: any) => void, errorCallback?: (e: any) => void, completeCallback?: () => void) {
+    if (this.debug) console.info("get: ", url);
+    this.http.get(url)
+      .timeout(PHILGO_API_CONNECTION_TIMEOUT, new Error('timeout exceeded'))
       .subscribe(
-        re => this.responseData( re, successCallback, errorCallback ),
-        er => this.responseConnectionError( er, errorCallback ),
-        completeCallback );
+      re => this.responseData(re, successCallback, errorCallback),
+      er => this.responseConnectionError(er, errorCallback),
+      completeCallback);
   }
 
-  _getCacheData( option, successCallback: (data:any) => void, errorCallback?: ( e:any ) => void, completeCallback?: () => void ) {
+  _getCacheData(option, successCallback: (data: any) => void, errorCallback?: (e: any) => void, completeCallback?: () => void) {
 
     let url = option['url'];
     let expire = option['expire'];
     let cache_id = url;
 
-    let cache_data = this.getCache( cache_id, expire );
-    if ( cache_data ) {
-        //console.info("use cached data");
-        successCallback( cache_data );
-        if ( completeCallback ) completeCallback();
+    let cache_data = this.getCache(cache_id, expire);
+    if (cache_data) {
+      //console.info("use cached data");
+      successCallback(cache_data);
+      if (completeCallback) completeCallback();
     }
     /**
      * If this code runs, successCallback() may be called again but only once every expire.
      */
-    if ( this.isCacheExpired( cache_id, option.expire ) ) {
-        //console.info("Cache expired. Going to cache");
-      this.http.get( url )
-        .subscribe( data => {
+    if (this.isCacheExpired(cache_id, option.expire)) {
+      //console.info("Cache expired. Going to cache");
+      this.http.get(url)
+        .subscribe(data => {
           try {
-            let re = JSON.parse( data['_body'] );
-            if ( ! cache_data ) {
-              successCallback( re ); // does not recall successCallback() if already called.
-              if ( completeCallback ) completeCallback();
+            let re = JSON.parse(data['_body']);
+            if (!cache_data) {
+              successCallback(re); // does not recall successCallback() if already called.
+              if (completeCallback) completeCallback();
             }
-            this.setCache( cache_id, re );
+            this.setCache(cache_id, re);
           }
-          catch( e ) {
-            errorCallback( 'api get cache url error' );
-            if ( completeCallback ) completeCallback();
+          catch (e) {
+            errorCallback('api get cache url error');
+            if (completeCallback) completeCallback();
             //console.error( data['_body']);
           }
         });
@@ -146,19 +147,19 @@ export class Api {
    * @example code @see member.login()
    *
    */
-  post( data: any, successCallback: (data:any) => void, errorCallback?: ( e:any ) => void, completeCallback?: () => void ) {
-    if ( data['action'] === void 0 ) return errorCallback("Ajax request 'action' value is empty");
-    data = this.buildQuery( data );
-    if ( this.debug ) {
+  post(data: any, successCallback: (data: any) => void, errorCallback?: (e: any) => void, completeCallback?: () => void) {
+    if (data['action'] === void 0) return errorCallback("Ajax request 'action' value is empty");
+    data = this.buildQuery(data);
+    if (this.debug) {
       let url = this.serverUrl + '?' + data;
       console.info("post: ", url);
     }
-    this.http.post( this.serverUrl, data, this.requestOptions )
-      .timeout( PHILGO_API_CONNECTION_TIMEOUT, new Error('timeout exceeded') )
+    this.http.post(this.serverUrl, data, this.requestOptions)
+      .timeout(PHILGO_API_CONNECTION_TIMEOUT, new Error('timeout exceeded'))
       .subscribe(
-        re => this.responseData( re, successCallback, errorCallback ),
-        er => this.responseConnectionError( er, errorCallback ),
-        completeCallback );
+      re => this.responseData(re, successCallback, errorCallback),
+      er => this.responseConnectionError(er, errorCallback),
+      completeCallback);
   }
 
   /**
@@ -201,21 +202,21 @@ export class Api {
             })
    * @endcode
    */
-  responseData( re, successCallback: ( data: any ) => void, errorCallback: ( error: string ) => void ) : any {
+  responseData(re, successCallback: (data: any) => void, errorCallback: (error: string) => void): any {
     // console.log('Api::responseData() re: ', re);
     let data;
     try {
-      data = JSON.parse( re['_body'] );
+      data = JSON.parse(re['_body']);
     }
-    catch( e ) {
+    catch (e) {
       //console.error(e);
       //console.info(re);
-      if ( errorCallback ) return errorCallback('json-parse-error. Debug Tip: try to access the original url.');
+      if (errorCallback) return errorCallback('json-parse-error. Debug Tip: try to access the original url.');
     }
-    if ( this.isRequestError(data) ) {
-      if ( errorCallback ) return errorCallback( data.message )
+    if (this.isRequestError(data)) {
+      if (errorCallback) return errorCallback(data.message)
     }
-    else successCallback( data );
+    else successCallback(data);
   }
 
   /**
@@ -226,14 +227,14 @@ export class Api {
    * @update 2016-12-17 error message change from "http-request-error maybe no-internet or wrong-domain or timeout or server-down" to "No Internet!..."
    * @warning the error message "No Internet!" NOT only means for 'no internet' but also for 'no connection' to server maybe because of slow internet or wrong domain or server script error etc.
    */
-  responseConnectionError( error: Response | any, errorCallback: ( error : string ) => void ) {
+  responseConnectionError(error: Response | any, errorCallback: (error: string) => void) {
     // console.error(Response);
-    if ( errorCallback ) errorCallback( NO_INTERNET );
+    if (errorCallback) errorCallback(NO_INTERNET);
   }
 
-  get requestOptions() : RequestOptions {
-    let headers  = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
-    let options  = new RequestOptions({ headers: headers });
+  get requestOptions(): RequestOptions {
+    let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
+    let options = new RequestOptions({ headers: headers });
     return options;
   }
 
@@ -245,7 +246,7 @@ export class Api {
    * @endcode
    *
    */
-  getUrl( qs: string = '' ) {
+  getUrl(qs: string = '') {
     return this.serverUrl + "?module=ajax&submit=1&action=" + qs;
   }
 
@@ -256,10 +257,10 @@ export class Api {
    *
    * @param params must be an object.
    */
-  buildQuery( params ) {
-    params[ 'module' ] = 'ajax'; // 'module' must be ajax.
-    params[ 'submit' ] = 1; // all submit must send 'submit'=1
-    return this.http_build_query( params );
+  buildQuery(params) {
+    params['module'] = 'ajax'; // 'module' must be ajax.
+    params['submit'] = 1; // all submit must send 'submit'=1
+    return this.http_build_query(params);
 
 
     /*
@@ -280,10 +281,10 @@ export class Api {
    *
    *
    */
-  version( successCallback: (version:any) => void, errorCallback?: (error: string) => void, completeCallback?: () => void ) {
+  version(successCallback: (version: any) => void, errorCallback?: (error: string) => void, completeCallback?: () => void) {
     let url = this.getUrl('version');
     let login = this.getLoginData();
-    if ( login ) url += '&id=' + login.id + '&session_id=' + login.session_id;
+    if (login) url += '&id=' + login.id + '&session_id=' + login.session_id;
     this.get(
       url,
       successCallback,
@@ -321,18 +322,18 @@ export class Api {
 
 
 
-  search( data: SEARCH_QUERY_DATA, successCallback: ( re: any ) => void, errorCallback: ( error: string ) => void, completeCallback?: () => void ) {
-    let url = this.getUrl( 'search&' + this.http_build_query( data ) );
-    this._get( url,
+  search(data: SEARCH_QUERY_DATA, successCallback: (re: any) => void, errorCallback: (error: string) => void, completeCallback?: () => void) {
+    let url = this.getUrl('search&' + this.http_build_query(data));
+    this._get(url,
       successCallback,
       errorCallback,
-      completeCallback );
+      completeCallback);
   }
 
 
 
-  isRequestError( data ) : boolean {
-    if ( data['code'] && parseInt( data['code'] ) != 0 ) return true;
+  isRequestError(data): boolean {
+    if (data['code'] && parseInt(data['code']) != 0) return true;
     else return false;
   }
 
@@ -349,25 +350,25 @@ export class Api {
    * @endcode
    *
    */
-  cacheCallback( cache_id, callback ) {
+  cacheCallback(cache_id, callback) {
     //console.info('cacheCallback: ', cache_id);
-    let re = localStorage.getItem( cache_id );
-    if ( re ) {
+    let re = localStorage.getItem(cache_id);
+    if (re) {
       let data = null;
       try {
-        data = JSON.parse( re );
+        data = JSON.parse(re);
       }
       catch (e) {
         // error. no callback.
         // console.error( "error on parsing data of localstroage.");
       }
       try {
-        if ( data ) {
+        if (data) {
           // console.log("Api::cacheCallback()");
-          callback( data );
+          callback(data);
         }
       }
-      catch ( e ) {
+      catch (e) {
         // console.error("error on cacheCallback() ==> callback()");
       }
     }
@@ -392,23 +393,23 @@ export class Api {
     }, errorCallback );
    * @endcode
    */
-  saveCache( cache_id:string, data:any ) {
-    localStorage.setItem( cache_id, JSON.stringify(data) );
+  saveCache(cache_id: string, data: any) {
+    localStorage.setItem(cache_id, JSON.stringify(data));
     let stamp = Math.floor(Date.now() / 1000)
-    localStorage.setItem( cache_id + '.stamp', stamp.toString());
+    localStorage.setItem(cache_id + '.stamp', stamp.toString());
   }
   /**
    * alias of saveCache()
    */
-  setCache( cache_id:string, data:any ) {
-    return this.saveCache( cache_id, data );
+  setCache(cache_id: string, data: any) {
+    return this.saveCache(cache_id, data);
   }
   /**
    *
    */
-  deleteCache( cache_id ) {
-    localStorage.removeItem( cache_id );
-    localStorage.removeItem( cache_id + '.stamp' );
+  deleteCache(cache_id) {
+    localStorage.removeItem(cache_id);
+    localStorage.removeItem(cache_id + '.stamp');
   }
 
   /**
@@ -430,18 +431,18 @@ export class Api {
    *    - cached data after json.parse
    *    - null if no data cached.
    */
-  getCache( cache_id:string, expire:number = 0 ) {
-    let raw = localStorage.getItem( cache_id );
-    if ( raw == null ) return null;
+  getCache(cache_id: string, expire: number = 0) {
+    let raw = localStorage.getItem(cache_id);
+    if (raw == null) return null;
     let data;
     try {
-      data = JSON.parse( raw );
+      data = JSON.parse(raw);
     }
-    catch ( e ) {
+    catch (e) {
       return null;
     }
-    if ( expire == 0 ) return data;
-    if ( this.isCacheExpired( cache_id, expire) ) this.deleteCache( cache_id );
+    if (expire == 0) return data;
+    if (this.isCacheExpired(cache_id, expire)) this.deleteCache(cache_id);
     return data; //
 
     // let cache_stamp = + localStorage.getItem( cache_id + '.stamp' );
@@ -458,10 +459,10 @@ export class Api {
   /**
    * Returns true if the cache is already expired.
    */
-  isCacheExpired( cache_id: string, expire: number ) : boolean {
-    let cache_stamp = + localStorage.getItem( cache_id + '.stamp' );
+  isCacheExpired(cache_id: string, expire: number): boolean {
+    let cache_stamp = + localStorage.getItem(cache_id + '.stamp');
     let stamp = Math.floor(Date.now() / 1000);
-    if ( expire + cache_stamp < stamp ) { // if cache expired, return true;
+    if (expire + cache_stamp < stamp) { // if cache expired, return true;
       return true;
     }
     else return false;
@@ -469,7 +470,7 @@ export class Api {
 
 
 
-  http_build_query (formdata, numericPrefix='', argSeparator='') {
+  http_build_query(formdata, numericPrefix = '', argSeparator = '') {
     var urlencode = this.urlencode;
     var value
     var key
@@ -518,7 +519,7 @@ export class Api {
   }
 
 
-  urlencode (str) {
+  urlencode(str) {
     str = (str + '')
     return encodeURIComponent(str)
       .replace(/!/g, '%21')
@@ -531,11 +532,11 @@ export class Api {
 
 
 
-  getApiEmail( login ) {
-    return  login.id + "@philgo.com";
+  getApiEmail(login) {
+    return login.id + "@philgo.com";
   }
-  getApiPassword( login ) {
-    return  'Pw+philgo.com@' + login.idx + ',' + login.id + '~' + login.stamp;
+  getApiPassword(login) {
+    return 'Pw+philgo.com@' + login.idx + ',' + login.id + '~' + login.stamp;
   }
 
   /**
@@ -549,7 +550,7 @@ export class Api {
   /**
    * PHP uniqid()
    */
-  uniqid (prefix?, moreEntropy=true) {
+  uniqid(prefix?, moreEntropy = true) {
     if (typeof prefix === 'undefined') {
       prefix = ''
     }
@@ -591,17 +592,17 @@ export class Api {
     return retId
   }
 
-  getBirthdayFormValue( data: MEMBER_DATA ) {
+  getBirthdayFormValue(data: MEMBER_DATA) {
     let str = '';
     try {
-      if ( data.birth_year !== void 0 ) {
+      if (data.birth_year !== void 0) {
         str += data.birth_year + '-';
         str += parseInt(data.birth_month) < 10 ? '0' + data.birth_month : data.birth_month;
         str += '-';
         str += parseInt(data.birth_day) < 10 ? '0' + data.birth_day : data.birth_day;
       }
     }
-    catch( e ) {
+    catch (e) {
       // console.error('birthday error: ', e );
     }
 
@@ -610,7 +611,7 @@ export class Api {
   }
 
 
-  strip_tags (input, allowed?) {
+  strip_tags(input, allowed?) {
     allowed = (((allowed || '') + '').toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join('')
 
     var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi
@@ -621,10 +622,10 @@ export class Api {
     })
   }
 
-  getDateTime( stamp ) {
+  getDateTime(stamp) {
 
     let m = parseInt(stamp) * 1000;
-    let d = new Date( m );
+    let d = new Date(m);
 
     let post_year = d.getFullYear();
     let post_month = d.getMonth();
@@ -637,37 +638,37 @@ export class Api {
 
 
     let time;
-    if ( today_year == post_year && today_month == post_month && today_date == post_date ) {
+    if (today_year == post_year && today_month == post_month && today_date == post_date) {
       time = d.getHours() + ':' + d.getMinutes();
     }
     else {
-      time = post_year + '-' + ( post_month + 1 ) + '-' + post_date;
+      time = post_year + '-' + (post_month + 1) + '-' + post_date;
     }
     return time;
   }
 
 
-    isCordova () {
-        if ( !! window['cordova'] ) return true;
-        if ( document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1 ) return true;
-        return false;
-    }
+  isCordova() {
+    if (!!window['cordova']) return true;
+    if (document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1) return true;
+    return false;
+  }
 
 
   /**
    * It shows( alerts ) error message based on philgo error which is returned from philgo api server.
    */
-  error( error, obj?: any ) {
+  error(error, obj?: any) {
     let str = '';
-    if ( error == NO_INTERNET ) str = "You have no internet. Or your internet is too slow.";
-    else if ( error == "User not found. Wrong idx_member.") str = "Please, login ...";
+    if (error == NO_INTERNET) str = "You have no internet. Or your internet is too slow.";
+    else if (error == "User not found. Wrong idx_member.") str = "Please, login ...";
     else str = error;
     alert("api.ts error() ERROR!\n\n" + str);
   }
 
 
 
-  explode (delimiter, string, limit?) {
+  explode(delimiter, string, limit?) {
     //  discuss at: http://locutus.io/php/explode/
     // original by: Kevin van Zonneveld (http://kvz.io)
     //   example 1: explode(' ', 'Kevin van Zonneveld')
