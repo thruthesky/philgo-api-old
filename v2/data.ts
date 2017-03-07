@@ -432,6 +432,18 @@ export class Data extends Api {
         }
     }
 
+
+    /**
+     * 
+     * 
+     * 
+     * @param gid 
+     * @param event 
+     * @param successCallback 
+     * @param failureCallback 
+     * @param completeCallback 
+     * @param progressCallback 
+     */
     uploadPostFile(
         gid: string,
         event,
@@ -440,13 +452,6 @@ export class Data extends Api {
         completeCallback: (completeCode: number) => void,
         progressCallback: ( percentage: number ) => void
     ) {
-        /*
-        let login = this.getLoginData();
-        if ( ! login ) {
-            failureCallback('login first');
-            if ( completeCallback ) completeCallback( 1 );
-        }
-        */
         let options: DATA_UPLOAD_OPTIONS = {
             gid: gid,
             module_name: 'post',
@@ -454,6 +459,24 @@ export class Data extends Api {
         }
         this.upload( options, event, successCallback, failureCallback, completeCallback, progressCallback );
     }
+    uploadPostFileAnonymous(
+        gid: string,
+        event,
+        successCallback: (data: FILE_UPLOAD_RESPONSE) => void,
+        failureCallback: (error: string) => void,
+        completeCallback: (completeCode: number) => void,
+        progressCallback: ( percentage: number ) => void
+    ) {
+        let options: DATA_UPLOAD_OPTIONS = {
+            gid: gid,
+            login: 'pass',
+            module_name: 'post',
+            finish: '0'
+        }
+        this.upload( options, event, successCallback, failureCallback, completeCallback, progressCallback );
+    }
+
+
 
     /**
      * Transfers file to server using cordova-plugin-transfer.

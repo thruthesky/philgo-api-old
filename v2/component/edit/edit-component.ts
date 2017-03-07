@@ -17,6 +17,7 @@ declare var Camera;
 })
 export class EditComponent {
 
+
     @ViewChild('contentTextarea') contentTextarea: ElementRef;
 
     /**
