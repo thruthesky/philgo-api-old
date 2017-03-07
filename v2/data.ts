@@ -459,6 +459,20 @@ export class Data extends Api {
         }
         this.upload( options, event, successCallback, failureCallback, completeCallback, progressCallback );
     }
+
+    /**
+     * 
+     * Upload photo on forum without login.
+     * 
+     * @note You may set the idx_user after posting with updateMemberIdx()
+     * 
+     * @param gid
+     * @param event 
+     * @param successCallback 
+     * @param failureCallback 
+     * @param completeCallback 
+     * @param progressCallback 
+     */
     uploadPostFileAnonymous(
         gid: string,
         event,
