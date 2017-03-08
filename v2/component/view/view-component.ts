@@ -121,7 +121,7 @@ export class ViewComponent {
 
 
     onClickEdit( post ) {
-        console.log("ViewComponent::onClickEdit()" );
+        //console.log("ViewComponent::onClickEdit()" );
         this.edit.emit( post );
         this.show = true;
         this.active = true;
@@ -134,7 +134,7 @@ export class ViewComponent {
     onClickDelete() {
         this.post['inDeleting'] = true;
         this.postService.delete( this.post.idx, re => {
-            console.log('delete: re: ', re);
+            //console.log('delete: re: ', re);
             this.post.subject = "deleted";
             this.post.content = "deleted";
             // this.post['subject'] = "deleted";
@@ -147,15 +147,15 @@ export class ViewComponent {
 
 
     onClickReport() {
-        console.log("onClickReport()");
+        //console.log("onClickReport()");
         //this.post.debug = true;
         this.post['inReport'] = true;
         this.postService.report( this.post.idx, re => {
-            console.log('report succes: re: ', re);
+            //console.log('report succes: re: ', re);
             this.notice.emit("report-success");
         },
         error => {
-            console.log("report failed: ", error);
+            //console.log("report failed: ", error);
             this.error.emit( error );
         },
         () => {
@@ -167,7 +167,7 @@ export class ViewComponent {
     onClickLike() {
         this.post['inLike'] = true;
         this.postService.vote( this.post.idx, re => {
-            console.log('delete: re: ', re);
+            //console.log('delete: re: ', re);
             // this.postService.error("You have reported a post. Thank you.");
              this.post['inLike'] = false;
             this.post.good = (parseInt( this.post.good ) + 1).toString();
@@ -175,7 +175,7 @@ export class ViewComponent {
         error => {
             this.error.emit( error );
               this.post['inLike'] = false;
-            console.log("like error: " + error );
+            //console.log("like error: " + error );
         },
         () => {
             this.post['inLike'] = false;

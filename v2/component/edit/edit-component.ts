@@ -149,7 +149,7 @@ export class EditComponent {
 
 
         setTimeout( () => this.contentTextarea.nativeElement.focus(), 100 );
-            
+
 
     }
 
@@ -425,11 +425,11 @@ export class EditComponent {
 
 
     sendPushNotifications( re ) {
-        console.log("result of comment create: ", re.parents);
+        //console.log("result of comment create: ", re.parents);
         let parents = re.parents;
         for ( let parent of parents ) {
             if ( parent.varchar_9 ) {
-                console.log("Going to send push notification!");
+                //console.log("Going to send push notification!");
                 // @todo replace sendPushNotification with FCM.
                 // this.sendPushNotification( parent.varchar_9 );
             }
