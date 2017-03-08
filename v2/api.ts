@@ -15,9 +15,9 @@ export class Api {
   //  apiEndpoint = "http://philgo.org/index.php";
   //apiEndpoint = "https://www.philgo.com/index.php";
   //  apiEndpoint = "http://w8.philgo.com/index.php";
-     apiEndpoint = "http://hello.philgo.com/index.php"; // fastest server from db. // this must be realy service for CORS. it can only connect to origin domain.
+  apiEndpoint = "http://hello.philgo.com/index.php"; // fastest server from db. // this must be realy service for CORS. it can only connect to origin domain.
   apiEndpointFileServer = "http://file.philgo.com/index.php";
-  apiEndpointLocation = 'https://www.philgo.com/etc/location/philippines/json.php';
+  apiEndpointLocation = 'http://www.philgo.com/etc/location/philippines/json.php';
   constructor(http) {
     this.http = http;
     // console.log('Api::constructor()', http);
