@@ -111,7 +111,7 @@ export class Data extends Api {
         progressCallback?: (progress:number) => void
         ) {
         let url = this.getUploadUrl( options );
-        console.log("Data::upload options and event, url ", options, event, url);
+        //console.log("Data::upload options and event, url ", options, event, url);
         this.uploader = new FileUploader({ url: url });
 
         let files;
@@ -141,7 +141,7 @@ export class Data extends Api {
         }
     }
     upload_old( files, successCallback: (data: FILE_UPLOAD_RESPONSE) => void, failureCallback: (error:string) => void, progressCallback?: (progress:number) => void) {
-        console.log("Data::upload()");
+        //console.log("Data::upload()");
         /*
 
 
@@ -250,7 +250,7 @@ export class Data extends Api {
              + '&gid=' + gid
              + '&id=' + login.id
              + '&session_id=' + login.session_id;
-        console.log(url);
+        //console.log(url);
         this.get( url, successCallback, failureCallback );
     }
     initFileUpload( successCallback: (data: FILE_UPLOAD_RESPONSE) => void,
@@ -258,10 +258,10 @@ export class Data extends Api {
         completeCallback?: ( code: number ) => void,
         progressCallback?: (progress:number) => void
     ) {
-        console.log('initFileUpload()');
+        //console.log('initFileUpload()');
 
         this.uploader.onSuccessItem = (item, response, status, headers) => {
-            console.log('onSuccessItem()');
+            //console.log('onSuccessItem()');
             this.result = {
                 "success": true,
                 "item": item,
@@ -272,7 +272,7 @@ export class Data extends Api {
             //console.log( 'onSuccessItem : ', this.result );
         };
         this.uploader.onErrorItem = (item, response, status, headers) => {
-            console.log('onFailureItem()');
+            //console.log('onFailureItem()');
             this.result = {
                 "success": false,
                 "item": item,
@@ -344,7 +344,7 @@ export class Data extends Api {
 
         };
         this.uploader.onAfterAddingFile = ( fileItem ) => {
-            console.log('uploader.onAfterAddingFile: begins to upload. ', fileItem);
+            //console.log('uploader.onAfterAddingFile: begins to upload. ', fileItem);
             fileItem.withCredentials = false; // remove credentials
             fileItem.upload(); // upload file.
         }
@@ -434,15 +434,15 @@ export class Data extends Api {
 
 
     /**
-     * 
-     * 
-     * 
-     * @param gid 
-     * @param event 
-     * @param successCallback 
-     * @param failureCallback 
-     * @param completeCallback 
-     * @param progressCallback 
+     *
+     *
+     *
+     * @param gid
+     * @param event
+     * @param successCallback
+     * @param failureCallback
+     * @param completeCallback
+     * @param progressCallback
      */
     uploadPostFile(
         gid: string,
@@ -461,17 +461,17 @@ export class Data extends Api {
     }
 
     /**
-     * 
+     *
      * Upload photo on forum without login.
-     * 
+     *
      * @note You may set the idx_user after posting with updateMemberIdx()
-     * 
+     *
      * @param gid
-     * @param event 
-     * @param successCallback 
-     * @param failureCallback 
-     * @param completeCallback 
-     * @param progressCallback 
+     * @param event
+     * @param successCallback
+     * @param failureCallback
+     * @param completeCallback
+     * @param progressCallback
      */
     uploadPostFileAnonymous(
         gid: string,
@@ -540,13 +540,13 @@ export class Data extends Api {
         */
 
 
-        console.log("file transfer to : ", uri);
+        //console.log("file transfer to : ", uri);
         uri = encodeURI( uri );
 
         ft.upload(fileURL, uri, s => {
-            console.log("file upload success: Code = " + s.responseCode);
-            console.log("Response = " + s.response);
-            console.log("Sent = " + s.bytesSent);
+            //console.log("file upload success: Code = " + s.responseCode);
+            //console.log("Response = " + s.response);
+            //console.log("Sent = " + s.bytesSent);
             let re;
             try {
                 re = JSON.parse( s.response );
@@ -590,8 +590,8 @@ export class Data extends Api {
             if ( completeCallback ) completeCallback( 0 );
         }, e => {
             // this.member.error("An error has occurred: Code = " + e.code);
-            console.log("upload error source " + e.source);
-            console.log("upload error target " + e.target);
+            //console.log("upload error source " + e.source);
+            //console.log("upload error target " + e.target);
             failureCallback( e.code );
             if ( completeCallback ) completeCallback( 1 );
         }, ft_options);

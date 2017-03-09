@@ -10,12 +10,12 @@ export class SamplePostPage {
     form = <POST_DATA> {};
     login: MEMBER_LOGIN_DATA = null;
     constructor( private member: Member, private post: Post ) {
-        console.log( 'SamplePostPage::constructor()' );
+        //console.log( 'SamplePostPage::constructor()' );
         this.setTemporaryFormValues();
         this.onClickSubmit();
     }
     onClickSubmit() {
-        console.log("SamplePostPage::onClickSubmit()");
+        //console.log("SamplePostPage::onClickSubmit()");
 
         // 1. register
         let d = new Date();
@@ -30,7 +30,7 @@ export class SamplePostPage {
             mobile: '12345678901'
         };
         this.member.register( userData, (login: MEMBER_REGISTER_RESPONSE_DATA) => {
-            console.log("user registration success: ", login);
+            //console.log("user registration success: ", login);
             this.login = {
                 id: login.id,
                 session_id: login.session_id
@@ -39,7 +39,7 @@ export class SamplePostPage {
             //this.form.session_id = login.session_id;
             // 2. create a post
             this.post.create( this.form, data => {
-                console.log("post create success: ", data);
+                //console.log("post create success: ", data);
                 // 3. compare
                 this.compareCreatePost( data.post.idx );
                 },
@@ -55,46 +55,46 @@ export class SamplePostPage {
         this.form.id = null;
         this.form.session_id = null;
         this.post.update( this.form, data => {
-            console.log("post update : ", data);
+            //console.log("post update : ", data);
             // ==>
             this.compareUpdatePost( idx );
         }, er => alert( er ));
     }
     createComment( idx_parent ) {
-        console.log("createComment()");
+        //console.log("createComment()");
         let c = <POST_DATA> {};
         c.idx_parent = idx_parent;
         c.subject = "Comment title";
         c.content = "Comment content";
-        console.log("comment create data: ", c);
+        //console.log("comment create data: ", c);
         //this.post.debug = true;
         this.post.createComment( c, data => {
-            console.log('createComment() data: ', data);
+            //console.log('createComment() data: ', data);
             this.updateComment( data.post.idx );
         }, error => {
-            console.error("create comment error: " + error );
+            //console.error("create comment error: " + error );
             alert( error );
         } );
     }
 
     updateComment( idx ) {
-        console.log("updateComment()");
+        //console.log("updateComment()");
         let c = <POST_DATA> {};
         c.idx = idx;
         c.subject = "edited comment subject";
         c.content = "edited comment content";
         this.post.update( c, data => {
-            console.log("updateComment() success: ", data);
+            //console.log("updateComment() success: ", data);
             this.compareUpdatedComment( data.idx );
         }, error => {
-            console.error("comment update error: " + error );
+            //console.error("comment update error: " + error );
             alert( error );
         })
     }
 
     compareUpdatedComment( idx ) {
         this.post.get( idx, data => {
-            console.log("compareUpdatedComment() get post : ", data.post);
+            //console.log("compareUpdatedComment() get post : ", data.post);
             if ( data.post.subject != 'edited comment subject') console.error('comment subject does not match');
             if ( data.post.content != 'edited comment content') console.error('comment content does not match');
             this.deletePostComment( data.post.idx, data.post.idx_parent );
@@ -102,18 +102,18 @@ export class SamplePostPage {
     }
 
     deletePostComment( idx, idx_parent ) {
-        console.log("deletePostComment()");
+        //console.log("deletePostComment()");
         this.post.delete( idx, re => {
-            console.log("delete comment success: idx: " );
+            //console.log("delete comment success: idx: " );
         }, error => alert("error: " + error));
 
         this.post.delete( idx_parent, re => {
-            console.log("delete post success: idx: " );
+            //console.log("delete post success: idx: " );
         }, error => alert("error: " + error));
     }
     compareUpdatePost( idx ) {
         this.post.get( idx, data => {
-            console.log("compareUpdatePost() get post : ", data.post);
+            //console.log("compareUpdatePost() get post : ", data.post);
             let p: POST_DATA = data.post;
             let f = this.form;
             let keys = Object.keys( f );
