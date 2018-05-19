@@ -2,27 +2,22 @@
 
 Philgo Restful API v2.
 
-
-
-# TODO
+## TODO
 
 * capsulate locations of Philipines.
-    * Make it class.
+  * Make it class.
 
-
-
-# Install
-
+## Install
 
 npm install @types/lodash
 
-# TEST
+## TEST
 
 * http://localhost:4200/test/philgo/home for test page
 * http://localhost:4200/test/philgo/register
 
 
-# Example Codes
+## Example Codes
 
 
 * @see home.ts to get forums
@@ -163,9 +158,61 @@ This shows in three format.
 
     * active=true 이면, form 이 active 된 상태를 보여준다.
 
+## Examples
+
+### How to do post query to server
+
+See `api.post()` to learn how to use api post query.
+
+```` typescript
+    api.setUrl( 'https://local.philgo.com/api.php' );
+    api.post({ method: 'version' }).subscribe( re => {
+      console.log('data: ', re);
+    }, e => console.log(`Error code: ${e.code}, message: ${e.message}`));
+````
+
+### How to build and use api method
+
+See the simplest `api.version()` and `api.exchangeRate()` method on how to call and build.
+
+```` typescript
+    api.version().subscribe( re => {
+      console.log('version: ', re.version);
+    }, e => console.log(`Error code: ${e.code}, message: ${e.message}`));
+    api.exchangeRate().subscribe( re => {
+      console.log('exchangeRate: ', re);
+    }, e => console.log(`Error code: ${e.code}, message: ${e.message}`));
+````
+
+### General Post Query
+
+`api.query()` is the general query method. You do not need to create api service method anymore since `api.query()` can take all the queries.
+
+```` typescript
+    api.query<ApiCurrencyResponse>('exchangeRate', {currency: 'php'}).subscribe( re => {
+      console.log('usd: ', re.usd);
+      console.log('php: ', re.php);
+    }, e => console.log(e));
+````
 
 
+## Protocol
 
+### Response
 
+If there is no data, code is always 0. and data has the response from server.
 
+If code is not 0, then it is considered as an error response from PhilGo Api.
+
+```` josn
+{
+    code: 0,
+    data: ... response data ...
+}
+````
+
+### Error code
+
+* -400 cannot connect to webserver or PHP script error.
+* -500 Server Internal error.
 
