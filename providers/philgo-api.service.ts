@@ -59,14 +59,27 @@ export class PhilGoApiService {
             console.error(`Error. Server URL is not set.`);
         }
         return this.http.post(this.apiUrl, data).pipe(
-            map(event => this.checkResult(event, data)),
+            map(res => this.checkResult(res, data)),
             catchError(e => this.handleError(e))
         );
     }
 
-    checkResult(event, data) {
-        if (event['code'] !== void 0 && event['code'] === 0) {
-            return event['data'];
+    /**
+     * 서버로 부터 받은 데이터를 리턴한다. ( code 는 제외 )
+     * 만약 코드 값이 0 이 아니면, 에러를 간주하고 에러를 throw 한다. ( 에러는 결국 catchError() 메소드에서 처리가 된다. )
+     *
+     * Returns the data from server without code.
+     * If code is not 0, then it throws an error.
+     *
+     * @param responseData responseData is the response data coming from the server
+     * @param requestData request is the request information sent to the server.
+     *
+     * @return response data from server if successful.
+     *      Or else, throws an error.
+     */
+    checkResult(responseData, requestData) {
+        if (responseData['code'] !== void 0 && responseData['code'] === 0) {
+            return responseData['data'];
         } else {
             throw event;
         }
