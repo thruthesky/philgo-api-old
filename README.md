@@ -217,3 +217,25 @@ If code is not 0, then it is considered as an error response from PhilGo Api.
 * -400 cannot connect to webserver or PHP script error.
 * -500 Server Internal error.
 
+## Test
+
+Run tests like below.
+
+```` typescript
+import { Component } from '@angular/core';
+import { ApiCurrencyResponse } from '../../modules/philgo-api/providers/philgo-api.service';
+import { PhilGoApiTestService } from '../../modules/philgo-api/providers/philgo-api-test.service';
+@Component({
+  selector: 'app-page-home',
+  templateUrl: 'home.page.html',
+  styleUrls: ['home.page.scss'],
+  providers: [PhilGoApiTestService]
+})
+export class HomePage {
+  constructor(
+    t: PhilGoApiTestService
+  ) {
+    t.setUrl('https://local.philgo.com/api.php').run();
+  }
+}
+````
