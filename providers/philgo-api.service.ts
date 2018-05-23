@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpRequest, HttpResponse, HttpHeaderResponse, HttpEventType } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
-export const SESSION_ID = 'sessionId';
+export const ID = 'id';
+export const SESSION_ID = 'session_id';
 export const NICKNAME = 'nickname';
-export const MEMBER_IDX = 'idxMember';
+export const IDX_MEMBER = 'idx_member';
 
 
 interface ApiOptionalRequest {
     method?: string;
-    sessionId?: string;
+    session_id?: string;
 }
 interface ApiLoginRequest extends ApiOptionalRequest {
     email: string;
@@ -54,18 +55,20 @@ export interface ApiCurrencyResponse {
     usd: string;
 }
 interface ApiRegisterResponse {
-    sessionId: string;
+    session_id: string;
     idx: string;
+    id: string;
     nickname: string;
 }
 interface ApiLoginResponse extends ApiRegisterResponse {
-    sessionId: string;
+    session_id: string;
 }
 interface ApiUserInformation extends ApiRegisterResponse {
-    sessionId: string;
+    session_id: string;
 }
 interface ApiProfileResponse {
     idx: string;
+    id: string;
     email: string;
     mobile: string;
     name: string;
@@ -73,19 +76,52 @@ interface ApiProfileResponse {
     password: string;
 }
 
+export interface ApiFileUploadResponse {
+    idx: number;
+    name: string; // file name
+    path: string; // relative file path on server
+    result: number; // 0 on success.
+    url: string; // orinal file url
+    url_thumbnail: string; // thumbnail url.
+}
+
+export const ApiErrorFileNotSelected = 'file-not-selected';
+export const ApiErrorFileUploadError = -50020;
+
+
+interface ApiFileUploadOptions {
+    gid?: string;
+    login?: 'pass';
+    finish?: '1';
+    code?: string;
+    module_name?: string;
+}
+
 
 @Injectable()
 export class PhilGoApiService {
-    private apiUrl = '';
+    static serverUrl = '';
+    static fileServerUrl = '';
     constructor(
         public http: HttpClient
     ) {
-
+        console.log('PhilGoApiService::constructor');
     }
 
-    setUrl(url: string) {
-        this.apiUrl = url;
+    setServerUrl(url: string) {
+        PhilGoApiService.serverUrl = url;
+        console.log('setServerUrl(): ', this.getServerUrl());
     }
+    getServerUrl(): string {
+        return PhilGoApiService.serverUrl;
+    }
+    setFileServerUrl(url: string) {
+        PhilGoApiService.fileServerUrl = url;
+    }
+    getFileServerUrl(): string {
+        return PhilGoApiService.fileServerUrl;
+    }
+
 
 
     httpBuildQuery(params): string | null {
@@ -102,8 +138,8 @@ export class PhilGoApiService {
 
     private prePost(data) {
         const q = this.httpBuildQuery(data);
-        console.log('PhilGoApiService::post() url: ', this.apiUrl + '?' + q);
-        if (!this.apiUrl) {
+        console.log('PhilGoApiService::post() url: ', this.getServerUrl() + '?' + q);
+        if (!this.getServerUrl()) {
             console.error(`Error. Server URL is not set.`);
         }
     }
@@ -122,7 +158,7 @@ export class PhilGoApiService {
      */
     post(data): Observable<any> {
         this.prePost(data);
-        return this.http.post(this.apiUrl, data).pipe(
+        return this.http.post(this.getServerUrl(), data).pipe(
             map((res: ApiResponse) => {
                 /**
                  * PhilGo API 부터 잘 처리된 결과 데이터가 전달되었다면,
@@ -272,9 +308,9 @@ export class PhilGoApiService {
      * @param data user profile data to update
      */
     profileUpdate(data: ApiProfileUpdateRequest) {
-        data = Object.assign(data, this.getLoginObject());
-        console.log('profileUpdate data: ', data);
-        return this.query<ApiProfileUpdateRequest, ApiProfileResponse>('profileUpdate', data);
+        // data = Object.assign(data, this.getLoginObject());
+        // console.log('profileUpdate data: ', data);
+        return this.query<ApiProfileUpdateRequest, ApiProfileResponse>('profileUpdate', this.addLogin(data));
     }
 
 
@@ -298,9 +334,26 @@ export class PhilGoApiService {
 
     /**
      * Returns user login object.
+     * @example
+     *      data = Object.assign(data, this.getLoginObject());
+     *
      */
-    getLoginObject() {
-        return { idxMember: this.getUserIdx(), sessionId: this.getSessionId() };
+    private getLoginObject() {
+        return { idx_member: this.getIdxMember(), session_id: this.getSessionId() };
+    }
+
+    /**
+     * Get an object and add login session id and idx and returns it.
+     * @param obj Object to add login information.
+     *          if `obj` is undefined or falsy, then it return a new object with login information.
+     */
+    private addLogin(obj?) {
+        if (obj === void 0 || !obj) {
+            obj = {};
+        }
+        obj[IDX_MEMBER] = this.getIdxMember();
+        obj[SESSION_ID] = this.getSessionId();
+        return obj;
     }
 
     /**
@@ -309,7 +362,7 @@ export class PhilGoApiService {
     logout() {
         localStorage.removeItem(SESSION_ID);
         localStorage.removeItem(NICKNAME);
-        localStorage.removeItem(MEMBER_IDX);
+        localStorage.removeItem(IDX_MEMBER);
     }
 
     /**
@@ -319,10 +372,12 @@ export class PhilGoApiService {
      *
      * @param user User information
      */
-    saveUserInformation(user: ApiUserInformation) {
-        localStorage.setItem(SESSION_ID, user.sessionId);
+    private saveUserInformation(user: ApiUserInformation) {
+        console.log('saveuserInformation: user: ', user);
+        localStorage.setItem(SESSION_ID, user.session_id);
+        localStorage.setItem(ID, user.id);
         localStorage.setItem(NICKNAME, user.nickname);
-        localStorage.setItem(MEMBER_IDX, user.idx);
+        localStorage.setItem(IDX_MEMBER, user.idx);
     }
 
     /**
@@ -338,8 +393,93 @@ export class PhilGoApiService {
     /**
      * Returns user idx.
      */
-    getUserIdx(): string {
-        return localStorage.getItem(MEMBER_IDX);
+    getIdxMember(): string {
+        return localStorage.getItem(IDX_MEMBER);
+    }
+
+    /**
+     * Returns user idx.
+     */
+    getMemberId(): string {
+        return localStorage.getItem(ID);
+    }
+
+    uploadPrimaryPhotoWeb(files: FileList) {
+        return this.fileUploadOnWeb(files, {
+            gid: this.getMemberId(),
+            code: 'primary_photo'
+        });
+    }
+
+    fileUploadOnWeb(files: FileList, option: ApiFileUploadOptions = {}): Observable<any> {
+        if (files === void 0 || !files.length || files[0] === void 0) {
+            return throwError(ApiErrorFileNotSelected);
+        }
+        const file = files[0];
+
+        const formData = new FormData();
+        formData.append('file', file, file.name);
+        formData.append('module', 'ajax');
+        formData.append('action', 'file_upload_submit');
+        console.log('option: ', option);
+        if (option.gid) {
+            formData.append('gid', option.gid);
+        }
+        if (option.finish) {
+            formData.append('finish', option.finish);
+        }
+        if (option.login === 'pass') {
+            formData.append('login', option.login);
+        } else {
+            formData.append('idx_member', this.getIdxMember());
+            formData.append('session_id', this.getSessionId());
+        }
+        if (option.module_name) {
+            formData.append('module_name', option.module_name);
+        }
+        if (option.code) {
+            formData.append('varname', option.code);
+        }
+
+        const req = new HttpRequest('POST', this.getFileServerUrl(), formData, {
+            reportProgress: true,
+            responseType: 'json'
+        });
+
+        console.log('file upload: ', this.getFileServerUrl());
+        return this.http.request(req).pipe(
+            map(e => {
+                if (e instanceof HttpResponse) { // success event.
+                    if (e.status === 200) {
+                        if (e.body) {
+                            // upload success now.
+                            // console.log('success: ', e);
+                            // console.log('e.body.data', e.body['data']);
+                            if (e.body['data']['result'] === 0) {
+                                return e.body['data'];
+                            } else {
+                                throw { code: ApiErrorFileUploadError, message: e.body['data']['error'] };
+                            }
+                        } else {
+                            return e.body; // Return Server error
+                        }
+                    }
+                } else if (e instanceof HttpHeaderResponse) { // header event
+                    return e;
+                } else if (e.type === HttpEventType.UploadProgress) { // progress event
+                    const precentage = Math.round(100 * e.loaded / e.total);
+                    if (isNaN(precentage)) {
+                        console.log('file upload error. percentage is not number');
+                    } else {
+                        console.log('upload percentage: ', precentage);
+                        return precentage;
+                    }
+                }
+                return e; // other events
+            })
+        );
+
+
     }
 
 }

@@ -1,0 +1,7 @@
+<h2>User registeration and update.</h2>
+<hr>
+Primary Photo Upload:
+<input type="file" name="file" (change)="onChangePrimaryPhoto($event)">
+
+<img src="{{ photo.url_thumbnail }}" *ngIf=" photo ">
+

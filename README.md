@@ -10,7 +10,17 @@
 
 ## Install
 
-npm install @types/lodash
+
+### Settings
+
+```` typescript
+export class AppModule {
+  constructor(api: PhilGoApiService) {
+    api.setServerUrl('https://local.philgo.com/api.php');
+    api.setFileServerUrl('https://local.philgo.com/index.php'); // must end with index.php
+  }
+}
+````
 
 ## TEST
 
@@ -239,3 +249,5 @@ export class HomePage {
   }
 }
 ````
+
+

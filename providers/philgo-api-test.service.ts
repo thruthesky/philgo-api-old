@@ -8,6 +8,7 @@ export class PhilGoApiTestService {
         public api: PhilGoApiService
     ) {
         console.log('* PhilGoApiTestService::constructor()');
+        console.log('* url: ', this.api.getServerUrl());
     }
     run() {
         console.log('** run()');
@@ -15,7 +16,7 @@ export class PhilGoApiTestService {
         this.testRegisterLoginUpdate();
     }
     setUrl(url: string) {
-        this.api.setUrl(url);
+        this.api.setServerUrl(url);
         return this;
     }
     good(msg?) {
@@ -53,11 +54,13 @@ export class PhilGoApiTestService {
             mobile: '0123456789'
         })
             .subscribe(user => {
+                // console.log('user: ', user);
                 this.api.getSessionId();
-                this.test(user.sessionId, `User session id is truty. sessionId: ${user.sessionId}`);
-                this.test(user.sessionId === this.api.getSessionId(), 'register success');
+                this.test(user.session_id, `User session id is truty. sessionId: ${user.session_id}`);
+                this.test(user.session_id === this.api.getSessionId(), 'register success');
 
                 this.api.profile().subscribe(profile => {
+                    // console.log('profile: ', profile);
                     this.test(parseInt(profile.idx, 10), 'Profile idx: ' + profile.idx);
                     const newName = 'NewName' + Math.round((new Date).getTime() / 1000);
                     this.api.profileUpdate({ name: newName, mobile: '0102343232' }).subscribe(newProfile => {
