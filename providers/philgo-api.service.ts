@@ -253,14 +253,22 @@ export class PhilGoApiService {
 
     /**
      * Returns user profile data
+     * @desc Use this method to
+     *      - Get full data of the user information.
+     *      - Display user dat into profile update form to update user data.
      */
     profile() {
         const data = this.getLoginObject();
         return this.query<ApiProfileResponse>('profile', data);
     }
 
+
     /**
      * Update user information
+     *
+     * This method gets form data and update user information on PhilGo sf_member table.
+     *
+     * @desc Use this method to update user information.
      * @param data user profile data to update
      */
     profileUpdate(data: ApiProfileUpdateRequest) {
@@ -269,6 +277,15 @@ export class PhilGoApiService {
         return this.query<ApiProfileUpdateRequest, ApiProfileResponse>('profileUpdate', data);
     }
 
+
+    /**
+     * User login
+     *
+     * Use this method to get session id which, laster, can be used to verify who you are.
+     * This saves user's login information into localStorage.
+     *
+     * @param data email and password
+     */
     login(data: ApiLoginRequest) {
         return this.query<ApiLoginRequest, ApiLoginResponse>('login', data)
             .pipe(
@@ -279,6 +296,9 @@ export class PhilGoApiService {
             );
     }
 
+    /**
+     * Returns user login object.
+     */
     getLoginObject() {
         return { idxMember: this.getUserIdx(), sessionId: this.getSessionId() };
     }
@@ -315,6 +335,9 @@ export class PhilGoApiService {
     getSessionId(): string {
         return localStorage.getItem(SESSION_ID);
     }
+    /**
+     * Returns user idx.
+     */
     getUserIdx(): string {
         return localStorage.getItem(MEMBER_IDX);
     }
