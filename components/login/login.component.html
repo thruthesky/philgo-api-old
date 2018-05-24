@@ -1,0 +1,25 @@
+<h1>PhilGo Api User Login</h1>
+<div *ngIf=" api.isLoggedIn() ">You are logged in as {{ api.getMemberNickname() }}</div>
+<section id="login-form" *ngIf=" api.isLoggedOut() ">
+    <form (ngSubmit)="onSubmit( $event )">
+        <div class="set email">
+            <span class="caption">Email</span>
+            <span class="text">
+                <input type="text" name="email" [(ngModel)]=" form.email " autocomplete="off">
+            </span>
+        </div>
+        <div class="set password">
+            <span class="caption">Password</span>
+            <span class="text">
+                <input type="password" name="password" [(ngModel)]=" form.password " autocomplete="off">
+            </span>
+        </div>
+        <div class="set submit">
+            <span class="caption"></span>
+            <span class="text">
+                <button type="submit">Login</button>
+                <div style="color: red;" *ngIf=" loader.submit ">로그인 중입니다.</div>
+            </span>
+        </div>
+    </form>
+</section>

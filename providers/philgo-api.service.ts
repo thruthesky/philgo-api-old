@@ -13,7 +13,7 @@ interface ApiOptionalRequest {
     method?: string;
     session_id?: string;
 }
-interface ApiLoginRequest extends ApiOptionalRequest {
+export interface ApiLoginRequest extends ApiOptionalRequest {
     email: string;
     password: string;
 }
@@ -23,13 +23,13 @@ export interface ApiCurrencyRequest extends ApiOptionalRequest {
 export interface ApiRegisterRequest extends ApiOptionalRequest {
     email: string;
     password: string;
-    name: string;
+    name?: string;
     nickname: string;
-    mobile: string;
+    mobile?: string;
+    url_profile_photo?: string; // for profile upload form compatibility only.
 }
 export interface ApiProfileUpdateRequest extends ApiOptionalRequest {
     name: string;
-    // nickname: string; // nickname cannot be updated.
     mobile: string;
 }
 
@@ -54,11 +54,20 @@ export interface ApiCurrencyResponse {
     php: string;
     usd: string;
 }
-interface ApiRegisterResponse {
-    session_id: string;
+interface ApiProfileResponse {
     idx: string;
     id: string;
+    email: string;
+    name: string;
     nickname: string;
+    mobile: string;
+    password: string;
+    readonly url_profile_photo?: string;
+    session_id: string;
+}
+
+interface ApiRegisterResponse extends ApiProfileResponse {
+    session_id: string;
 }
 interface ApiLoginResponse extends ApiRegisterResponse {
     session_id: string;
@@ -66,14 +75,31 @@ interface ApiLoginResponse extends ApiRegisterResponse {
 interface ApiUserInformation extends ApiRegisterResponse {
     session_id: string;
 }
-interface ApiProfileResponse {
-    idx: string;
-    id: string;
-    email: string;
-    mobile: string;
-    name: string;
-    nickname: string;
-    password: string;
+
+interface ApiThumbnailOption {
+    height?: number;
+    width?: number;
+    path: string;
+    percentage: number;
+    quality?: number;
+    type?: 'adaptive' | 'crop';
+}
+
+interface ApiVersion2Request {
+    module?: string;
+    action: string;
+    submit?: number;
+    id?: string;
+    idx?: number;
+    session_id?: string;
+}
+
+interface ApiVersion2Response {
+    code: number;
+    data: {
+        code: number;
+        message: string;
+    };
 }
 
 export interface ApiFileUploadResponse {
@@ -115,6 +141,12 @@ export class PhilGoApiService {
     getServerUrl(): string {
         return PhilGoApiService.serverUrl;
     }
+    /**
+     * Returns old api's end point.
+     */
+    getV2ServerUrl(): string {
+        return PhilGoApiService.serverUrl.replace('api.php', 'index.php');
+    }
     setFileServerUrl(url: string) {
         PhilGoApiService.fileServerUrl = url;
     }
@@ -124,7 +156,7 @@ export class PhilGoApiService {
 
 
 
-    httpBuildQuery(params): string | null {
+    private httpBuildQuery(params): string | null {
         const keys = Object.keys(params);
         if (keys.length === 0) {
             return null; //
@@ -209,13 +241,13 @@ export class PhilGoApiService {
      * @return response data from server if successful.
      *      Or else, throws an error.
      */
-    checkResult(responseData, requestData) {
-        if (responseData['code'] !== void 0 && responseData['code'] === 0) {
-            return responseData['data'];
-        } else {
-            throw event;
-        }
-    }
+    // private checkResult(responseData, requestData) {
+    //     if (responseData['code'] !== void 0 && responseData['code'] === 0) {
+    //         return responseData['data'];
+    //     } else {
+    //         throw event;
+    //     }
+    // }
     /**
      * @todo 클라이언트 인터넷 에러인지, 서버에 에러인지 구분이 필요하다. 공식 문서에 나오는데로 해도 잘 안된다.
      * @param error error response
@@ -273,8 +305,48 @@ export class PhilGoApiService {
     }
 
     /**
+     * 옛날 API (v2) 로 쿼리를 한다.
+     * 주의: v2 Api 의 endpoint 에서 Raw Input 을 인식하지 못하므로 End point 에 module 과 action 을 적어주어,
+     * DataLayer 에서 인식을 하도록 한다.
+     */
+    queryVersion2(req: ApiVersion2Request) {
+        req.module = 'ajax';
+        req.submit = 1;
+        req.session_id = this.getSessionId();
+        req.id = this.getIdxMember();
+        const q = this.httpBuildQuery(req);
+        console.log('PhilGoApiService::post() to Old V2 url: ', this.getV2ServerUrl() + '?' + q);
+        const url = this.getV2ServerUrl() + '?module=ajax&action=' + req.action;
+        return this.http.post(url, req).pipe(
+            map( (res: ApiVersion2Response) => {
+                console.log('old api: ', res);
+                /**
+                 * PhilGo API Version 2 부터 잘 처리된 결과 데이터가 전달되었다면,
+                 * 데이터만 Observable 로 리턴한다.
+                 */
+                if (res.code !== void 0 && res.code === 0) {
+                    // console.log('code: ', res.code);
+                    if ( res.data && res.data.code !== void 0 && res.data.code === 0 ) {
+                        return res.data;
+                    } else {
+                        throw res.data;
+                    }
+                } else {
+                    /**
+                     * (인터넷 접속 에러나 서버 프로그램 에러가 아닌)
+                     * PhilGo API 가 올바로 실행되었지만 결과에 성공적이지 못하다면
+                     * Javascript 에러를 throw 해서 catchError() 에러 처리한다.
+                     */
+                    throw res;
+                }
+            })
+        );
+    }
+
+    /**
      * Registers
      * @param data User registration data
+     * @example see test file in 'philgo-api-test-service.ts'
      */
     register(data: ApiRegisterRequest) {
         return this.query<ApiRegisterRequest, ApiRegisterResponse>('register', data)
@@ -396,6 +468,18 @@ export class PhilGoApiService {
     getIdxMember(): string {
         return localStorage.getItem(IDX_MEMBER);
     }
+    /**
+     * Returns true if the user has logged in already.
+     */
+    isLoggedIn(): boolean {
+        return !!this.getIdxMember();
+    }
+    /**
+     * Returns false if the user has logged out already.
+     */
+    isLoggedOut(): boolean {
+        return !this.isLoggedIn();
+    }
 
     /**
      * Returns user idx.
@@ -404,10 +488,15 @@ export class PhilGoApiService {
         return localStorage.getItem(ID);
     }
 
+    getMemberNickname(): string {
+        return localStorage.getItem(NICKNAME);
+    }
+
     uploadPrimaryPhotoWeb(files: FileList) {
         return this.fileUploadOnWeb(files, {
             gid: this.getMemberId(),
-            code: 'primary_photo'
+            code: 'primary_photo',
+            finish: '1'
         });
     }
 
@@ -482,4 +571,28 @@ export class PhilGoApiService {
 
     }
 
+    /**
+     * Returns thumbnail URL of the photo
+     * @see sapcms_1_2/etc/resize_image.php for detail.
+     * @example
+     *  <img src="{{ api.thumbnailUrl({ width: 100, height: 100, path: form.url_profile_photo }) }}" *ngIf=" form.url_profile_photo ">
+     */
+    thumbnailUrl(option: ApiThumbnailOption): string {
+        let url = this.getFileServerUrl().replace('index.php', '');
+        let type = 'adaptive';
+        if (option.type) {
+            type = option.type;
+        }
+        const path = option.path.replace(url, '../');
+        let quality = 100;
+        if (option.quality) {
+            quality = option.quality;
+        }
+        url += `etc/image_resize.php?${type}=1&w=${option.width}&h=${option.height}&path=${path}&qualty=${quality}`;
+        return url;
+    }
+
+    deleteFile(idx: number) {
+        return this.queryVersion2({ action: 'data_delete_submit', idx: idx });
+    }
 }

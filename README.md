@@ -10,8 +10,9 @@
 
 ## Install
 
+### Initializing Philgo Api
 
-### Settings
+* You will need to set philgo site api URL and file server url.
 
 ```` typescript
 export class AppModule {

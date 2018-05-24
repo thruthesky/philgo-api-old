@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {
-    PhilGoApiService, ApiErrorFileNotSelected, ApiErrorFileUploadError, ApiFileUploadResponse
+    PhilGoApiService, ApiErrorFileNotSelected, ApiErrorFileUploadError, ApiFileUploadResponse, ApiRegisterRequest, ApiProfileUpdateRequest
 } from '../../providers/philgo-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -10,21 +10,45 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class UserRegisterAndProfileComponent {
 
-    photo: ApiFileUploadResponse = null;
+    form: ApiRegisterRequest = {
+        email: '',
+        password: '',
+        name: '',
+        nickname: '',
+        mobile: ''
+    };
+    percentage = 0;
+    // photo: ApiFileUploadResponse = null;
+    justRegistered = false;
+    loader = {
+        profile: false,
+        submit: false
+    };
     constructor(
         public api: PhilGoApiService
     ) {
+        if (api.isLoggedIn()) {
+            this.loader.profile = true;
+            api.profile().subscribe(user => {
+                this.loader.profile = false;
+                this.form = user;
+                console.log('user: ', user);
+            }, e => alert(e.message));
+        }
     }
     onChangePrimaryPhoto(event: Event) {
         this.api.uploadPrimaryPhotoWeb(event.target['files']).subscribe(re => {
             // console.log(event);
             if (typeof re === 'number') {
                 console.log(`File is ${re}% uploaded.`);
+                this.percentage = re;
             } else if (re['code'] && re['idx'] === void 0) {
                 console.log('error: ', re);
             } else if (re['idx'] !== void 0 && re['idx']) {
                 // console.log('file upload success: ', re);
-                this.photo = re;
+                // this.photo = re;
+                this.form.url_profile_photo = re['url'];
+                this.percentage = 0;
             }
         }, (e: HttpErrorResponse) => {
             console.log('error subscribe: ', e);
@@ -42,6 +66,41 @@ export class UserRegisterAndProfileComponent {
             }
             console.log('file upload failed');
         });
+    }
+    onSubmit(event: Event) {
+        event.preventDefault();
+        console.log('onSubmit()', this.form);
+        this.loader.submit = true;
+        if (this.api.isLoggedIn()) {
+            const data: ApiProfileUpdateRequest = {
+                name: this.form.name,
+                mobile: this.form.mobile
+            };
+            this.api.profileUpdate(data).subscribe( user => {
+                this.loader.submit = false;
+                console.log('profile update success: ', user);
+            }, e => {
+                this.loader.submit = false;
+                alert(e.message);
+            });
+        } else {
+            this.api.register(this.form).subscribe(user => {
+                this.loader.submit = false;
+                this.justRegistered = true;
+            }, e => {
+                this.loader.submit = false;
+                alert('Failed: ' + e.message);
+            });
+        }
+        return false;
+    }
+
+    onClickDeletePrimaryPhoto() {
+        const idx = this.form.url_profile_photo.split('/').pop();
+        this.api.deleteFile(parseInt(idx, 10)).subscribe( res => {
+            console.log('res: ', res);
+            this.form.url_profile_photo = '';
+        }, e => alert(e.message));
     }
 }
 
