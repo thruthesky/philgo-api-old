@@ -16,7 +16,7 @@
 
 ### Adding PhilGo API as submodule
 
-* You can add philgo-api as submodule of any angualr/ionic project under src/module/philgo-api.
+* You can add philgo-api as submodule of any angualr/ionic project under src/app/module/philgo-api.
 
 ```` sh
 git submodule add https://github.com/thruthesky/philgo-api src/app/modules/philgo-api
