@@ -5,16 +5,19 @@ import { UserRegisterAndProfileComponent } from './components/user-register-and-
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserLogin } from './components/login/login.component';
+import { PostListComponent } from './components/forum/post-list/post-list.component';
 export { UserRegisterAndProfileComponent };
 
 @NgModule({
     declarations: [
         UserRegisterAndProfileComponent,
-        UserLogin
+        UserLogin,
+        PostListComponent
     ],
     exports: [
         UserRegisterAndProfileComponent,
-        UserLogin
+        UserLogin,
+        PostListComponent
     ],
     imports: [
         CommonModule,

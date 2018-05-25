@@ -1,0 +1,9 @@
+<section class="post-list" [ngClass]="[ option.post_id ]" *ngIf=" option.post_id ">
+    <h1>Post list</h1>
+    <div class="posts">
+        <div class="post" *ngFor=" let idx of re.idxes ">
+            {{ idx }}
+            {{ re.posts[idx].subject }}
+        </div>
+    </div>
+</section>

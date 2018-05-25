@@ -96,11 +96,19 @@ interface ApiVersion2Request {
 
 interface ApiVersion2Response {
     code: number;
+    message?: string;
+    action: string;
+    domain: string;
+    module: string;
+    new_message: string; // if there is a new message.
+    post_name?: string; // post name if forum list requested.
+    // ... and there is more...
     data: {
         code: number;
         message: string;
     };
 }
+
 
 export interface ApiFileUploadResponse {
     idx: number;
@@ -122,6 +130,162 @@ interface ApiFileUploadOptions {
     code?: string;
     module_name?: string;
 }
+
+
+export interface ApiMember {
+    id: string;
+    name: string;
+    nickname: string;
+}
+
+
+export interface ApiPhoto {
+    idx: number;
+    url?: string;
+    url_thumbnail?: string;
+}
+
+export interface ApiPostListOption {
+    page_no?: number; // page number
+    post_id?: string; // post id
+    limit?: number; // number of posts to show in one page.
+    fields?: string; // fields to extract
+    file?: string; // Y to get only posts with files(photos)
+}
+
+interface ApiForumPageRequest extends ApiOptionalRequest, ApiPostListOption {
+    page_no: number;
+    post_id: string;
+    limit: number;
+}
+
+
+/**
+ * Post data structure for create/update
+ */
+export interface ApiPostData {
+    module?: string; // for crate/update
+    action?: string; // for create/update
+    id?: string; // user id to create/update.
+    session_id?: string; // user id to create or update.
+    idx?: string;
+    stamp?: string;
+    idx_member?: string;
+    idx_root?: string;
+    idx_parent?: string;
+    list_order?: string;
+    depth?: string;
+    gid?: string;
+    post_id?: string;
+    group_id?: string;
+    category?: string;
+    sub_category?: string;
+    reminder?: string;
+    secret?: string;
+    checked?: string;
+    checked_stamp?: string;
+    report?: string;
+    blind?: string;
+    no_of_comment?: string;
+    no_of_attach?: string;
+    no_of_first_image?: string;
+    user_domain?: string;
+    user_id?: string;
+    user_password?: string;
+    user_name?: string;
+    user_email?: string;
+    subject?: string;
+    content?: string;
+    content_stripped?: string;
+    link?: string;
+    stamp_update?: string;
+    stamp_last_comment?: string;
+    deleted?: string;
+    no_of_view?: string;
+    good?: string;
+    bad?: string;
+    access_code?: string;
+    region?: string;
+    photos?: Array<ApiPhoto>;
+    int_1?: string;
+    int_2?: string;
+    int_3?: string;
+    int_4?: string;
+    int_5?: string;
+    int_6?: string;
+    int_7?: string;
+    int_8?: string;
+    int_9?: string;
+    int_10?: string;
+
+    char_1?: string;
+    char_2?: string;
+    char_3?: string;
+    char_4?: string;
+    char_5?: string;
+    char_6?: string;
+    char_7?: string;
+    char_8?: string;
+    char_9?: string;
+    char_10?: string;
+
+    varchar_1?: string;
+    varchar_2?: string;
+    varchar_3?: string;
+    varchar_4?: string;
+    varchar_5?: string;
+    varchar_6?: string;
+    varchar_7?: string;
+    varchar_8?: string;
+    varchar_9?: string;
+    varchar_10?: string;
+    varchar_11?: string;
+    varchar_12?: string;
+    varchar_13?: string;
+    varchar_14?: string;
+    varchar_15?: string;
+    varchar_16?: string;
+    varchar_17?: string;
+    varchar_18?: string;
+    varchar_19?: string;
+    varchar_20?: string;
+    text_1?: string;
+    text_2?: string;
+    text_3?: string;
+    text_4?: string;
+    text_5?: string;
+    text_6?: string;
+    text_7?: string;
+    text_8?: string;
+    text_9?: string;
+    text_10?: string;
+
+    member?: ApiMember;
+}
+
+
+interface ApiBanner {
+    src: string; // banner image url
+    idx_file: number; // banner image idx
+    url: string; // url to be redirected to adv page.
+    subject: string; // for premium subject
+    sub_subject: string; // for premium sub sub subject
+    image_src: string; // for premium banner
+}
+
+export interface ApiForumPageResponse extends ApiResponse {
+    category: string;
+    limit: number;
+    page_no: number;
+    point_ad: Array<any>;
+    post_id: string;
+    post_top_ad: Array<ApiBanner>;
+    post_top_company_book_ad: Array<ApiBanner>;
+    post_top_premium_ad: Array<any>;
+    posts: Array<ApiPostData>;
+}
+
+
 
 
 @Injectable()
@@ -309,16 +473,16 @@ export class PhilGoApiService {
      * 주의: v2 Api 의 endpoint 에서 Raw Input 을 인식하지 못하므로 End point 에 module 과 action 을 적어주어,
      * DataLayer 에서 인식을 하도록 한다.
      */
-    queryVersion2(req: ApiVersion2Request) {
+    queryVersion2(req: ApiVersion2Request): Observable<any> {
         req.module = 'ajax';
         req.submit = 1;
         req.session_id = this.getSessionId();
         req.id = this.getIdxMember();
         const q = this.httpBuildQuery(req);
         console.log('PhilGoApiService::post() to Old V2 url: ', this.getV2ServerUrl() + '?' + q);
-        const url = this.getV2ServerUrl() + '?module=ajax&action=' + req.action;
+        const url = this.getV2ServerUrl() + '?module=ajax&action=' + req.action + '&submit=1';
         return this.http.post(url, req).pipe(
-            map( (res: ApiVersion2Response) => {
+            map((res: ApiVersion2Response) => {
                 console.log('old api: ', res);
                 /**
                  * PhilGo API Version 2 부터 잘 처리된 결과 데이터가 전달되었다면,
@@ -326,10 +490,19 @@ export class PhilGoApiService {
                  */
                 if (res.code !== void 0 && res.code === 0) {
                     // console.log('code: ', res.code);
-                    if ( res.data && res.data.code !== void 0 && res.data.code === 0 ) {
+                    if (res.data && res.data.code !== void 0 && res.data.code === 0) {
                         return res.data;
+                    } if (res.action) {
+                        /**
+                         * action='post-list' will simply use the result data.
+                         */
+                        return res;
                     } else {
                         throw res.data;
+                    }
+                } else if (res.code !== void 0 && res.code) {
+                    if (res.message !== void 0) {
+                        return { code: res.code, message: res.message };
                     }
                 } else {
                     /**
@@ -568,7 +741,6 @@ export class PhilGoApiService {
             })
         );
 
-
     }
 
     /**
@@ -594,5 +766,10 @@ export class PhilGoApiService {
 
     deleteFile(idx: number) {
         return this.queryVersion2({ action: 'data_delete_submit', idx: idx });
+    }
+
+    postList(option: ApiPostListOption): Observable<ApiForumPageResponse> {
+        const req: ApiForumPageRequest = <ApiForumPageRequest>option;
+        return this.query<ApiForumPageRequest, ApiForumPageResponse>('forumPage', req);
     }
 }

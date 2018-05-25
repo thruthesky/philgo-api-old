@@ -8,6 +8,10 @@
 * capsulate locations of Philipines.
   * Make it class.
 
+## Notes
+
+* Do not use Wysiwyg editor since everything is possible without it and it only makes trouble.
+
 ## Install
 
 ### Initializing Philgo Api
@@ -28,13 +32,12 @@ export class AppModule {
 * http://localhost:4200/test/philgo/home for test page
 * http://localhost:4200/test/philgo/register
 
-
 ## Example Codes
-
 
 * @see home.ts to get forums
 * get posts of a category
-````
+
+```` typescript
     let req = { post_id: this.post_id, page_no: this.page_no };
     this.post.page( req, ( posts: POSTS ) => {
       console.log('posts: ', posts);
@@ -44,13 +47,9 @@ export class AppModule {
     });
 ````
 
-
 ## Search
 
 @see home.ts for search.
-
-
-
 
 ## Debugging
 
