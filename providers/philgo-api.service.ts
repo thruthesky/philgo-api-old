@@ -121,6 +121,8 @@ export interface ApiFileUploadResponse {
 
 export const ApiErrorFileNotSelected = 'file-not-selected';
 export const ApiErrorFileUploadError = -50020;
+export const ApiErrorUrlNotSet = -50030;
+
 
 
 interface ApiFileUploadOptions {
@@ -145,18 +147,16 @@ export interface ApiPhoto {
     url_thumbnail?: string;
 }
 
-export interface ApiPostListOption {
-    page_no?: number; // page number
-    post_id?: string; // post id
-    limit?: number; // number of posts to show in one page.
+export interface ApiForumPageRequest extends ApiOptionalRequest {
+
+    // page_no?: number; // page number
+    // post_id?: string; // post id
+    // limit?: number; // number of posts to show in one page.
     fields?: string; // fields to extract
     file?: string; // Y to get only posts with files(photos)
-}
-
-interface ApiForumPageRequest extends ApiOptionalRequest, ApiPostListOption {
-    page_no: number;
-    post_id: string;
-    limit: number;
+    page_no: number; // page no
+    post_id: string; // post id
+    limit: number; // limit
 }
 
 
@@ -354,6 +354,9 @@ export class PhilGoApiService {
      */
     post(data): Observable<any> {
         this.prePost(data);
+        if ( ! this.getServerUrl() ) {
+            return throwError({ code: ApiErrorUrlNotSet, message: 'Server url is not set. Set it on App Module constructor().' });
+        }
         return this.http.post(this.getServerUrl(), data).pipe(
             map((res: ApiResponse) => {
                 /**
@@ -768,8 +771,7 @@ export class PhilGoApiService {
         return this.queryVersion2({ action: 'data_delete_submit', idx: idx });
     }
 
-    postList(option: ApiPostListOption): Observable<ApiForumPageResponse> {
-        const req: ApiForumPageRequest = <ApiForumPageRequest>option;
-        return this.query<ApiForumPageRequest, ApiForumPageResponse>('forumPage', req);
+    postList(option: ApiForumPageRequest): Observable<ApiForumPageResponse> {
+        return this.query<ApiForumPageRequest, ApiForumPageResponse>('forumPage', option);
     }
 }

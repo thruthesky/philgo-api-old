@@ -3,7 +3,7 @@ import { PhilGoApiService } from '../../philgo-api.module';
 import { ApiLoginRequest } from '../../providers/philgo-api.service';
 
 @Component({
-    selector: 'app-user-login',
+    selector: 'app-user-login-component',
     templateUrl: 'login.component.html'
 })
 export class UserLogin {

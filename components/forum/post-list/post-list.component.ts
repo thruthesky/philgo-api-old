@@ -1,6 +1,9 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy } from '@angular/core';
 import { PhilGoApiService } from '../../../philgo-api.module';
-import { ApiPostListOption, ApiPostData } from '../../../providers/philgo-api.service';
+import { ApiPostData, ApiForumPageRequest } from '../../../providers/philgo-api.service';
+import { ActivatedRoute } from '@angular/router';
+import { InfiniteScrollService } from '../../../providers/infinite-scroll.service';
+import { Subscription } from 'rxjs';
 
 interface Result {
     idxes: Array<string>;
@@ -10,28 +13,52 @@ interface Result {
     selector: 'app-post-list-component',
     templateUrl: 'post-list.component.html'
 })
-export class PostListComponent implements AfterViewInit {
+export class PostListComponent implements AfterViewInit, OnDestroy {
 
+    loader = {
+        page: false
+    };
 
     /**
      * list options
      */
-    option: ApiPostListOption = {
-        limit: 5, // how many posts to show in one page.
+    option: ApiForumPageRequest = {
+        limit: 10, // how many posts to show in one page.
         page_no: 1, // page no
         post_id: '' // post id
     };
 
     re: Result = null;
+
+
+    /**
+     * inifite scroll subscription
+     */
+    subscription: Subscription = null;
+
     constructor(
-        public api: PhilGoApiService
+        public activated: ActivatedRoute,
+        public api: PhilGoApiService,
+        public scroll: InfiniteScrollService
     ) {
-        this.init();
+
+        activated.paramMap.subscribe(params => {
+            if (params.get('post_id')) {
+                this.init(params);
+                this.loadPage();
+            }
+        });
     }
+
     ngAfterViewInit() {
-        // console.log('postId: ', this.postId);
+        this.subscription = this.scroll.watch('section.post-list', 400).subscribe(e => this.loadPage());
     }
-    init() {
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
+    }
+    init(params) {
+        this.option.post_id = params.get('post_id');
+        this.option.page_no = 1;
         this.re = {
             idxes: [],
             posts: {}
@@ -46,20 +73,15 @@ export class PostListComponent implements AfterViewInit {
      *          If option.post_id is set and it is different from this.option.post_id, then it re-initialize.
      * @param option post list optoin
      */
-    loadPage(option: ApiPostListOption) {
-        if (option.limit) {
-            this.option.limit = option.limit;
+    loadPage() {
+        console.log('loadPage()', this.option);
+        if (this.loader.page) {
+            return;
         }
-        if (option.page_no) {
-            this.option.page_no = option.page_no;
-            this.init();
-        }
-        if (option.post_id && option.post_id !== this.option.post_id ) {
-            this.option.post_id = option.post_id;
-            this.init();
-        }
-
+        this.loader.page = true;
         this.api.postList(this.option).subscribe(res => {
+            this.loader.page = false;
+            this.option.page_no++;
             console.log('postList(): res: ', res);
             if (res.posts && res.posts.length) {
                 for (const post of res.posts) {
@@ -67,7 +89,10 @@ export class PostListComponent implements AfterViewInit {
                     this.re.posts[post.idx] = post;
                 }
             }
-        }, e => console.log(e));
+        }, e => {
+            this.loader.page = false;
+            console.log(e);
+        });
     }
 }
 

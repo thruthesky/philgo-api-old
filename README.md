@@ -24,7 +24,24 @@ git submodule add https://github.com/thruthesky/philgo-api src/app/modules/philg
 
 ### Initializing Philgo Api
 
-* You will need to set philgo site api URL and file server url.
+* You need to import `PhilGoApiModule` to use Philgo Api.
+* Consider not to import `PhilGoApiComponentModule` since it is only holding exmaples of components. Or you may update it and use it in production.
+
+```` typescript
+import { PhilGoApiModule } from './modules/philgo-api/philgo-api.module';
+import { PhilGoApiComponentModule } from './modules/philgo-api/philgo-api.component.module';
+
+@NgModule({
+  imports: [
+    PhilGoApiModule,
+    PhilGoApiComponentModule
+  ],
+})
+export class AppModule { }
+
+````
+
+* And then, you will need to set philgo site api URL and file server url.
 
 ```` typescript
 export class AppModule {
