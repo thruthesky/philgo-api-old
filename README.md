@@ -14,6 +14,14 @@
 
 ## Install
 
+### Adding PhilGo API as submodule
+
+* You can add philgo-api as submodule of any angualr/ionic project under src/module/philgo-api.
+
+```` sh
+git submodule add https://github.com/thruthesky/philgo-api src/app/modules/philgo-api
+````
+
 ### Initializing Philgo Api
 
 * You will need to set philgo site api URL and file server url.
@@ -55,15 +63,13 @@ export class AppModule {
 
 * To see Reqeust Url, do below.
 
-````
+```` typescript
     this.post.debug = true
 ````
 
-
 ## Comment Create
 
-````
-
+```` typescript
         let c = <POST_DATA> {};
         c.id = this.login.id;
         c.session_id = this.login.session_id;
