@@ -94,20 +94,16 @@ export class InfiniteScrollService {
                 }),
                 filter(x => {
                     if (element['offsetTop'] === void 0) {
-                        // @attention this is error handling for some reason,
-                        // especially on first loading of each forum,
+                        // @desc On first loading of each forum,
                         // it creates "'offsetTop' of undefined" error.
                         return false;
                     }
                     const elementHeight = element['offsetTop'] + element['clientHeight'];
                     const windowYPosition = window.pageYOffset + window.innerHeight;
-                    // console.log("page scroll reaches at bottom: windowYPosition="
-                    // + windowYPosition + ", elementHeight-distance=" + (elementHeight-distance));
 
-                    if (windowYPosition > elementHeight - distance) { // page scrolled. the distance to the bottom is within 200 px from
+                    // is page scrolled to exptected pixels from bottom?
+                    if (windowYPosition > elementHeight - distance) {
                         this.scrollCountOnDistance++;
-                        // console.log( "scrollCountOnDistance", this.scrollCountOnDistance );
-
                         return true;
                     }
                     return false;
