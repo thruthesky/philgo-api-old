@@ -15,6 +15,10 @@ interface Result {
 })
 export class PostListComponent implements AfterViewInit, OnDestroy {
 
+    show = {
+        noMorePosts: false
+    };
+
     loader = {
         page: false
     };
@@ -44,20 +48,20 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
 
         activated.paramMap.subscribe(params => {
             if (params.get('post_id')) {
-                this.init(params);
+                this.init(params.get('post_id'));
                 this.loadPage();
             }
         });
     }
 
     ngAfterViewInit() {
-        this.subscription = this.scroll.watch('section.post-list', 400).subscribe(e => this.loadPage());
+        this.subscription = this.scroll.watch('body', 400).subscribe(e => this.loadPage());
     }
     ngOnDestroy() {
         this.subscription.unsubscribe();
     }
-    init(params) {
-        this.option.post_id = params.get('post_id');
+    init(post_id: string) {
+        this.option.post_id = post_id;
         this.option.page_no = 1;
         this.re = {
             idxes: [],
@@ -79,20 +83,33 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
             return;
         }
         this.loader.page = true;
-        this.api.postList(this.option).subscribe(res => {
+        this.api.forumPage(this.option).subscribe(res => {
             this.loader.page = false;
             this.option.page_no++;
-            console.log('postList(): res: ', res);
+            console.log('forumPage(): res: ', res);
             if (res.posts && res.posts.length) {
                 for (const post of res.posts) {
                     this.re.idxes.push(post.idx);
                     this.re.posts[post.idx] = post;
                 }
             }
+            if (res.posts && res.posts.length && res.posts.length === this.option.limit) {
+                this.show.noMorePosts = false;
+            } else {
+                this.show.noMorePosts = true;
+            }
         }, e => {
             this.loader.page = false;
             console.log(e);
+            alert(e.message);
         });
+    }
+
+    onClickView(event: Event, idx: number) {
+        event.preventDefault();
+        window.history.replaceState({}, '', this.api.urlForumView(idx));
+        this.re.posts[idx]['show'] = true;
+        return false;
     }
 }
 

@@ -1,0 +1,10 @@
+.comment[depth="1"] {
+    margin-left: 0;
+    padding: 1em;
+    background-color: #ddd;
+}
+.comment[depth="2"] {
+    margin-left: 1em;
+    padding: 1em;
+    background-color: #ddc;
+}

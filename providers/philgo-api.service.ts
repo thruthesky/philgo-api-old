@@ -159,6 +159,28 @@ export interface ApiForumPageRequest extends ApiOptionalRequest {
     limit: number; // limit
 }
 
+export interface ApiComment {
+    bad?: string;
+    blind?: string;
+    content: string;
+    deleted?: string;
+    depth?: string;
+    gid: string;
+    good?: string;
+    idx?: string;
+    idx_member?: string;
+    idx_parent: string;
+    idx_root?: string;
+    int_10?: string;
+    member?: ApiMember;
+    photos?: Array<ApiPhoto>;
+    post_id?: string;
+    stamp?: string;
+    date?: string;
+    user_name?: string;
+}
+
+
 
 /**
  * Post data structure for create/update
@@ -260,7 +282,9 @@ export interface ApiPostData {
     text_9?: string;
     text_10?: string;
 
+    comments: Array<ApiComment>;
     member?: ApiMember;
+    config_subject: string; // forum name. 게시판 이름.
 }
 
 
@@ -354,7 +378,7 @@ export class PhilGoApiService {
      */
     post(data): Observable<any> {
         this.prePost(data);
-        if ( ! this.getServerUrl() ) {
+        if (!this.getServerUrl()) {
             return throwError({ code: ApiErrorUrlNotSet, message: 'Server url is not set. Set it on App Module constructor().' });
         }
         return this.http.post(this.getServerUrl(), data).pipe(
@@ -771,7 +795,65 @@ export class PhilGoApiService {
         return this.queryVersion2({ action: 'data_delete_submit', idx: idx });
     }
 
-    postList(option: ApiForumPageRequest): Observable<ApiForumPageResponse> {
+    forumPage(option: ApiForumPageRequest): Observable<ApiForumPageResponse> {
         return this.query<ApiForumPageRequest, ApiForumPageResponse>('forumPage', option);
     }
+
+    /**
+     * Gets a post from server.
+     * @param idx Post idx or access code.
+     */
+    getPost(idx: number | string) {
+        const req = {
+            idx: idx
+        };
+        return this.query<any, ApiPostData>('getPost', req);
+    }
+
+    urlForumView(idx: number | string): string {
+        return `/forum/view/${idx}`;
+    }
+
+    /**
+     * Display short date
+     * If it is today, then it dispays YYYY-MM-DD HH:II AP
+     * @param stamp unix timestamp
+     */
+    shortDate(stamp) {
+        const d = new Date(stamp * 1000);
+        const dt = d.getFullYear().toString().substr(2, 2) +
+            '-' + this.add0(d.getMonth() + 1) +
+            '-' + this.add0(d.getDate()) +
+            ' ' + this.add0(d.getHours()) +
+            ':' + this.add0(d.getMinutes());
+
+        // const d = new Date(stamp * 1000);
+        const today = new Date();
+        // let dt;
+        if (d.getFullYear() === today.getFullYear() && d.getMonth() === today.getMonth() && d.getDate() === today.getDate()) {
+            // dt = d.toLocaleString();
+            // dt = dt.substring(dt.indexOf(',') + 2).toLowerCase();
+            // dt = dt.replace(/\:\d\d /, ' ');
+            return dt;
+        } else {
+            return dt.substr(0, 10);
+        }
+        // return dt;
+    }
+
+    /**
+     * Adds '0' infront of the `n` if the `n` is smaller than 10.
+     * @param n numbre
+     * @example
+     *      add0(1);
+     *      - input:  1
+     *      - output: 01
+     */
+    add0(n: number): string {
+        if (isNaN(n)) {
+            return '00';
+        }
+        return n < 10 ? '0' + n : n.toString();
+    }
+
 }

@@ -1,0 +1,7 @@
+<div class="comment" [attr.depth]=" comment.depth ">
+    <div class="meta">
+        글쓴이: {{ comment.member.nickname }} 날짜: {{ comment['date'] }} 글번호: {{ comment.idx }}
+    </div>
+  <div class="content" [innerHTML]=" comment.content ">
+  </div>
+</div>

@@ -7,18 +7,24 @@ import { FormsModule } from '@angular/forms';
 import { UserLogin } from './components/login/login.component';
 import { PostListComponent } from './components/forum/post-list/post-list.component';
 import { RouterModule } from '@angular/router';
+import { PostViewComponent } from './components/forum/post-view/post-view.component';
+import { CommentViewComponent } from './components/forum/comment-view/comment-view.component';
 export { UserRegisterAndProfileComponent };
 
 @NgModule({
     declarations: [
         UserRegisterAndProfileComponent,
         UserLogin,
-        PostListComponent
+        PostListComponent,
+        PostViewComponent,
+        CommentViewComponent
     ],
     exports: [
         UserRegisterAndProfileComponent,
         UserLogin,
-        PostListComponent
+        PostListComponent,
+        PostViewComponent,
+        CommentViewComponent
     ],
     imports: [
         CommonModule,
