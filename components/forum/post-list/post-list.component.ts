@@ -89,8 +89,7 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
             console.log('forumPage(): res: ', res);
             if (res.posts && res.posts.length) {
                 for (const post of res.posts) {
-                    this.re.idxes.push(post.idx);
-                    this.re.posts[post.idx] = post;
+                    this.addPost(post);
                 }
             }
             if (res.posts && res.posts.length && res.posts.length === this.option.limit) {
@@ -110,6 +109,18 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
         window.history.replaceState({}, '', this.api.urlForumView(idx));
         this.re.posts[idx]['show'] = true;
         return false;
+    }
+    update(post: ApiPostData) {
+        console.log('post update: ', post);
+        this.addPostOnTop(post);
+    }
+    addPost(post: ApiPostData) {
+        this.re.idxes.push(post.idx);
+        this.re.posts[post.idx] = post;
+    }
+    addPostOnTop(post: ApiPostData) {
+        this.re.idxes.unshift(post.idx);
+        this.re.posts[post.idx] = post;
     }
 }
 

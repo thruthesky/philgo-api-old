@@ -9,6 +9,7 @@ import { PostListComponent } from './components/forum/post-list/post-list.compon
 import { RouterModule } from '@angular/router';
 import { PostViewComponent } from './components/forum/post-view/post-view.component';
 import { CommentViewComponent } from './components/forum/comment-view/comment-view.component';
+import { PostEditComponent } from './components/forum/post-edit/post-edit.component';
 export { UserRegisterAndProfileComponent };
 
 @NgModule({
@@ -17,14 +18,16 @@ export { UserRegisterAndProfileComponent };
         UserLogin,
         PostListComponent,
         PostViewComponent,
-        CommentViewComponent
+        CommentViewComponent,
+        PostEditComponent
     ],
     exports: [
         UserRegisterAndProfileComponent,
         UserLogin,
         PostListComponent,
         PostViewComponent,
-        CommentViewComponent
+        CommentViewComponent,
+        PostEditComponent
     ],
     imports: [
         CommonModule,

@@ -103,7 +103,7 @@ interface ApiVersion2Response {
     new_message: string; // if there is a new message.
     post_name?: string; // post name if forum list requested.
     // ... and there is more...
-    data: {
+    data?: {
         code: number;
         message: string;
     };
@@ -309,6 +309,16 @@ export interface ApiForumPageResponse extends ApiResponse {
     posts: Array<ApiPostData>;
 }
 
+
+export interface ApiPostEditRequest extends ApiVersion2Request {
+    subject?: string;
+    content?: string;
+    gid?: string;
+    post_id: string;
+}
+export interface ApiPostEditResponse extends ApiVersion2Response {
+    post: ApiPostData;
+}
 
 
 
@@ -529,7 +539,7 @@ export class PhilGoApiService {
                     }
                 } else if (res.code !== void 0 && res.code) {
                     if (res.message !== void 0) {
-                        return { code: res.code, message: res.message };
+                        throw { code: res.code, message: res.message };
                     }
                 } else {
                     /**
@@ -856,4 +866,9 @@ export class PhilGoApiService {
         return n < 10 ? '0' + n : n.toString();
     }
 
+
+    postWrite(req: ApiPostEditRequest): Observable<ApiPostEditResponse> {
+        req.action = 'post_write_submit';
+        return this.queryVersion2(req);
+    }
 }

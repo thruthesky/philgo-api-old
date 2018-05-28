@@ -6,5 +6,20 @@
 .comment[depth="2"] {
     margin-left: 1em;
     padding: 1em;
-    background-color: #ddc;
+    background-color: rgb(212, 212, 200);
+}
+.comment[depth="3"] {
+    margin-left: 2em;
+    padding: 1em;
+    background-color: rgb(187, 187, 187);
+}
+.comment[depth="4"] {
+    margin-left: 3em;
+    padding: 1em;
+    background-color: rgb(161, 161, 161);
+}
+.comment[depth="5"] {
+    margin-left: 4em;
+    padding: 1em;
+    background-color: rgb(153, 153, 153);
 }
