@@ -48,6 +48,8 @@ export class CommentEditComponent implements OnInit, OnChanges {
     };
 
     mode: 'edit' | 'reply' = 'reply';
+
+    placeIntoView = false;
     constructor(
         public api: PhilGoApiService
     ) {
@@ -93,19 +95,33 @@ export class CommentEditComponent implements OnInit, OnChanges {
         this.display = true;
         if (this.size === 'small') {
             this.size = 'big';
+            this.placeIntoView = false;
             this.delayActivate(100);
             this.delayActivate(400);
             this.delayActivate(800);
             this.delayActivate(3000);
         }
     }
+    /**
+     * 코멘트 창을 바닥으로 내리는데, 버튼을 클릭하자 마자 밑으로 내리기에는 컴포넌트가 초기화 되지 않아 너무 빠르다.
+     * @param ms ms 초 시간
+     */
     delayActivate(ms) {
         /**
          * Wait for active mode display. and scroll into view.
          */
         setTimeout(() => {
+            /**
+             * 한번 답변 창을 바닥으로 내렸으면, 그 다음 부터는 스크롤을 해도 바닥으로 내리지 않도록 한다.
+             */
+            if ( this.placeIntoView ) {
+                return true;
+            }
             if (this.size === 'big') {
-                this.commentEdit.nativeElement.scrollIntoView(false);
+                if ( this.commentEdit.nativeElement.scrollIntoView ) {
+                    this.placeIntoView = true;
+                    this.commentEdit.nativeElement.scrollIntoView(false);
+                }
             }
         }, ms);
     }
