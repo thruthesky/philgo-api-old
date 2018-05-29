@@ -10,6 +10,11 @@ export class PostViewComponent implements OnChanges {
 
     @Input() post: ApiPostData = null;
     @Input() showClose = false;
+
+    show = {
+        mode: 'view'
+    };
+
     constructor(
         public sanitizer: DomSanitizer,
         public api: PhilGoApiService
@@ -23,6 +28,7 @@ export class PostViewComponent implements OnChanges {
             if (this.post['safe']) {
                 //
             } else {
+                this.post['original_content'] = this.post.content;
                 this.post.content = <any>this.sanitizer.bypassSecurityTrustHtml(this.post.content);
                 this.post['safe'] = true;
             }

@@ -1,0 +1,5 @@
+<div class="comments" *ngIf=" post && post.comments && post.comments.length ">
+  <app-comment-view-component *ngFor=" let comment of post.comments " [post]=" post " [comment]=" comment ">
+  </app-comment-view-component>
+</div>
+

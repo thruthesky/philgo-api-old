@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { ApiComment, PhilGoApiService } from '../../../providers/philgo-api.service';
+import { PhilGoApiService, ApiPostData } from '../../../providers/philgo-api.service';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
@@ -9,7 +9,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 
 export class CommentViewComponent implements OnInit, OnChanges {
-    @Input() comment: ApiComment;
+    @Input() post: ApiPostData;
+    @Input() comment: ApiPostData;
     constructor(
         public sanitizer: DomSanitizer,
         public api: PhilGoApiService

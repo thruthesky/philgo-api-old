@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, Input } from '@angular/core';
 import { PhilGoApiService } from '../../../philgo-api.module';
 import { ApiPostData, ApiForumPageRequest } from '../../../providers/philgo-api.service';
 import { ActivatedRoute } from '@angular/router';
@@ -15,6 +15,8 @@ interface Result {
 })
 export class PostListComponent implements AfterViewInit, OnDestroy {
 
+    @Input('display') display = true; // true for show, false for hide.
+    config_subject = '';
     show = {
         noMorePosts: false
     };
@@ -85,6 +87,7 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
         this.loader.page = true;
         this.api.forumPage(this.option).subscribe(res => {
             this.loader.page = false;
+            this.config_subject = res.config_subject;
             this.option.page_no++;
             console.log('forumPage(): res: ', res);
             if (res.posts && res.posts.length) {
@@ -110,9 +113,13 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
         this.re.posts[idx]['show'] = true;
         return false;
     }
-    update(post: ApiPostData) {
+    write(post: ApiPostData) {
         console.log('post update: ', post);
         this.addPostOnTop(post);
+    }
+    edit(post: ApiPostData) {
+        console.log('post edit:', post);
+        this.editPost(post);
     }
     addPost(post: ApiPostData) {
         this.re.idxes.push(post.idx);
@@ -122,6 +129,11 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
         this.re.idxes.unshift(post.idx);
         this.re.posts[post.idx] = post;
     }
+    editPost(post: ApiPostData) {
+        this.re.posts[post.idx] = post;
+    }
+
 }
+
 
 

@@ -10,7 +10,8 @@ import { RouterModule } from '@angular/router';
 import { PostViewComponent } from './components/forum/post-view/post-view.component';
 import { CommentViewComponent } from './components/forum/comment-view/comment-view.component';
 import { PostEditComponent } from './components/forum/post-edit/post-edit.component';
-export { UserRegisterAndProfileComponent };
+import { CommentEditComponent } from './components/forum/comment-edit/comment-edit.component';
+import { CommentListComponent } from './components/forum/comment-list/comment-list.component';
 
 @NgModule({
     declarations: [
@@ -19,7 +20,9 @@ export { UserRegisterAndProfileComponent };
         PostListComponent,
         PostViewComponent,
         CommentViewComponent,
-        PostEditComponent
+        PostEditComponent,
+        CommentEditComponent,
+        CommentListComponent
     ],
     exports: [
         UserRegisterAndProfileComponent,
@@ -27,7 +30,9 @@ export { UserRegisterAndProfileComponent };
         PostListComponent,
         PostViewComponent,
         CommentViewComponent,
-        PostEditComponent
+        PostEditComponent,
+        CommentEditComponent,
+        CommentListComponent
     ],
     imports: [
         CommonModule,

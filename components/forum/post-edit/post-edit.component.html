@@ -1,23 +1,33 @@
-<section class="post-edit">
+<section class="post-edit" *ngIf=" display ">
   <div class="container">
 
     <form (ngSubmit)="onSubmit($event)">
-        <div class="row forum-name">
-            <div class="col-2">Forum</div>
-            <div class="col-10">{{ post_id }}</div>
+      <div class="row forum-name">
+        <div class="col-2">Forum</div>
+        <div class="col-10">{{ forumName }}</div>
+      </div>
+      <div class="row subject">
+        <div class="col-2">Subject</div>
+        <div class="col-10">
+          <input type="text" name="subject" [(ngModel)]="form.subject">
         </div>
-            <div class="row subject">
-                <div class="col-2">Subject</div>
-                <div class="col-10"><input type="text" name="subject" [(ngModel)]="form.subject"></div>
-            </div>
-            <div class="row content">
-                <div class="col-2">Content</div>
-                <div class="col-10"><textarea name="content" [(ngModel)]="form.content"></textarea></div>
-            </div>
-            <div class="row submit">
-                <div class="col-2"></div>
-                <div class="col-10"><button type="submit">Submit</button></div>
-            </div>
+      </div>
+      <div class="row content">
+        <div class="col-2">Content</div>
+        <div class="col-10">
+          <textarea name="content" [(ngModel)]="form.content"></textarea>
+        </div>
+      </div>
+      <div class="row submit">
+        <div class="col-2"></div>
+        <div class="col-10">
+          <div class="buttons" *ngIf=" ! loader.submit ">
+            <button type="submit">Submit</button>
+            <button type="button" (click)=" cancel.emit() ">Cancel</button>
+          </div>
+          <div *ngIf=" loader.submit " class="loader alert alert-danger">서버로 전송중입니다.</div>
+        </div>
+      </div>
     </form>
   </div>
 </section>

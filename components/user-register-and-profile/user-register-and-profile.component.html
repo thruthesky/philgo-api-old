@@ -31,6 +31,12 @@
                 <input type="text" name="email" [(ngModel)]=" form.email " autocomplete="off">
             </span>
         </div>
+        <div class="set email" *ngIf=" api.isLoggedIn() ">
+            <span class="caption">Email</span>
+            <span class="text">
+                {{ form.email }}
+            </span>
+        </div>
         <div class="set password" *ngIf=" api.isLoggedOut() ">
             <span class="caption">Password</span>
             <span class="text">

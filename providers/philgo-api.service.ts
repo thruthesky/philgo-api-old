@@ -122,6 +122,7 @@ export interface ApiFileUploadResponse {
 export const ApiErrorFileNotSelected = 'file-not-selected';
 export const ApiErrorFileUploadError = -50020;
 export const ApiErrorUrlNotSet = -50030;
+export const ApiErrorMessageInternetOrServer = 'Please check your internet or connection to server.';
 
 
 
@@ -298,6 +299,7 @@ interface ApiBanner {
 }
 
 export interface ApiForumPageResponse extends ApiResponse {
+    config_subject?: string; // forum name.
     category: string;
     limit: number;
     page_no: number;
@@ -311,6 +313,7 @@ export interface ApiForumPageResponse extends ApiResponse {
 
 
 export interface ApiPostEditRequest extends ApiVersion2Request {
+    idx?: any;
     subject?: string;
     content?: string;
     gid?: string;
@@ -320,7 +323,16 @@ export interface ApiPostEditResponse extends ApiVersion2Response {
     post: ApiPostData;
 }
 
-
+export interface ApiCommentEditRequest extends ApiVersion2Request {
+    idx?: any;
+    idx_parent: any;
+    content?: string;
+    gid?: string;
+}
+export interface ApiCommentEditResponse extends ApiVersion2Response {
+    parents: Array<number>;
+    post: ApiComment;
+}
 
 @Injectable()
 export class PhilGoApiService {
@@ -422,7 +434,7 @@ export class PhilGoApiService {
                  */
                 const re: ApiErrorResponse = {
                     code: -400,
-                    message: 'Please check your internet.'
+                    message: ApiErrorMessageInternetOrServer
                 };
                 return throwError(re);
             })
@@ -466,7 +478,7 @@ export class PhilGoApiService {
          */
         const re: ApiErrorResponse = {
             code: -400,
-            message: 'Please check your internet.'
+            message: ApiErrorMessageInternetOrServer
         };
         return throwError(re);
     }
@@ -871,4 +883,80 @@ export class PhilGoApiService {
         req.action = 'post_write_submit';
         return this.queryVersion2(req);
     }
+    postEdit(req: ApiPostEditRequest): Observable<ApiPostEditResponse> {
+        req.action = 'post_edit_submit';
+        return this.queryVersion2(req);
+    }
+    commentWrite(req: ApiCommentEditRequest): Observable<ApiCommentEditResponse> {
+        req.action = 'comment_write_submit';
+        return this.queryVersion2(req);
+    }
+
+    /**
+     * PHP strip_tags() from locutus.
+     * @note this is not the latest version since latest version use some dependency, I use old version.
+     * @see https://github.com/kvz/locutus/blob/16e78de555fc9e845f5c25919eb0193a95c41068/src/php/strings/strip_tags.js
+     * @param input HTML string
+     * @param allowed allowed HTML tags
+     */
+    strip_tags(input, allowed?) { // eslint-disable-line camelcase
+        //  discuss at: http://locutus.io/php/strip_tags/
+        // original by: Kevin van Zonneveld (http://kvz.io)
+        // improved by: Luke Godfrey
+        // improved by: Kevin van Zonneveld (http://kvz.io)
+        //    input by: Pul
+        //    input by: Alex
+        //    input by: Marc Palau
+        //    input by: Brett Zamir (http://brett-zamir.me)
+        //    input by: Bobby Drake
+        //    input by: Evertjan Garretsen
+        // bugfixed by: Kevin van Zonneveld (http://kvz.io)
+        // bugfixed by: Onno Marsman (https://twitter.com/onnomarsman)
+        // bugfixed by: Kevin van Zonneveld (http://kvz.io)
+        // bugfixed by: Kevin van Zonneveld (http://kvz.io)
+        // bugfixed by: Eric Nagel
+        // bugfixed by: Kevin van Zonneveld (http://kvz.io)
+        // bugfixed by: Tomasz Wesolowski
+        // bugfixed by: Tymon Sturgeon (https://scryptonite.com)
+        //  revised by: Rafał Kukawski (http://blog.kukawski.pl)
+        //   example 1: strip_tags('<p>Kevin</p> <br /><b>van</b> <i>Zonneveld</i>', '<i><b>')
+        //   returns 1: 'Kevin <b>van</b> <i>Zonneveld</i>'
+        //   example 2: strip_tags('<p>Kevin <img src="someimage.png" onmouseover="someFunction()">van <i>Zonneveld</i></p>', '<p>')
+        //   returns 2: '<p>Kevin van Zonneveld</p>'
+        //   example 3: strip_tags("<a href='http://kvz.io'>Kevin van Zonneveld</a>", "<a>")
+        //   returns 3: "<a href='http://kvz.io'>Kevin van Zonneveld</a>"
+        //   example 4: strip_tags('1 < 5 5 > 1')
+        //   returns 4: '1 < 5 5 > 1'
+        //   example 5: strip_tags('1 <br/> 1')
+        //   returns 5: '1  1'
+        //   example 6: strip_tags('1 <br/> 1', '<br>')
+        //   returns 6: '1 <br/> 1'
+        //   example 7: strip_tags('1 <br/> 1', '<br><br/>')
+        //   returns 7: '1 <br/> 1'
+        //   example 8: strip_tags('<i>hello</i> <<foo>script>world<</foo>/script>')
+        //   returns 8: 'hello world'
+
+        // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
+        allowed = (((allowed || '') + '').toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join('');
+
+        const tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
+        const commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+
+        let before = input;
+        let after = input;
+        // recursively remove tags to ensure that the returned string doesn't contain forbidden tags
+        // after previous passes (e.g. '<<bait/>switch/>')
+        while (true) {
+            before = after;
+            after = before.replace(commentsAndPhpTags, '').replace(tags, function ($0, $1) {
+                return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+            });
+
+            // return once no more tags are removed
+            if (before === after) {
+                return after;
+            }
+        }
+    }
 }
+
