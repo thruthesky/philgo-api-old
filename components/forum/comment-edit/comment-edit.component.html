@@ -1,13 +1,14 @@
-<section #commentEdit class="comment-edit" [ngClass]="[ size ]" *ngIf=" display ">
+<section #commentEdit class="comment-edit" [ngClass]="[ size ]">
+  <div class="comment-edit-view" *ngIf=" display ">
     <form (ngSubmit)="onSubmit( $event )">
-        <textarea name="content" [(ngModel)]=" form.content " (ngModelChange)="onChangeContent()" (click)="onClickContent()"></textarea>
-        <div class="buttons" *ngIf=" ! loader.submit ">
-            <button type="submit">Submit</button>
-            <button type="button" (click)="onCancel()">Cancel</button>
-        </div>
-        <div class="alert alert-danger" *ngIf=" loader.submit ">
-            Connecting to server ...
-        </div>
+      <textarea name="content" [(ngModel)]=" form.content " (ngModelChange)="onChangeContent()" (click)="onClickContent()"></textarea>
+      <div class="buttons" *ngIf=" ! loader.submit ">
+        <button type="submit">Submit</button>
+        <button type="button" (click)="onCancel()">Cancel</button>
+      </div>
+      <div class="alert alert-danger" *ngIf=" loader.submit ">
+        Connecting to server ...
+      </div>
     </form>
+  </div>
 </section>
-

@@ -14,10 +14,15 @@
     <button (click)=" onClickPostEdit() ">수정</button>
     <button>삭제</button>
     <button>신고</button>
-    <button (click)=" onViewClose() " *ngIf=" showClose ">닫기</button>
+    <button (click)=" onPostViewClose() " *ngIf=" showClose ">닫기</button>
   </div>
 
-  <app-comment-edit-component [post]=" post " [parent]=" post " [display]=" true " (write)=" true "></app-comment-edit-component>
+  <app-comment-edit-component #commentEditComponent
+    [post]=" post "
+    [parent]=" post "
+    [display]=" true "
+    (write)=" onCommentWriteSuccess( $event ); commentEditComponent.display = true; commentEditComponent.size = 'small' ">
+  </app-comment-edit-component>
 
   <app-comment-list-component [post]=" post "></app-comment-list-component>
 
@@ -26,6 +31,6 @@
 
 <app-post-edit-component *ngIf=" mode == 'edit' "
   [post]=" post "
-  (write)=" onWriteSuccess( $event ) "
-  (edit)=" onEditSuccess( $event ) "
-  (cancel)=" onFormCancel() "></app-post-edit-component>
+  (write)=" onPostWriteSuccess( $event ) "
+  (edit)=" onPostEditSuccess( $event ) "
+  (cancel)=" onPostFormCancel() "></app-post-edit-component>

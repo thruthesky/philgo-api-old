@@ -49,7 +49,6 @@ export class CommentEditComponent implements OnInit, OnChanges {
 
     mode: 'edit' | 'reply' = 'reply';
 
-    placeIntoView = false;
     constructor(
         public api: PhilGoApiService
     ) {
@@ -95,15 +94,22 @@ export class CommentEditComponent implements OnInit, OnChanges {
         this.display = true;
         if (this.size === 'small') {
             this.size = 'big';
-            this.placeIntoView = false;
+
+
+
+            this.commentEdit.nativeElement.scrollIntoView(false);
+
             this.delayActivate(100);
-            this.delayActivate(400);
-            this.delayActivate(800);
-            this.delayActivate(3000);
+            this.delayActivate(300);
         }
     }
     /**
-     * 코멘트 창을 바닥으로 내리는데, 버튼을 클릭하자 마자 밑으로 내리기에는 컴포넌트가 초기화 되지 않아 너무 빠르다.
+     * 코멘트를 입력할 때, 코멘트 창을 크게 보여주는데, 이 때, CSS 클래스로 크기를 조정한다.
+     * 문제는 CSS 로 크기를 조절하는 것 보다 scrollIntoView() 가 더 빨리 실행되어져 버려서,
+     * 코멘트 창의 전체 크기가 커 지기도 전에 scrollIntoview() 는 실행을 종료 해 버려서, 실제로 완전한 크기의 코멘트 창을 계산하지 못해서,
+     * 코멘트 창이 부분적으로만 보이는 경우가 발생한다. 그러한 것을 방자하기 위해서 delay 를 잠깐 한다.
+     * 아주 잠깐이면 된다.
+     * 간결하게 코딩한다.
      * @param ms ms 초 시간
      */
     delayActivate(ms) {
@@ -111,18 +117,7 @@ export class CommentEditComponent implements OnInit, OnChanges {
          * Wait for active mode display. and scroll into view.
          */
         setTimeout(() => {
-            /**
-             * 한번 답변 창을 바닥으로 내렸으면, 그 다음 부터는 스크롤을 해도 바닥으로 내리지 않도록 한다.
-             */
-            if ( this.placeIntoView ) {
-                return true;
-            }
-            if (this.size === 'big') {
-                if ( this.commentEdit.nativeElement.scrollIntoView ) {
-                    this.placeIntoView = true;
-                    this.commentEdit.nativeElement.scrollIntoView(false);
-                }
-            }
+            this.commentEdit.nativeElement.scrollIntoView(false);
         }, ms);
     }
 
@@ -152,7 +147,7 @@ export class CommentEditComponent implements OnInit, OnChanges {
         }
         this.loader.submit = true;
         console.log('form: ', this.form);
-        if ( this.isEdit() ) {
+        if (this.isEdit()) {
             this.api.postEdit(<any>this.form).subscribe(res => {
                 this.loader.submit = false;
                 this.deactivateForm();

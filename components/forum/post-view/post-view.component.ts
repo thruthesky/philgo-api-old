@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { ApiPostData, PhilGoApiService } from '../../../providers/philgo-api.service';
+import { ApiPostData, PhilGoApiService, ApiComment } from '../../../providers/philgo-api.service';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
@@ -40,11 +40,11 @@ export class PostViewComponent implements OnChanges {
     }
 
 
-    onWriteSuccess(post) {
+    onPostWriteSuccess(post) {
         // this.listComponent.write(post);
         // this.activateView();
     }
-    onEditSuccess(post) {
+    onPostEditSuccess(post) {
         this.mode = 'view';
         this.post = post;
         // this.listComponent.edit(post);
@@ -52,15 +52,18 @@ export class PostViewComponent implements OnChanges {
 //  <!-- (edit)=" mode = 'view'; this.post = $event; " -->
         // this.activateView();
     }
-    onFormCancel() {
+    onPostFormCancel() {
         // this.activateView();
         this.mode = 'view';
     }
     /**
      * post view close button clicked
      */
-    onViewClose() {
+    onPostViewClose() {
         this.post['mode'] = 'hide';
+    }
+    onCommentWriteSuccess(comment: ApiComment) {
+
     }
 }
 
