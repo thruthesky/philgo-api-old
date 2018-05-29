@@ -24,9 +24,8 @@
 </div>
 
 
-<app-post-edit-component *ngIf=" mode == 'edit' " [post]=" post "
- (write)=" onWrite( $event ) "
- (edit)=" onEdit( $event ) "
- (cancel)=" onCancel() "
- ></app-post-edit-component>
-
+<app-post-edit-component *ngIf=" mode == 'edit' "
+  [post]=" post "
+  (write)=" onWriteSuccess( $event ) "
+  (edit)=" onEditSuccess( $event ) "
+  (cancel)=" onFormCancel() "></app-post-edit-component>

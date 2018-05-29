@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, OnDestroy, Input, ViewChild } from '@angular/core';
 import { PhilGoApiService } from '../../../philgo-api.module';
-import { ApiPostData, ApiForumPageRequest } from '../../../providers/philgo-api.service';
+import { ApiPostData, ApiForumPageRequest, ApiForumPageResponse } from '../../../providers/philgo-api.service';
 import { ActivatedRoute } from '@angular/router';
 import { InfiniteScrollService } from '../../../providers/infinite-scroll.service';
 import { Subscription } from 'rxjs';
@@ -16,8 +16,9 @@ interface Result {
 })
 export class PostListComponent implements AfterViewInit, OnDestroy {
 
+    // @Input() post_id: string;
     @Input('display') display = true; // true for show, false for hide.
-    @Input() hidePost: any;
+    @Input() view: ApiPostData;
     config_subject = '';
     show = {
         noMorePosts: false
@@ -36,7 +37,10 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
         post_id: '' // post id
     };
 
-    re: Result = null;
+    re: Result = {
+        idxes: [],
+        posts: {}
+    };
 
 
     /**
@@ -50,12 +54,12 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
         public scroll: InfiniteScrollService
     ) {
 
-        activated.paramMap.subscribe(params => {
-            if (params.get('post_id')) {
-                this.init(params.get('post_id'));
-                this.loadPage();
-            }
-        });
+        // activated.paramMap.subscribe(params => {
+        //     if (params.get('post_id')) {
+        //         this.init(params.get('post_id'));
+        //         this.loadPage();
+        //     }
+        // });
     }
 
     ngAfterViewInit() {
@@ -81,13 +85,16 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
      *          If option.post_id is set and it is different from this.option.post_id, then it re-initialize.
      * @param option post list optoin
      */
-    loadPage() {
+    loadPage(callback?: (res: ApiForumPageResponse) => void) {
         console.log('loadPage()', this.option);
         if (this.loader.page) {
             return;
         }
         this.loader.page = true;
         this.api.forumPage(this.option).subscribe(res => {
+            if (callback) {
+                callback(res);
+            }
             this.loader.page = false;
             this.config_subject = res.config_subject;
             this.option.page_no++;
@@ -137,6 +144,9 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
         this.re.posts[post.idx] = post;
     }
 
+    post(idx): ApiPostData {
+        return this.re.posts[idx];
+    }
 }
 
 

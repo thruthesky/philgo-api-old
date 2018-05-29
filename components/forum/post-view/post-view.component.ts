@@ -40,11 +40,11 @@ export class PostViewComponent implements OnChanges {
     }
 
 
-    onWrite(post) {
+    onWriteSuccess(post) {
         // this.listComponent.write(post);
         // this.activateView();
     }
-    onEdit(post) {
+    onEditSuccess(post) {
         this.mode = 'view';
         this.post = post;
         // this.listComponent.edit(post);
@@ -52,7 +52,7 @@ export class PostViewComponent implements OnChanges {
 //  <!-- (edit)=" mode = 'view'; this.post = $event; " -->
         // this.activateView();
     }
-    onCancel() {
+    onFormCancel() {
         // this.activateView();
         this.mode = 'view';
     }

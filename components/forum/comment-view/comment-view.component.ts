@@ -47,11 +47,14 @@ export class CommentViewComponent implements OnInit, OnChanges {
         this.editComponent.comment = null;
         this.editComponent.activateReply();
     }
-    onWrite() {
+    onCommentWriteSuccess() {
         this.show.comment = true;
         this.show.buttons = true;
     }
-    onCancel() {
+    onCommentEditSuccess() {
+
+    }
+    onCommentFormCancel() {
         this.show.comment = true;
         this.show.buttons = true;
         // this.mode = 'view';

@@ -35,12 +35,16 @@ export class PostEditComponent implements OnInit, OnChanges {
 
     ngOnInit() { }
     ngOnChanges() {
+        /**
+         * edit
+         */
         if (this.post) {
             this.form.idx = this.post.idx;
             this.form.subject = this.post.subject;
             this.form.content = this.post.content_stripped;
         } else {
             this.form = <any>{};
+            this.form.post_id = this.post_id;
         }
     }
     onSubmit(event?: Event) {
