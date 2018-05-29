@@ -1,4 +1,4 @@
-<section class="post-edit" *ngIf=" display ">
+<section class="post-edit" *ngIf=" mode == 'edit' ">
   <div class="container">
 
     <form (ngSubmit)="onSubmit($event)">
@@ -23,7 +23,7 @@
         <div class="col-10">
           <div class="buttons" *ngIf=" ! loader.submit ">
             <button type="submit">Submit</button>
-            <button type="button" (click)=" cancel.emit() ">Cancel</button>
+            <button type="button" (click)=" onClickCancel()">Cancel</button>
           </div>
           <div *ngIf=" loader.submit " class="loader alert alert-danger">서버로 전송중입니다.</div>
         </div>
@@ -31,3 +31,4 @@
     </form>
   </div>
 </section>
+

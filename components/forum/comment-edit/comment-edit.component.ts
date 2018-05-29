@@ -12,6 +12,9 @@ import { ApiCommentEditRequest, ApiPostData, ApiComment } from '../../../provide
 export class CommentEditComponent implements OnInit, OnChanges {
     @ViewChild('commentEdit') commentEdit: ElementRef;
 
+    /**
+     * Decides to display 'none' or 'block'
+     */
     @Input() display = false;
     /**
      * Post of the comemnt.
@@ -23,65 +26,77 @@ export class CommentEditComponent implements OnInit, OnChanges {
      * This can be a post or a comment.
      */
     @Input() parent: ApiPostData = null;
+    /**
+     * For editing a comment.
+     * @desc This is available on edit and reply. You do not need to use it on reply.
+     * @desc This is not available on the reply of immediate child of root post.
+     */
+    @Input() comment: ApiComment = null;
+
+    /**
+     * events.
+     */
     @Output() write: EventEmitter<ApiComment> = new EventEmitter();
+    @Output() edit: EventEmitter<ApiComment> = new EventEmitter();
+    @Output() cancel: EventEmitter<void> = new EventEmitter();
 
     form: ApiCommentEditRequest = <any>{};
 
-    mode: 'hidden' | 'active' = 'hidden';
+    size: 'small' | 'big' = 'small';
     loader = {
         submit: false
     };
 
+    mode: 'edit' | 'reply' = 'reply';
     constructor(
         public api: PhilGoApiService
     ) {
     }
 
-    testCreate() {
-        this.form.idx_parent = this.parent.idx;
-        this.form.content = 'test coment';
-        this.onSubmit();
-    }
+    // testCreate() {
+    //     this.form.idx_parent = this.parent.idx;
+    //     this.form.content = 'test coment';
+    //     this.onSubmit();
+    // }
     ngOnInit() { }
 
     ngOnChanges() {
-        if (this.parent) {
-            // this.testCreate();
-            this.form.idx_parent = this.parent.idx;
-        }
+        // if ( this.parent ) {}
+        // if (this.comment) {
+        //     this.form.idx = this.comment.idx;
+        //     this.form.content = this.comment.content_stripped;
+        // } else if (this.parent) {
+        //     // this.testCreate();
+        //     this.form.idx_parent = this.parent.idx;
+        // }
     }
 
+    isReply() {
+        return this.mode === 'reply';
+    }
+    isEdit() {
+        return this.mode === 'edit';
+    }
 
-    activeForm() {
-        if (this.mode === 'hidden') {
-            this.mode = 'active';
+    activateEdit() {
+        this.mode = 'edit';
+        this.form.idx_parent = 0;
+        this.form.idx = this.comment.idx;
+        this.form.content = this.comment.content_stripped;
+        this.activate();
+    }
+    activateReply() {
+        this.mode = 'reply';
+        this.activate();
+    }
+    activate() {
+        this.display = true;
+        if (this.size === 'small') {
+            this.size = 'big';
             this.delayActivate(100);
             this.delayActivate(400);
             this.delayActivate(800);
             this.delayActivate(3000);
-            /**
-             * Wait for active mode display. and scroll into view.
-             */
-            // setTimeout(() => {
-            //     if (this.mode === 'active') {
-            //         this.commentEdit.nativeElement.scrollIntoView(false);
-            //     }
-            // }, 100);
-            // setTimeout(() => {
-            //     this.commentEdit.nativeElement.scrollIntoView(false);
-            // }, 300);
-            // setTimeout(() => {
-            //     this.commentEdit.nativeElement.scrollIntoView(false);
-            // }, 600);
-            // setTimeout(() => {
-            //     this.commentEdit.nativeElement.scrollIntoView(false);
-            // }, 3000);
-
-            // const element = this.commentEdit.nativeElement;
-            // const elementRect = element.getBoundingClientRect();
-            // const absoluteElementTop = elementRect.top + window.pageYOffset;
-            // const middle = absoluteElementTop - (window.innerHeight / 2);
-            // window.scrollTo(0, middle);
         }
     }
     delayActivate(ms) {
@@ -89,7 +104,7 @@ export class CommentEditComponent implements OnInit, OnChanges {
          * Wait for active mode display. and scroll into view.
          */
         setTimeout(() => {
-            if (this.mode === 'active') {
+            if (this.size === 'big') {
                 this.commentEdit.nativeElement.scrollIntoView(false);
             }
         }, ms);
@@ -97,19 +112,22 @@ export class CommentEditComponent implements OnInit, OnChanges {
 
     onChangeContent() {
         // console.log('onChagneContent()');
-        this.activeForm();
+        this.activate();
     }
     onClickContent() {
         // console.log('onClickContent()');
-        this.activeForm();
+        this.activate();
     }
     deactivateForm() {
-        this.mode = 'hidden';
+        this.size = 'small';
         this.form.content = '';
+        this.display = false;
     }
+
 
     onCancel() {
         this.deactivateForm();
+        this.cancel.emit();
     }
 
     onSubmit(event?: Event) {
@@ -117,21 +135,58 @@ export class CommentEditComponent implements OnInit, OnChanges {
             event.preventDefault();
         }
         this.loader.submit = true;
-        this.api.commentWrite(this.form).subscribe(res => {
-            this.loader.submit = false;
-            this.deactivateForm();
-            this.write.emit(res.post);
-            this.addComment(res.post);
-            console.log('commentWrite() res: ', res);
-        }, e => {
-            this.loader.submit = false;
-            alert(e.message);
-        });
+        console.log('form: ', this.form);
+        if ( this.isEdit() ) {
+            this.api.postEdit(<any>this.form).subscribe(res => {
+                this.loader.submit = false;
+                this.deactivateForm();
+                this.edit.emit(<ApiComment>res.post);
+                this.editComment(<ApiComment>res.post);
+            });
+        } else {
+            this.form.idx_parent = this.parent.idx;
+            this.api.commentWrite(this.form).subscribe(res => {
+                this.loader.submit = false;
+                this.deactivateForm();
+                this.write.emit(res.post); // reply event
+                this.addComment(res.post);
+                console.log('commentWrite() res: ', res);
+            }, e => {
+                this.loader.submit = false;
+                alert(e.message);
+            });
+        }
         return false;
     }
 
     addComment(comment: ApiComment) {
-        this.post.comments.unshift(comment);
+        /**
+         * first comment
+         */
+        if (this.post.comments === void 0) {
+            this.post.comments = [];
+            this.post.comments.push(comment);
+        } else if (this.post.idx === this.parent.idx) {
+            /**
+             * direct comment under root post
+             */
+            this.post.comments.unshift(comment);
+        } else {
+            /**
+             * comment under another comment.
+             * Need to find position.
+             */
+            const i = this.post.comments.findIndex(cmt => cmt.idx === this.parent.idx);
+            this.post.comments.splice(i + 1, 0, comment);
+        }
+    }
+    editComment(comment: ApiComment) {
+        /**
+         * comment under another comment.
+         * Need to find position.
+         */
+        const i = this.post.comments.findIndex(cmt => cmt.idx === this.parent.idx);
+        this.post.comments[i] = comment;
     }
 }
 

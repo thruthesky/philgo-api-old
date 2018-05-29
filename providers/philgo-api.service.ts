@@ -164,6 +164,7 @@ export interface ApiComment {
     bad?: string;
     blind?: string;
     content: string;
+    content_stripped?: string; // Same as post data. it is made up when posts/comments are loaded.
     deleted?: string;
     depth?: string;
     gid: string;
@@ -219,7 +220,7 @@ export interface ApiPostData {
     user_email?: string;
     subject?: string;
     content?: string;
-    content_stripped?: string;
+    content_stripped?: string; // @note this is not coming from the server. it is made up when posts are loaded.
     link?: string;
     stamp_update?: string;
     stamp_last_comment?: string;
@@ -378,7 +379,7 @@ export class PhilGoApiService {
         return query;
     }
 
-    private prePost(data) {
+    private validatePost(data) {
         const q = this.httpBuildQuery(data);
         console.log('PhilGoApiService::post() url: ', this.getServerUrl() + '?' + q);
         if (!this.getServerUrl()) {
@@ -399,7 +400,7 @@ export class PhilGoApiService {
      *
      */
     post(data): Observable<any> {
-        this.prePost(data);
+        this.validatePost(data);
         if (!this.getServerUrl()) {
             return throwError({ code: ApiErrorUrlNotSet, message: 'Server url is not set. Set it on App Module constructor().' });
         }
@@ -818,19 +819,49 @@ export class PhilGoApiService {
     }
 
     forumPage(option: ApiForumPageRequest): Observable<ApiForumPageResponse> {
-        return this.query<ApiForumPageRequest, ApiForumPageResponse>('forumPage', option);
+        return this.query<ApiForumPageRequest, ApiForumPageResponse>('forumPage', option)
+            .pipe(
+                map(res => {
+                    if (res.posts && res.posts.length) {
+                        for (const post of res.posts) {
+                            this.prePost(post);
+                        }
+                    }
+                    return res;
+                })
+            );
     }
 
     /**
      * Gets a post from server.
      * @param idx Post idx or access code.
      */
-    getPost(idx: number | string) {
+    getPost(idx: number | string): Observable<ApiPostData> {
         const req = {
             idx: idx
         };
-        return this.query<any, ApiPostData>('getPost', req);
+        return this.query<any, ApiPostData>('getPost', req)
+            .pipe(
+                map(post => {
+                    this.prePost(post);
+                    return post;
+                }
+                )
+            );
     }
+
+    prePost(post: ApiPostData) {
+        // post.content_stripped = this.api.strip_tags(post.content);
+        post.content_stripped = this.strip_tags(post.content);
+        if (post.comments) {
+            for (const comment of post.comments) {
+                comment.content_stripped = this.strip_tags(comment.content);
+                // console.log('comment', comment);
+            }
+        }
+        // console.log('post:', post);
+    }
+
 
     urlForumView(idx: number | string): string {
         return `/forum/view/${idx}`;
@@ -899,7 +930,7 @@ export class PhilGoApiService {
      * @param input HTML string
      * @param allowed allowed HTML tags
      */
-    strip_tags(input, allowed?) { // eslint-disable-line camelcase
+    strip_tags(input: string, allowed?) { // eslint-disable-line camelcase
         //  discuss at: http://locutus.io/php/strip_tags/
         // original by: Kevin van Zonneveld (http://kvz.io)
         // improved by: Luke Godfrey

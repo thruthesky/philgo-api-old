@@ -1,17 +1,19 @@
+{{ display | json }}
 <section class="post-list" [ngClass]="[ option.post_id ]" *ngIf=" display && option.post_id ">
   <h1>Post list</h1>
   <div class="posts">
     <div class="post" *ngFor=" let idx of re.idxes " class="post mb-1 bg-secondary">
-      <a (click)="onClickView( $event, idx )" href="{{ api.urlForumView( idx ) }}" class="d-block px-2 py-3 text-white"  *ngIf=" ! re.posts[idx]['show'] ">
-        {{ idx }} {{ re.posts[idx].subject }}
-      </a>
-      <app-post-view-component
-      [post]=" re.posts[idx] " 
-      [showClose]=" true "
-      *ngIf=" re.posts[idx]['show'] "></app-post-view-component>
+      <ng-container *ngIf=" idx !== hidePost ">
+        <a (click)="onClickView( $event, idx )" href="{{ api.urlForumView( idx ) }}" class="d-block px-2 py-3 text-white" *ngIf=" ! re.posts[idx]['show'] ">
+          {{ idx }} {{ re.posts[idx].subject }}
+        </a>
+      </ng-container>
+
+      <app-post-view-component *ngIf=" re.posts[idx]['mode'] == 'view' " [post]=" re.posts[idx] " [showClose]=" true "></app-post-view-component>
     </div>
   </div>
   <div class="no-more-posts" *ngIf=" show.noMorePosts ">
     <b>더 이상 글이 없습니다.</b>
   </div>
 </section>
+

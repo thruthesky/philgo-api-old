@@ -8,12 +8,11 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class PostViewComponent implements OnChanges {
 
+
     @Input() post: ApiPostData = null;
     @Input() showClose = false;
+    @Input() mode: 'edit' | 'view' = 'view';
 
-    show = {
-        mode: 'view'
-    };
 
     constructor(
         public sanitizer: DomSanitizer,
@@ -32,8 +31,36 @@ export class PostViewComponent implements OnChanges {
                 this.post.content = <any>this.sanitizer.bypassSecurityTrustHtml(this.post.content);
                 this.post['safe'] = true;
             }
-            this.post['date'] = this.api.shortDate( this.post.stamp );
+            this.post['date'] = this.api.shortDate(this.post.stamp);
         }
+    }
+
+    onClickPostEdit() {
+        this.mode = 'edit';
+    }
+
+
+    onWrite(post) {
+        // this.listComponent.write(post);
+        // this.activateView();
+    }
+    onEdit(post) {
+        this.mode = 'view';
+        this.post = post;
+        // this.listComponent.edit(post);
+
+//  <!-- (edit)=" mode = 'view'; this.post = $event; " -->
+        // this.activateView();
+    }
+    onCancel() {
+        // this.activateView();
+        this.mode = 'view';
+    }
+    /**
+     * post view close button clicked
+     */
+    onViewClose() {
+        this.post['mode'] = 'hide';
     }
 }
 

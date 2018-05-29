@@ -11,7 +11,7 @@ export class PostEditComponent implements OnInit, OnChanges {
     @Input() post_id: string = null;    // for creating a new post
     @Input() config_subject = ''; // forum name coming from app-post-list-component
     @Input() post: ApiPostData = null;  // for editing a post.
-    @Input() display = false;
+    @Input() mode: 'hide' | 'edit' = 'edit';
     @Output() write: EventEmitter<ApiPostData> = new EventEmitter();
     @Output() edit: EventEmitter<ApiPostData> = new EventEmitter();
     @Output() cancel: EventEmitter<void> = new EventEmitter();
@@ -56,7 +56,7 @@ export class PostEditComponent implements OnInit, OnChanges {
                 console.log('postEdit() res: ', res);
                 this.edit.emit(res.post);
                 this.loader.submit = false;
-                this.display = false;
+                this.mode = 'hide';
             }, e => {
                 this.loader.submit = false;
                 alert(e.message);
@@ -66,7 +66,7 @@ export class PostEditComponent implements OnInit, OnChanges {
                 console.log('postWrite() res: ', res);
                 this.write.emit(res.post);
                 this.loader.submit = false;
-                this.display = false;
+                this.mode = 'hide';
             }, e => {
                 this.loader.submit = false;
                 alert(e.message);
@@ -77,15 +77,20 @@ export class PostEditComponent implements OnInit, OnChanges {
     }
 
     get forumName() {
-        if ( this.post && this.post.post_id ) {
+        if (this.post && this.post.post_id) {
             return this.post.config_subject;
-        } else if ( this.config_subject ) {
+        } else if (this.config_subject) {
             return this.config_subject;
-        } else if ( this.post_id ) {
+        } else if (this.post_id) {
             return this.post_id;
         } else {
             return '';
         }
+    }
+
+    onClickCancel() {
+        this.mode = 'hide';
+        this.cancel.emit();
     }
 }
 

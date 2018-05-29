@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { PhilGoApiService, ApiPostData } from '../../../providers/philgo-api.service';
+import { Component, OnInit, Input, OnChanges, ViewChild } from '@angular/core';
+import { PhilGoApiService, ApiPostData, ApiComment } from '../../../providers/philgo-api.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { CommentEditComponent } from '../comment-edit/comment-edit.component';
 
 @Component({
     selector: 'app-comment-view-component',
@@ -9,8 +10,14 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 
 export class CommentViewComponent implements OnInit, OnChanges {
+    @ViewChild('editComponent') editComponent: CommentEditComponent;
     @Input() post: ApiPostData;
     @Input() comment: ApiPostData;
+    // mode: 'edit' | 'reply' | 'view' = 'view';
+    show = {
+        comment: true,
+        buttons: true
+    };
     constructor(
         public sanitizer: DomSanitizer,
         public api: PhilGoApiService
@@ -27,6 +34,27 @@ export class CommentViewComponent implements OnInit, OnChanges {
             }
             this.comment['date'] = this.api.shortDate(this.comment.stamp);
         }
+    }
+    onClickEdit() {
+        // this.mode = 'edit';
+        this.show.comment = false;
+        this.show.buttons = false;
+        this.editComponent.activateEdit();
+    }
+    onClickReply() {
+        // this.mode = 'reply';
+        this.show.buttons = false;
+        this.editComponent.comment = null;
+        this.editComponent.activateReply();
+    }
+    onWrite() {
+        this.show.comment = true;
+        this.show.buttons = true;
+    }
+    onCancel() {
+        this.show.comment = true;
+        this.show.buttons = true;
+        // this.mode = 'view';
     }
 }
 

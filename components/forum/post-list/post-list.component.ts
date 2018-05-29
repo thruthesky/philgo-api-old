@@ -1,9 +1,10 @@
-import { Component, AfterViewInit, OnDestroy, Input } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, Input, ViewChild } from '@angular/core';
 import { PhilGoApiService } from '../../../philgo-api.module';
 import { ApiPostData, ApiForumPageRequest } from '../../../providers/philgo-api.service';
 import { ActivatedRoute } from '@angular/router';
 import { InfiniteScrollService } from '../../../providers/infinite-scroll.service';
 import { Subscription } from 'rxjs';
+import { PostViewComponent } from '../post-view/post-view.component';
 
 interface Result {
     idxes: Array<string>;
@@ -16,6 +17,7 @@ interface Result {
 export class PostListComponent implements AfterViewInit, OnDestroy {
 
     @Input('display') display = true; // true for show, false for hide.
+    @Input() hidePost: any;
     config_subject = '';
     show = {
         noMorePosts: false
@@ -106,11 +108,12 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
             alert(e.message);
         });
     }
-
     onClickView(event: Event, idx: number) {
         event.preventDefault();
         window.history.replaceState({}, '', this.api.urlForumView(idx));
-        this.re.posts[idx]['show'] = true;
+        // this.re.posts[idx]['display'] = true;
+        // this.viewComponent.mode = 'view';
+        this.re.posts[idx]['mode'] = 'view';
         return false;
     }
     write(post: ApiPostData) {
@@ -124,6 +127,7 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
     addPost(post: ApiPostData) {
         this.re.idxes.push(post.idx);
         this.re.posts[post.idx] = post;
+        // console.log('post:', post);
     }
     addPostOnTop(post: ApiPostData) {
         this.re.idxes.unshift(post.idx);

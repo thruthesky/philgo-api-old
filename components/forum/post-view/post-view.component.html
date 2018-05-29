@@ -1,6 +1,7 @@
-<div class="post-view" *ngIf=" post && show.mode == 'view' " class="p-1">
+<div class="post-view" *ngIf=" mode == 'view' && post " class="p-1">
   <div class="post-root">
     <div class="subject p-3 bg-secondary text-white">{{ post.subject }}</div>
+
     <div class="meta p-3 bg-light">글쓴이: {{ post.member.nickname }} 날짜: {{ post['date'] }} 조회 {{ post.no_of_view | number }} {{ post.config_subject }} 글번호
       {{ post.idx }}</div>
     <div [innerHTML]=" post.content " class="content p-3 bg-light">
@@ -10,10 +11,10 @@
     <button>비추천</button>
     <button>쪽지</button>
     <button>작성자의 글 목록</button>
-    <button (click)=" show.mode = 'edit' ">수정</button>
+    <button (click)=" onClickPostEdit() ">수정</button>
     <button>삭제</button>
     <button>신고</button>
-    <button (click)=" post['show'] = false " *ngIf=" showClose ">닫기</button>
+    <button (click)=" onViewClose() " *ngIf=" showClose ">닫기</button>
   </div>
 
   <app-comment-edit-component [post]=" post " [parent]=" post " [display]=" true " (write)=" true "></app-comment-edit-component>
@@ -22,4 +23,10 @@
 
 </div>
 
-<app-post-edit-component [display]=" show.mode == 'edit' " [post]=" post " (edit)=" show.mode = 'view'; this.post = $event; "></app-post-edit-component>
+
+<app-post-edit-component *ngIf=" mode == 'edit' " [post]=" post "
+ (write)=" onWrite( $event ) "
+ (edit)=" onEdit( $event ) "
+ (cancel)=" onCancel() "
+ ></app-post-edit-component>
+

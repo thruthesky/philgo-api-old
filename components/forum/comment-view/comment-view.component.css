@@ -1,3 +1,7 @@
+.comment {
+    margin: .25em 0;
+    border-radius: 3px;
+}
 .comment[depth="1"] {
     margin-left: 0;
     padding: 1em;

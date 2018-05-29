@@ -1,4 +1,4 @@
-<section #commentEdit class="comment-edit" [ngClass]="[ mode ]">
+<section #commentEdit class="comment-edit" [ngClass]="[ size ]" *ngIf=" display ">
     <form (ngSubmit)="onSubmit( $event )">
         <textarea name="content" [(ngModel)]=" form.content " (ngModelChange)="onChangeContent()" (click)="onClickContent()"></textarea>
         <div class="buttons" *ngIf=" ! loader.submit ">
