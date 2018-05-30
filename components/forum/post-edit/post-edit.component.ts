@@ -1,5 +1,6 @@
-import { Component, OnInit, Output, EventEmitter, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, OnChanges, ViewChild } from '@angular/core';
 import { ApiPostEditRequest, PhilGoApiService, ApiPostData } from '../../../providers/philgo-api.service';
+import { EditorComponent } from '../../../../angular-wysiwyg-editor/components/editor/editor.component';
 
 
 @Component({
@@ -8,6 +9,7 @@ import { ApiPostEditRequest, PhilGoApiService, ApiPostData } from '../../../prov
 })
 
 export class PostEditComponent implements OnInit, OnChanges {
+    @ViewChild('editorComponent') editorComponent: EditorComponent;
     @Input() post_id: string = null;    // for creating a new post
     @Input() config_subject = ''; // forum name coming from app-post-list-component
     @Input() post: ApiPostData = null;  // for editing a post.
@@ -51,7 +53,7 @@ export class PostEditComponent implements OnInit, OnChanges {
         if (event) {
             event.preventDefault();
         }
-        this.form.post_id = this.post_id;
+        this.form.content = this.editorComponent.getContent();
         console.log('form: ', this.form);
 
         this.loader.submit = true;
@@ -66,6 +68,7 @@ export class PostEditComponent implements OnInit, OnChanges {
                 alert(e.message);
             });
         } else {
+            this.form.post_id = this.post_id;
             this.api.postWrite(this.form).subscribe(res => {
                 console.log('postWrite() res: ', res);
                 this.write.emit(res.post);

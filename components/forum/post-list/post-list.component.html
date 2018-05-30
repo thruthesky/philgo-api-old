@@ -3,7 +3,7 @@
   <div class="posts">
     <div class="post" *ngFor=" let idx of re.idxes " class="post mb-1 bg-secondary">
       <ng-container *ngIf=" ! view || view.idx != idx ">
-        <a (click)="onClickView( $event, idx )" *ngIf=" ! post(idx).mode || post(idx).mode == 'hide' " class="d-block px-2 py-3 text-white" href="{{ api.urlForumView( idx ) }}">
+        <a (click)="onClickView( $event, idx )" *ngIf=" ! post(idx).mode || post(idx)['mode'] == 'hide' " class="d-block px-2 py-3 text-white" href="{{ api.urlForumView( idx ) }}">
           {{ idx }} {{ re.posts[idx].subject }}
         </a>
         <app-post-view-component *ngIf=" post(idx)['mode'] == 'view' " [post]=" post(idx) " [showClose]=" true "></app-post-view-component>
@@ -15,4 +15,5 @@
     <b>더 이상 글이 없습니다.</b>
   </div>
 </section>
+
 

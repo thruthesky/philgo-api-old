@@ -12,6 +12,7 @@ import { CommentViewComponent } from './components/forum/comment-view/comment-vi
 import { PostEditComponent } from './components/forum/post-edit/post-edit.component';
 import { CommentEditComponent } from './components/forum/comment-edit/comment-edit.component';
 import { CommentListComponent } from './components/forum/comment-list/comment-list.component';
+import { EditorModule } from '../angular-wysiwyg-editor/editor.module';
 
 @NgModule({
     declarations: [
@@ -38,7 +39,8 @@ import { CommentListComponent } from './components/forum/comment-list/comment-li
         CommonModule,
         RouterModule,
         FormsModule,
-        HttpClientModule
+        HttpClientModule,
+        EditorModule
     ],
     providers: [
         PhilGoApiService
