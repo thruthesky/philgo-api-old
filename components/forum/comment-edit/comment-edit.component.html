@@ -1,20 +1,48 @@
+
 <section #commentEdit class="comment-edit" [attr.mode]=" mode ">
   <div class="comment-edit-view" *ngIf=" display ">
     <form (ngSubmit)="onSubmit( $event )">
 
-<app-editor-component #editorComponent *ngIf=" mode != 'fake' "
-  [init]=" { content: comment?.content_original }"
-  [buttons]="['bold', 'italic', 'underline', 'strike', 'fontsize', 'forecolor', 'backcolor', 'highlight', 'link', 'unink', 'table', 'formatblock', 'insertline', 'insertimage', 'orderedlist', 'unorderedlist', 'left', 'center', 'removeformat', 'big', 'normal']"
-></app-editor-component>
-      <textarea name="fakeContent" (ngModelChange)="onChangeFakeContent()" (click)="onClickFakeContent()"></textarea>
-      <div class="buttons" *ngIf=" ! loader.submit ">
-        <button type="submit">Submit</button>
-        <button type="button" (click)="onCancel()">Cancel</button>
+      <app-editor-component #editorComponent *ngIf=" mode != 'fake' "
+        [init]=" { content: comment?.content_original, cursor: true }"
+        [buttons]="['bold', 'italic', 'underline', 'strike', 'fontsize', 'forecolor', 'backcolor', 'highlight', 'link', 'unink', 'table', 'formatblock', 'insertline', 'insertimage', 'orderedlist', 'unorderedlist', 'left', 'center', 'removeformat', 'big', 'normal']"
+      ></app-editor-component>
+
+      <table width="100%" *ngIf=" mode == 'fake' ">
+        <tr>
+          <td width="32">
+            <div class="file-upload-button">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <path d="M512 144v288c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V144c0-26.5 21.5-48 48-48h88l12.3-32.9c7-18.7 24.9-31.1 44.9-31.1h125.5c20 0 37.9 12.4 44.9 31.1L376 96h88c26.5 0 48 21.5 48 48zM376 288c0-66.2-53.8-120-120-120s-120 53.8-120 120 53.8 120 120 120 120-53.8 120-120zm-32 0c0 48.5-39.5 88-88 88s-88-39.5-88-88 39.5-88 88-88 88 39.5 88 88z"
+                />
+              </svg>
+              <input type="file" name="file" (change)="onChangeFile($event)">
+            </div>
+          </td>
+          <td width="99%">
+            <textarea name="fakeContent" (ngModelChange)="onChangeFakeContent()" (click)="onClickFakeContent()"></textarea>
+          </td>
+        </tr>
+      </table>
+
+      <div class="buttons d-flex justify-content-between" *ngIf=" ! loader.submit  && mode != 'fake' ">
+        <div class="file-upload-button">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path d="M512 144v288c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V144c0-26.5 21.5-48 48-48h88l12.3-32.9c7-18.7 24.9-31.1 44.9-31.1h125.5c20 0 37.9 12.4 44.9 31.1L376 96h88c26.5 0 48 21.5 48 48zM376 288c0-66.2-53.8-120-120-120s-120 53.8-120 120 53.8 120 120 120 120-53.8 120-120zm-32 0c0 48.5-39.5 88-88 88s-88-39.5-88-88 39.5-88 88-88 88 39.5 88 88z"
+            />
+          </svg>
+          <input type="file" name="file" (change)="onChangeFile($event)">
+          <span class="percentage" *ngIf=" percentage ">{{ percentage }}%</span>
+        </div>
+        <div>
+          <button type="submit">Submit</button>
+          <button type="button" (click)=" onClickCancel()">Cancel</button>
+        </div>
       </div>
+      <app-data-component #dataComponent [files]=" files " [percentage]=" percentage " [editable]=" true "></app-data-component>
       <div class="alert alert-danger" *ngIf=" loader.submit ">
         Connecting to server ...
       </div>
     </form>
   </div>
 </section>
-

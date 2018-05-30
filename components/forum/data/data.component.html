@@ -1,0 +1,7 @@
+<section class="files" *ngIf=" files ">
+    <div class="file" *ngFor="let file of files">
+        <img src="{{ file.url_thumbnail }}">
+        <div (click)="onClickDelete( file.idx )" *ngIf=" editable " class="delete">[X] Delete</div>
+    </div>
+</section>
+

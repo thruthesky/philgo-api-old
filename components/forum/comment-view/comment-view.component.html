@@ -6,6 +6,9 @@
     <div class="content" [innerHTML]=" comment.content ">
     </div>
 
+    <app-data-component [files]=" comment.photos "></app-data-component>
+
+
     <div class="buttons" *ngIf=" show.buttons ">
       <button (click)=" onClickReply() ">답변</button>
       <button>추천</button>

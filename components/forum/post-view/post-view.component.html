@@ -7,6 +7,8 @@
     <div [innerHTML]=" post.content " class="content p-3 bg-light">
     </div>
 
+    <app-data-component [files]=" post.photos "></app-data-component>
+
     <button>추천</button>
     <button>비추천</button>
     <button>쪽지</button>

@@ -1,6 +1,11 @@
 import { Component, OnInit, Output, EventEmitter, Input, OnChanges, ViewChild, AfterViewInit } from '@angular/core';
-import { ApiPostEditRequest, PhilGoApiService, ApiPostData } from '../../../providers/philgo-api.service';
+import {
+    ApiPostEditRequest, PhilGoApiService, ApiPostData,
+    ApiFileUploadOptions, ApiPhoto
+} from '../../../providers/philgo-api.service';
 import { EditorComponent } from '../../../../angular-wysiwyg-editor/components/editor/editor.component';
+import { HttpErrorResponse } from '@angular/common/http';
+import { DataComponent } from '../data/data.component';
 
 
 @Component({
@@ -10,11 +15,31 @@ import { EditorComponent } from '../../../../angular-wysiwyg-editor/components/e
         .post-edit {
             background-color: white;
         }
+        .file-upload-button {
+            position: relative;
+            width: 32;
+            height: 32px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .file-upload-button svg {
+            width: 32px;
+            height: 32px;
+        }
+        .file-upload-button input[type="file"] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 36px;
+            opacity: 0.01;
+            cursor: pointer;
+        }
     `]
 })
 
 export class PostEditComponent implements OnInit, OnChanges, AfterViewInit {
     @ViewChild('editorComponent') editorComponent: EditorComponent;
+    @ViewChild('dataComponent') dataComponent: DataComponent;
     @Input() post_id: string = null;    // for creating a new post
     @Input() config_subject = ''; // forum name coming from app-post-list-component
     @Input() post: ApiPostData = null;  // for editing a post.
@@ -24,13 +49,17 @@ export class PostEditComponent implements OnInit, OnChanges, AfterViewInit {
     @Output() cancel: EventEmitter<void> = new EventEmitter();
 
     form: ApiPostEditRequest = <any>{};
+    files: Array<ApiPhoto> = [];
     loader = {
         submit: false
     };
+    percentage = 0;
     constructor(
         public api: PhilGoApiService
     ) {
         // setInterval(() => this.test(), 3000);
+        this.form.gid = api.randomString(10, api.getIdxMember());
+        console.log('gid: ', this.form.gid);
     }
 
     // test() {
@@ -48,6 +77,8 @@ export class PostEditComponent implements OnInit, OnChanges, AfterViewInit {
         if (this.post) {
             this.form.idx = this.post.idx;
             this.form.subject = this.post.subject;
+            this.form.gid = this.post.gid;
+            this.files = this.post.photos;
             // this.form.content = this.post.content_stripped;
         }
     }
@@ -55,6 +86,10 @@ export class PostEditComponent implements OnInit, OnChanges, AfterViewInit {
         if (this.post && this.post.content) {
             this.editorComponent.putContent(this.post['content_original']);
         }
+        setTimeout(() => {
+            const input: HTMLInputElement = document.querySelector(`[name="subject"]`);
+            input.focus();
+        }, 100);
     }
     onSubmit(event?: Event) {
         if (event) {
@@ -110,6 +145,14 @@ export class PostEditComponent implements OnInit, OnChanges, AfterViewInit {
     onClickCancel() {
         this.mode = 'hide';
         this.cancel.emit();
+    }
+
+    onChangeFile(event: Event) {
+        const options: ApiFileUploadOptions = {
+            gid: this.form.gid,
+            module_name: 'post'
+        };
+        this.dataComponent.fileUploadOnWeb(options);
     }
 }
 

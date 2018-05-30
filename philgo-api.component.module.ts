@@ -13,6 +13,7 @@ import { PostEditComponent } from './components/forum/post-edit/post-edit.compon
 import { CommentEditComponent } from './components/forum/comment-edit/comment-edit.component';
 import { CommentListComponent } from './components/forum/comment-list/comment-list.component';
 import { EditorModule } from '../angular-wysiwyg-editor/editor.module';
+import { DataComponent } from './components/forum/data/data.component';
 
 @NgModule({
     declarations: [
@@ -23,7 +24,8 @@ import { EditorModule } from '../angular-wysiwyg-editor/editor.module';
         CommentViewComponent,
         PostEditComponent,
         CommentEditComponent,
-        CommentListComponent
+        CommentListComponent,
+        DataComponent
     ],
     exports: [
         UserRegisterAndProfileComponent,
@@ -33,7 +35,8 @@ import { EditorModule } from '../angular-wysiwyg-editor/editor.module';
         CommentViewComponent,
         PostEditComponent,
         CommentEditComponent,
-        CommentListComponent
+        CommentListComponent,
+        DataComponent
     ],
     imports: [
         CommonModule,

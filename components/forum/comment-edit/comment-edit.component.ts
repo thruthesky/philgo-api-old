@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, Output, EventEmitter } from '@angular/core';
 import { PhilGoApiService } from '../../../philgo-api.module';
-import { ApiCommentEditRequest, ApiPostData, ApiComment } from '../../../providers/philgo-api.service';
+import { ApiCommentEditRequest, ApiPostData, ApiComment, ApiPhoto, ApiFileUploadOptions } from '../../../providers/philgo-api.service';
 import { EditorComponent } from '../../../../angular-wysiwyg-editor/components/editor/editor.component';
+import { DataComponent } from '../data/data.component';
 
 
 @Component({
@@ -13,6 +14,7 @@ import { EditorComponent } from '../../../../angular-wysiwyg-editor/components/e
 export class CommentEditComponent implements OnInit, OnChanges {
     @ViewChild('editorComponent') editorComponent: EditorComponent;
     @ViewChild('commentEdit') commentEdit: ElementRef;
+    @ViewChild('dataComponent') dataComponent: DataComponent;
 
     /**
      * Decides to display 'none' or 'block'.
@@ -45,6 +47,8 @@ export class CommentEditComponent implements OnInit, OnChanges {
 
     form: ApiCommentEditRequest = <any>{};
 
+    files: Array<ApiPhoto> = [];
+
 
     loader = {
         submit: false
@@ -52,9 +56,13 @@ export class CommentEditComponent implements OnInit, OnChanges {
 
     mode: 'edit' | 'fake' | 'reply' = 'fake';
 
+    percentage = 0;
+
+
     constructor(
         public api: PhilGoApiService
     ) {
+        console.log('CommentEditComponent::constructor()');
     }
 
     // testCreate() {
@@ -83,14 +91,25 @@ export class CommentEditComponent implements OnInit, OnChanges {
     }
 
     activateEdit() {
+        console.log('CommentEditComponent::activateEdit()');
         this.mode = 'edit';
         this.form.idx_parent = 0;
         this.form.idx = this.comment.idx;
+        this.files = this.comment.photos;
+        this.form.gid = this.comment.gid;
         // this.form.content = this.comment.content_stripped;
         this.activate();
     }
     activateReply() {
+        console.log('mode: ', this.mode);
+        if ( this.mode === 'reply' ) {
+            return;
+        }
+        console.log('CommentEditComponent::activateReply()');
         this.mode = 'reply';
+        this.form.idx = 0;
+        this.form.gid = this.api.randomString(10, this.api.getIdxMember());
+        this.files = [];
         this.activate();
     }
     activate() {
@@ -112,6 +131,7 @@ export class CommentEditComponent implements OnInit, OnChanges {
          * Wait for active mode display. and scroll into view.
          */
         setTimeout(() => {
+            // console.log('delayActivate()');
             this.commentEdit.nativeElement.scrollIntoView(false);
         }, ms);
     }
@@ -127,12 +147,13 @@ export class CommentEditComponent implements OnInit, OnChanges {
     deactivateForm() {
         console.log('CommentEditComponent::deactiveForm()');
         this.form.content = '';
+        this.files = [];
         this.display = false;
         this.mode = 'fake';
     }
 
 
-    onCancel() {
+    onClickCancel() {
         this.deactivateForm();
         this.cancel.emit();
     }
@@ -145,6 +166,7 @@ export class CommentEditComponent implements OnInit, OnChanges {
         this.form.content = this.editorComponent.getContent();
         console.log('form: ', this.form);
         if (this.isEdit()) {
+            console.log('going to edit');
             this.api.postEdit(<any>this.form).subscribe(res => {
                 this.loader.submit = false;
                 this.deactivateForm();
@@ -153,6 +175,7 @@ export class CommentEditComponent implements OnInit, OnChanges {
                 this.editComment(comment);
             });
         } else {
+            console.log('going to write');
             this.form.idx_parent = this.parent.idx;
             this.api.commentWrite(this.form).subscribe(res => {
                 this.loader.submit = false;
@@ -207,6 +230,25 @@ export class CommentEditComponent implements OnInit, OnChanges {
         const i = this.post.comments.findIndex(cmt => cmt.idx === this.parent.idx);
         // this.post.comments[i] = comment; // 이렇게 하면 새로운 코멘트 보기 컴포넌트가 생생되어 예기치 못한 상황이 된다.
         Object.assign(this.post.comments[i], comment);
+    }
+
+    /**
+     * 파일이 선택되면 업로드를 한다.
+     */
+    onChangeFile(event: Event) {
+        /**
+         * 'fake' mode 인 경우는 post view 의 맨 첫 코멘트 박스는 항상 보여지는 상태이다.
+         * ( 'fake' mode 에서 파일 업로드 아이콘을 클릭 할 수 있는데, ) 파일 업로드 아이콘을 클릭하면, 무조건 reply 상태로 되는 것이다.
+         * 만약 이미 'reply' 또는 'edit' 상태라면 다시 변경 할 필요가 없다.
+         */
+        if ( this.mode === 'fake' ) {
+            this.activateReply();
+        }
+        const options: ApiFileUploadOptions = {
+            gid: this.form.gid,
+            module_name: 'post'
+        };
+        this.dataComponent.fileUploadOnWeb(options);
     }
 }
 

@@ -127,7 +127,7 @@ export const ApiErrorMessageInternetOrServer = 'Please check your internet or co
 
 
 
-interface ApiFileUploadOptions {
+export interface ApiFileUploadOptions {
     gid?: string;
     login?: 'pass';
     finish?: '1';
@@ -145,6 +145,7 @@ export interface ApiMember {
 
 export interface ApiPhoto {
     idx: number;
+    name: string;
     url?: string;
     url_thumbnail?: string;
 }
@@ -727,6 +728,11 @@ export class PhilGoApiService {
         });
     }
 
+    /**
+     * 카메라 업로드가 아닌, HTML FORM 파일 선택을 통해서 파일 업로드를 한다.
+     * @param files HTML FORM type='file' event.target.files
+     * @param option Optoins for requesting file upload to the server
+     */
     fileUploadOnWeb(files: FileList, option: ApiFileUploadOptions = {}): Observable<any> {
         if (files === void 0 || !files.length || files[0] === void 0) {
             return throwError(ApiErrorFileNotSelected);
@@ -861,7 +867,7 @@ export class PhilGoApiService {
         post.content = <any>this.sanitizer.bypassSecurityTrustHtml(post.content);
         if (post.comments) {
             for (const comment of post.comments) {
-                this.preComment( comment );
+                this.preComment(comment);
                 // console.log('comment', comment);
             }
         }
@@ -1001,6 +1007,24 @@ export class PhilGoApiService {
                 return after;
             }
         }
+    }
+
+    /**
+     * Generates a random string.
+     * @param len length of random string.
+     * @param prefix prefix to add infront of generated rnadom string.
+     */
+    randomString(len = 8, prefix?) {
+        let text = '';
+        const charset = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        for (let i = 0; i < len; i++) {
+            text += charset.charAt(Math.floor(Math.random() * charset.length));
+        }
+        if ( prefix ) {
+            text = prefix + text;
+        }
+
+        return text;
     }
 }
 

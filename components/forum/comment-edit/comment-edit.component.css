@@ -2,3 +2,24 @@
 .comment-edit [name="fakeContent"] { height: 1em; width: 100%; font-size: 1em; }
 .comment-edit[mode="edit"] [name="fakeContent"] { display: none; }
 .comment-edit[mode="reply"] [name="fakeContent"] { display: none; }
+
+
+.file-upload-button {
+    position: relative;
+    width: 32;
+    height: 32px;
+    overflow: hidden;
+    cursor: pointer;
+}
+.file-upload-button svg {
+    width: 32px;
+    height: 32px;
+}
+.file-upload-button input[type="file"] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 36px;
+    opacity: 0.01;
+    cursor: pointer;
+}
