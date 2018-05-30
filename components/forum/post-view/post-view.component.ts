@@ -26,13 +26,6 @@ export class PostViewComponent implements OnChanges {
     ngOnChanges() {
         console.log('ngOnChanges()');
         if (this.post) {
-            if (this.post['safe']) {
-                //
-            } else {
-                this.post['original_content'] = this.post.content;
-                this.post.content = <any>this.sanitizer.bypassSecurityTrustHtml(this.post.content);
-                this.post['safe'] = true;
-            }
             this.post['date'] = this.api.shortDate(this.post.stamp);
         }
     }
@@ -51,7 +44,7 @@ export class PostViewComponent implements OnChanges {
         this.post = post;
         // this.listComponent.edit(post);
 
-//  <!-- (edit)=" mode = 'view'; this.post = $event; " -->
+        //  <!-- (edit)=" mode = 'view'; this.post = $event; " -->
         // this.activateView();
     }
     onPostFormCancel() {
@@ -66,7 +59,6 @@ export class PostViewComponent implements OnChanges {
     }
     onCommentWriteSuccess(comment: ApiComment) {
         this.commentEditComponent.display = true;
-        this.commentEditComponent.size = 'small';
     }
 }
 

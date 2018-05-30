@@ -1,2 +1,4 @@
-.comment-edit [name="content"] { height: 1em; width: 100%; font-size: 1em; }
-.comment-edit.big [name="content"] { height: 20em; }
+.comment-edit { background-color: white; }
+.comment-edit [name="fakeContent"] { height: 1em; width: 100%; font-size: 1em; }
+.comment-edit[mode="edit"] [name="fakeContent"] { display: none; }
+.comment-edit[mode="reply"] [name="fakeContent"] { display: none; }

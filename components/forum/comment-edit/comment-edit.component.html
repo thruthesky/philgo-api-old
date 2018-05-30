@@ -1,7 +1,12 @@
-<section #commentEdit class="comment-edit" [ngClass]="[ size ]">
+<section #commentEdit class="comment-edit" [attr.mode]=" mode ">
   <div class="comment-edit-view" *ngIf=" display ">
     <form (ngSubmit)="onSubmit( $event )">
-      <textarea name="content" [(ngModel)]=" form.content " (ngModelChange)="onChangeContent()" (click)="onClickContent()"></textarea>
+
+<app-editor-component #editorComponent *ngIf=" mode != 'fake' "
+  [init]=" { content: comment?.content_original }"
+  [buttons]="['bold', 'italic', 'underline', 'strike', 'fontsize', 'forecolor', 'backcolor', 'highlight', 'link', 'unink', 'table', 'formatblock', 'insertline', 'insertimage', 'orderedlist', 'unorderedlist', 'left', 'center', 'removeformat', 'big', 'normal']"
+></app-editor-component>
+      <textarea name="fakeContent" (ngModelChange)="onChangeFakeContent()" (click)="onClickFakeContent()"></textarea>
       <div class="buttons" *ngIf=" ! loader.submit ">
         <button type="submit">Submit</button>
         <button type="button" (click)="onCancel()">Cancel</button>
@@ -12,3 +17,4 @@
     </form>
   </div>
 </section>
+

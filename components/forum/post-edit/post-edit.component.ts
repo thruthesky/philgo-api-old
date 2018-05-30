@@ -1,14 +1,19 @@
-import { Component, OnInit, Output, EventEmitter, Input, OnChanges, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, OnChanges, ViewChild, AfterViewInit } from '@angular/core';
 import { ApiPostEditRequest, PhilGoApiService, ApiPostData } from '../../../providers/philgo-api.service';
 import { EditorComponent } from '../../../../angular-wysiwyg-editor/components/editor/editor.component';
 
 
 @Component({
     selector: 'app-post-edit-component',
-    templateUrl: 'post-edit.component.html'
+    templateUrl: 'post-edit.component.html',
+    styles: [`
+        .post-edit {
+            background-color: white;
+        }
+    `]
 })
 
-export class PostEditComponent implements OnInit, OnChanges {
+export class PostEditComponent implements OnInit, OnChanges, AfterViewInit {
     @ViewChild('editorComponent') editorComponent: EditorComponent;
     @Input() post_id: string = null;    // for creating a new post
     @Input() config_subject = ''; // forum name coming from app-post-list-component
@@ -43,15 +48,21 @@ export class PostEditComponent implements OnInit, OnChanges {
         if (this.post) {
             this.form.idx = this.post.idx;
             this.form.subject = this.post.subject;
-            this.form.content = this.post.content_stripped;
-        } else {
-            this.form = <any>{};
-            this.form.post_id = this.post_id;
+            // this.form.content = this.post.content_stripped;
+        }
+    }
+    ngAfterViewInit() {
+        if (this.post && this.post.content) {
+            this.editorComponent.putContent(this.post['content_original']);
         }
     }
     onSubmit(event?: Event) {
         if (event) {
             event.preventDefault();
+        }
+
+        if (!this.form.post_id) {
+            this.form.post_id = this.post_id;
         }
         this.form.content = this.editorComponent.getContent();
         console.log('form: ', this.form);
@@ -60,7 +71,8 @@ export class PostEditComponent implements OnInit, OnChanges {
         if (this.post && this.post.idx) {
             this.api.postEdit(this.form).subscribe(res => {
                 console.log('postEdit() res: ', res);
-                this.edit.emit(res.post);
+                const post = this.api.prePost(res.post);
+                this.edit.emit(post);
                 this.loader.submit = false;
                 this.mode = 'hide';
             }, e => {
@@ -68,10 +80,10 @@ export class PostEditComponent implements OnInit, OnChanges {
                 alert(e.message);
             });
         } else {
-            this.form.post_id = this.post_id;
             this.api.postWrite(this.form).subscribe(res => {
                 console.log('postWrite() res: ', res);
-                this.write.emit(res.post);
+                const post = this.api.prePost(res.post);
+                this.write.emit(post);
                 this.loader.submit = false;
                 this.mode = 'hide';
             }, e => {

@@ -28,12 +28,6 @@ export class CommentViewComponent implements OnInit, OnChanges {
     ngOnInit() { }
     ngOnChanges() {
         if (this.comment) {
-            if (this.comment['safe']) {
-                //
-            } else {
-                this.comment.content = <any>this.sanitizer.bypassSecurityTrustHtml(this.comment.content);
-                this.comment['safe'] = true;
-            }
             this.comment['date'] = this.api.shortDate(this.comment.stamp);
         }
     }

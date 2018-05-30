@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, Output, EventEmitter } from '@angular/core';
 import { PhilGoApiService } from '../../../philgo-api.module';
 import { ApiCommentEditRequest, ApiPostData, ApiComment } from '../../../providers/philgo-api.service';
+import { EditorComponent } from '../../../../angular-wysiwyg-editor/components/editor/editor.component';
 
 
 @Component({
@@ -10,10 +11,12 @@ import { ApiCommentEditRequest, ApiPostData, ApiComment } from '../../../provide
 })
 
 export class CommentEditComponent implements OnInit, OnChanges {
+    @ViewChild('editorComponent') editorComponent: EditorComponent;
     @ViewChild('commentEdit') commentEdit: ElementRef;
 
     /**
-     * Decides to display 'none' or 'block'
+     * Decides to display 'none' or 'block'.
+     * This is true on view page. and false for all other places.
      */
     @Input() display = false;
     /**
@@ -42,12 +45,12 @@ export class CommentEditComponent implements OnInit, OnChanges {
 
     form: ApiCommentEditRequest = <any>{};
 
-    size: 'small' | 'big' = 'small';
+
     loader = {
         submit: false
     };
 
-    mode: 'edit' | 'reply' = 'reply';
+    mode: 'edit' | 'fake' | 'reply' = 'fake';
 
     constructor(
         public api: PhilGoApiService
@@ -83,7 +86,7 @@ export class CommentEditComponent implements OnInit, OnChanges {
         this.mode = 'edit';
         this.form.idx_parent = 0;
         this.form.idx = this.comment.idx;
-        this.form.content = this.comment.content_stripped;
+        // this.form.content = this.comment.content_stripped;
         this.activate();
     }
     activateReply() {
@@ -92,16 +95,8 @@ export class CommentEditComponent implements OnInit, OnChanges {
     }
     activate() {
         this.display = true;
-        if (this.size === 'small') {
-            this.size = 'big';
-
-
-
-            this.commentEdit.nativeElement.scrollIntoView(false);
-
-            this.delayActivate(100);
-            this.delayActivate(300);
-        }
+        this.delayActivate(100);
+        this.delayActivate(300);
     }
     /**
      * 코멘트를 입력할 때, 코멘트 창을 크게 보여주는데, 이 때, CSS 클래스로 크기를 조정한다.
@@ -121,19 +116,19 @@ export class CommentEditComponent implements OnInit, OnChanges {
         }, ms);
     }
 
-    onChangeContent() {
+    onChangeFakeContent() {
         // console.log('onChagneContent()');
-        this.activate();
+        this.activateReply();
     }
-    onClickContent() {
+    onClickFakeContent() {
         // console.log('onClickContent()');
-        this.activate();
+        this.activateReply();
     }
     deactivateForm() {
         console.log('CommentEditComponent::deactiveForm()');
-        this.size = 'small';
         this.form.content = '';
         this.display = false;
+        this.mode = 'fake';
     }
 
 
@@ -147,21 +142,24 @@ export class CommentEditComponent implements OnInit, OnChanges {
             event.preventDefault();
         }
         this.loader.submit = true;
+        this.form.content = this.editorComponent.getContent();
         console.log('form: ', this.form);
         if (this.isEdit()) {
             this.api.postEdit(<any>this.form).subscribe(res => {
                 this.loader.submit = false;
                 this.deactivateForm();
-                this.edit.emit(<ApiComment>res.post);
-                this.editComment(<ApiComment>res.post);
+                const comment = this.api.preComment(<ApiComment>res.post);
+                this.edit.emit(comment);
+                this.editComment(comment);
             });
         } else {
             this.form.idx_parent = this.parent.idx;
             this.api.commentWrite(this.form).subscribe(res => {
                 this.loader.submit = false;
                 this.deactivateForm();
-                this.write.emit(res.post); // reply event
-                this.addComment(res.post);
+                const comment = this.api.preComment(<ApiComment>res.post);
+                this.write.emit(comment); // reply event
+                this.addComment(comment);
                 console.log('commentWrite() res: ', res);
             }, e => {
                 this.loader.submit = false;
@@ -208,7 +206,7 @@ export class CommentEditComponent implements OnInit, OnChanges {
          */
         const i = this.post.comments.findIndex(cmt => cmt.idx === this.parent.idx);
         // this.post.comments[i] = comment; // 이렇게 하면 새로운 코멘트 보기 컴포넌트가 생생되어 예기치 못한 상황이 된다.
-        Object.assign( this.post.comments[i], comment );
+        Object.assign(this.post.comments[i], comment);
     }
 }
 

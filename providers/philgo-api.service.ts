@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpRequest, HttpResponse, HttpHeaderResponse, HttpEventType } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { DomSanitizer } from '@angular/platform-browser';
 
 export const ID = 'id';
 export const SESSION_ID = 'session_id';
@@ -165,6 +166,7 @@ export interface ApiComment {
     blind?: string;
     content: string;
     content_stripped?: string; // Same as post data. it is made up when posts/comments are loaded.
+    content_original?: string; // Get a copy of content. Only available in client.
     deleted?: string;
     depth?: string;
     gid: string;
@@ -221,6 +223,7 @@ export interface ApiPostData {
     subject?: string;
     content?: string;
     content_stripped?: string; // @note this is not coming from the server. it is made up when posts are loaded.
+    content_original?: string; // Get a copy of content. Only available in client.
     link?: string;
     stamp_update?: string;
     stamp_last_comment?: string;
@@ -340,6 +343,7 @@ export class PhilGoApiService {
     static serverUrl = '';
     static fileServerUrl = '';
     constructor(
+        private sanitizer: DomSanitizer,
         public http: HttpClient
     ) {
         console.log('PhilGoApiService::constructor');
@@ -850,16 +854,25 @@ export class PhilGoApiService {
             );
     }
 
-    prePost(post: ApiPostData) {
+    prePost(post: ApiPostData): ApiPostData {
         // post.content_stripped = this.api.strip_tags(post.content);
+        post.content_original = post.content;
         post.content_stripped = this.strip_tags(post.content);
+        post.content = <any>this.sanitizer.bypassSecurityTrustHtml(post.content);
         if (post.comments) {
             for (const comment of post.comments) {
-                comment.content_stripped = this.strip_tags(comment.content);
+                this.preComment( comment );
                 // console.log('comment', comment);
             }
         }
         // console.log('post:', post);
+        return post;
+    }
+    preComment(comment: ApiComment): ApiComment {
+        comment.content_original = comment.content;
+        comment.content_stripped = this.strip_tags(comment.content);
+        comment.content = <any>this.sanitizer.bypassSecurityTrustHtml(comment.content);
+        return comment;
     }
 
 
