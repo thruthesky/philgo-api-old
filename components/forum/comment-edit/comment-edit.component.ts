@@ -130,6 +130,7 @@ export class CommentEditComponent implements OnInit, OnChanges {
         this.activate();
     }
     deactivateForm() {
+        console.log('CommentEditComponent::deactiveForm()');
         this.size = 'small';
         this.form.content = '';
         this.display = false;
@@ -191,13 +192,23 @@ export class CommentEditComponent implements OnInit, OnChanges {
             this.post.comments.splice(i + 1, 0, comment);
         }
     }
+    /**
+     * Show edited comment
+     *
+     * 주의: 새로운 코멘트 전체를 대입하면 새로운 코멘트 컴포넌트가 생성된다. 그렇게 하지 말고 reference 를 유지한 채 필요한 요소만 바뀌치기 한다.
+     *
+     * @see https://docs.google.com/document/d/1E7BcCOvOFzmLVEnymCgL1pmN2BPFxCwsE5pfjav9h9g/edit#heading=h.c06b5hnwihgc
+     *
+     * @param comment edited comment
+     */
     editComment(comment: ApiComment) {
         /**
          * comment under another comment.
          * Need to find position.
          */
         const i = this.post.comments.findIndex(cmt => cmt.idx === this.parent.idx);
-        this.post.comments[i] = comment;
+        // this.post.comments[i] = comment; // 이렇게 하면 새로운 코멘트 보기 컴포넌트가 생생되어 예기치 못한 상황이 된다.
+        Object.assign( this.post.comments[i], comment );
     }
 }
 

@@ -21,7 +21,9 @@ export class CommentViewComponent implements OnInit, OnChanges {
     constructor(
         public sanitizer: DomSanitizer,
         public api: PhilGoApiService
-    ) { }
+    ) {
+        console.log('CommentViewComponent::constructor()');
+    }
 
     ngOnInit() { }
     ngOnChanges() {
@@ -47,12 +49,18 @@ export class CommentViewComponent implements OnInit, OnChanges {
         this.editComponent.comment = null;
         this.editComponent.activateReply();
     }
-    onCommentWriteSuccess() {
+    onCommentWriteSuccess(comment: ApiComment) {
         this.show.comment = true;
         this.show.buttons = true;
     }
-    onCommentEditSuccess() {
 
+    /**
+     * Comment edit event handler
+     * @param comment edited comment
+     */
+    onCommentEditSuccess(comment: ApiComment) {
+        this.show.comment = true;
+        this.show.buttons = true;
     }
     onCommentFormCancel() {
         this.show.comment = true;

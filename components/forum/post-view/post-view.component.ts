@@ -1,6 +1,7 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { ApiPostData, PhilGoApiService, ApiComment } from '../../../providers/philgo-api.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { CommentEditComponent } from '../comment-edit/comment-edit.component';
 
 @Component({
     selector: 'app-post-view-component',
@@ -9,6 +10,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class PostViewComponent implements OnChanges {
 
 
+    @ViewChild('commentEditComponent') commentEditComponent: CommentEditComponent;
     @Input() post: ApiPostData = null;
     @Input() showClose = false;
     @Input() mode: 'edit' | 'view' = 'view';
@@ -63,7 +65,8 @@ export class PostViewComponent implements OnChanges {
         this.post['mode'] = 'hide';
     }
     onCommentWriteSuccess(comment: ApiComment) {
-
+        this.commentEditComponent.display = true;
+        this.commentEditComponent.size = 'small';
     }
 }
 
