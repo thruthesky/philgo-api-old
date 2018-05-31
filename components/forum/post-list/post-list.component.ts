@@ -86,7 +86,13 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
      * @param option post list optoin
      */
     loadPage(callback?: (res: ApiForumPageResponse) => void) {
-        console.log('loadPage()', this.option);
+        // console.log('loadPage()', this.option);
+        /**
+         * If the post list is not in display, it does not load again.
+         */
+        if ( ! this.display ) {
+            return;
+        }
         if (this.loader.page) {
             return;
         }
@@ -98,7 +104,7 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
             this.loader.page = false;
             this.config_subject = res.config_subject;
             this.option.page_no++;
-            console.log('forumPage(): res: ', res);
+            // console.log('forumPage(): res: ', res);
             if (res.posts && res.posts.length) {
                 for (const post of res.posts) {
                     this.addPost(post);

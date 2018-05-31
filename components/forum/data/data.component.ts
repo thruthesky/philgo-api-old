@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {
     ApiPhoto, PhilGoApiService, ApiFileUploadOptions,
-    ApiErrorFileNotSelected, ApiErrorFileUploadError
+    ApiErrorFileNotSelected, ApiErrorFileUploadError, ApiFileUploadResponse
 } from '../../../providers/philgo-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -45,7 +45,7 @@ export class DataComponent implements OnInit {
         }, e => alert(e.message));
     }
 
-    fileUploadOnWeb(options: ApiFileUploadOptions) {
+    fileUploadOnWeb(options: ApiFileUploadOptions, successCallback?: (file: ApiFileUploadResponse) => void ) {
         this.api.fileUploadOnWeb(event.target['files'], options).subscribe(re => {
             // console.log(event);
             if (typeof re === 'number') {
@@ -58,6 +58,9 @@ export class DataComponent implements OnInit {
                 // console.log('file upload success: ', re);
                 this.files.push(re);
                 this.percentage = 0;
+                if (successCallback) {
+                    successCallback(re);
+                }
             }
         }, (e: HttpErrorResponse) => {
             // console.log('error subscribe: ', e);

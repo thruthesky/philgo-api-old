@@ -152,7 +152,9 @@ export class PostEditComponent implements OnInit, OnChanges, AfterViewInit {
             gid: this.form.gid,
             module_name: 'post'
         };
-        this.dataComponent.fileUploadOnWeb(options);
+        this.dataComponent.fileUploadOnWeb(options, file => {
+            this.editorComponent.insertImage( file.url, file.name );
+        });
     }
 }
 

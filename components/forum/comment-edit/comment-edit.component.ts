@@ -102,7 +102,7 @@ export class CommentEditComponent implements OnInit, OnChanges {
     }
     activateReply() {
         console.log('mode: ', this.mode);
-        if ( this.mode === 'reply' ) {
+        if (this.mode === 'reply') {
             return;
         }
         console.log('CommentEditComponent::activateReply()');
@@ -241,14 +241,16 @@ export class CommentEditComponent implements OnInit, OnChanges {
          * ( 'fake' mode 에서 파일 업로드 아이콘을 클릭 할 수 있는데, ) 파일 업로드 아이콘을 클릭하면, 무조건 reply 상태로 되는 것이다.
          * 만약 이미 'reply' 또는 'edit' 상태라면 다시 변경 할 필요가 없다.
          */
-        if ( this.mode === 'fake' ) {
+        if (this.mode === 'fake') {
             this.activateReply();
         }
         const options: ApiFileUploadOptions = {
             gid: this.form.gid,
             module_name: 'post'
         };
-        this.dataComponent.fileUploadOnWeb(options);
+        this.dataComponent.fileUploadOnWeb(options, file => {
+            this.editorComponent.insertImage(file.url, file.name);
+        });
     }
 }
 

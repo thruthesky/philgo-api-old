@@ -733,7 +733,7 @@ export class PhilGoApiService {
      * @param files HTML FORM type='file' event.target.files
      * @param option Optoins for requesting file upload to the server
      */
-    fileUploadOnWeb(files: FileList, option: ApiFileUploadOptions = {}): Observable<any> {
+    fileUploadOnWeb(files: FileList, option: ApiFileUploadOptions = {}): Observable<ApiFileUploadResponse> {
         if (files === void 0 || !files.length || files[0] === void 0) {
             return throwError(ApiErrorFileNotSelected);
         }
