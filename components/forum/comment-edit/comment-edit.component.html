@@ -39,7 +39,9 @@
           <button type="button" (click)=" onClickCancel()">Cancel</button>
         </div>
       </div>
-      <app-data-component #dataComponent [files]=" files " [percentage]=" percentage " [editable]=" true "></app-data-component>
+      <app-data-component #dataComponent [files]=" files " [percentage]=" percentage " [editable]=" true "
+        (remove)="onFileRemove( $event )"
+      ></app-data-component>
       <div class="alert alert-danger" *ngIf=" loader.submit ">
         Connecting to server ...
       </div>

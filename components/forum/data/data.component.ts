@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {
     ApiPhoto, PhilGoApiService, ApiFileUploadOptions,
     ApiErrorFileNotSelected, ApiErrorFileUploadError, ApiFileUploadResponse
@@ -30,6 +30,7 @@ export class DataComponent implements OnInit {
     @Input() files: Array<ApiPhoto>;
     @Input() editable = false;
     @Input() percentage = 0;
+    @Output() remove: EventEmitter<number> = new EventEmitter();
     constructor(
         public api: PhilGoApiService
     ) { }
@@ -42,6 +43,7 @@ export class DataComponent implements OnInit {
             console.log('res: ', res);
             const i = this.files.findIndex(file => file.idx === idx);
             this.files.splice(i, 1);
+            this.remove.emit(idx);
         }, e => alert(e.message));
     }
 

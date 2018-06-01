@@ -153,8 +153,14 @@ export class PostEditComponent implements OnInit, OnChanges, AfterViewInit {
             module_name: 'post'
         };
         this.dataComponent.fileUploadOnWeb(options, file => {
-            this.editorComponent.insertImage( file.url, file.name );
+            this.editorComponent.insertImage(file.url, file.name, file.idx);
         });
+    }
+    /**
+     * 파일이 삭제된 경우 발생하는 이벤트
+     */
+    onFileRemove(idx) {
+        this.editorComponent.removeContent(`img[idx="${idx}"]`);
     }
 }
 
