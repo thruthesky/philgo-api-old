@@ -136,10 +136,18 @@ export interface ApiFileUploadOptions {
 }
 
 
+/**
+ * This is an inteface for member information on post and comment.
+ * @see ApiLibrary::getPostMemberInfo()
+ */
 export interface ApiMember {
+    idx: string;
     id: string;
     name: string;
     nickname: string;
+    stamp: string;
+    level: string;
+    idx_promiary_photo: string;
 }
 
 
@@ -228,7 +236,7 @@ export interface ApiPostData {
     link?: string;
     stamp_update?: string;
     stamp_last_comment?: string;
-    deleted?: string;
+    deleted?: '0' | '1';
     no_of_view?: string;
     good?: string;
     bad?: string;
@@ -343,6 +351,17 @@ export interface ApiCommentEditResponse extends ApiVersion2Response {
 export class PhilGoApiService {
     static serverUrl = '';
     static fileServerUrl = '';
+
+    /**
+     * Language for localization
+     *
+     * @todo improve language translation. try to make a external library module like
+     *          https://github.com/thruthesky/site/blob/master/src/app/providers/language.service.ts
+     */
+    t = {
+        deleted: 'Deleted ... !'
+    };
+
     constructor(
         private sanitizer: DomSanitizer,
         public http: HttpClient
@@ -853,10 +872,8 @@ export class PhilGoApiService {
         return this.query<any, ApiPostData>('getPost', req)
             .pipe(
                 map(post => {
-                    this.prePost(post);
-                    return post;
-                }
-                )
+                    return this.prePost(post);
+                })
             );
     }
 
@@ -936,6 +953,22 @@ export class PhilGoApiService {
     postEdit(req: ApiPostEditRequest): Observable<ApiPostEditResponse> {
         req.action = 'post_edit_submit';
         return this.queryVersion2(req);
+    }
+    postDelete(idx: string): Observable<ApiPostEditResponse> {
+        const req = {
+            action: 'post_delete_submit',
+            idx: parseInt(idx, 10)
+        };
+        return this.queryVersion2(req);
+    }
+    setDelete(post: ApiPostData) {
+        post.bad = '0';
+        post.good = '0';
+        post.subject = this.t.deleted;
+        post.content = this.t.deleted;
+        post.content_stripped = this.t.deleted;
+        post.content_original = this.t.deleted;
+        post.deleted = '1';
     }
     commentWrite(req: ApiCommentEditRequest): Observable<ApiCommentEditResponse> {
         req.action = 'comment_write_submit';
@@ -1020,7 +1053,7 @@ export class PhilGoApiService {
         for (let i = 0; i < len; i++) {
             text += charset.charAt(Math.floor(Math.random() * charset.length));
         }
-        if ( prefix ) {
+        if (prefix) {
             text = prefix + text;
         }
 

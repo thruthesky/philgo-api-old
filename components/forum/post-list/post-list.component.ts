@@ -66,9 +66,13 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
         this.subscription = this.scroll.watch('body', 400).subscribe(e => this.loadPage());
     }
     ngOnDestroy() {
-        this.subscription.unsubscribe();
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+            this.subscription = null;
+        }
     }
     init(post_id: string) {
+        console.log('PostListComponent::init()');
         this.option.post_id = post_id;
         this.option.page_no = 1;
         this.re = {
@@ -87,10 +91,13 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
      */
     loadPage(callback?: (res: ApiForumPageResponse) => void) {
         // console.log('loadPage()', this.option);
+        if ( ! this.option.post_id ) {
+            return;
+        }
         /**
          * If the post list is not in display, it does not load again.
          */
-        if ( ! this.display ) {
+        if (!this.display) {
             return;
         }
         if (this.loader.page) {

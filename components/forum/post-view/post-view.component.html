@@ -2,8 +2,11 @@
   <div class="post-root">
     <div class="subject p-3 bg-secondary text-white">{{ post.subject }}</div>
 
-    <div class="meta p-3 bg-light">글쓴이: {{ post.member.nickname }} 날짜: {{ post['date'] }} 조회 {{ post.no_of_view | number }} {{ post.config_subject }} 글번호
-      {{ post.idx }}</div>
+    <div class="meta p-3 bg-light" *ngIf=" post.deleted == '0' ">
+      글쓴이: {{ post.member.nickname }}
+      날짜: {{ post['date'] }}
+      조회 {{ post.no_of_view | number }} {{ post.config_subject }}
+      글번호 {{ post.idx }}</div>
     <div [innerHTML]=" post.content " class="content p-3 bg-light">
     </div>
 
@@ -14,7 +17,7 @@
     <button>쪽지</button>
     <!-- <button>작성자의 글 목록</button> -->
     <button (click)=" onClickPostEdit() ">수정</button>
-    <button>삭제</button>
+    <button (click)=" onClickPostDelete() ">삭제</button>
     <button>신고</button>
     <button (click)=" onPostViewClose() " *ngIf=" showClose ">닫기</button>
   </div>

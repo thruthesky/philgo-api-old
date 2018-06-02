@@ -31,9 +31,25 @@ export class PostViewComponent implements OnChanges {
     }
 
     onClickPostEdit() {
+        console.log('post: ', this.post);
+        console.log('my idx:', this.api.getIdxMember());
+        if ( this.post.member.idx !== this.api.getIdxMember() ) {
+            alert( 'This is not your post.' );
+            return;
+        }
         this.mode = 'edit';
     }
 
+    onClickPostDelete() {
+        if ( this.post.member.idx !== this.api.getIdxMember() ) {
+            alert( 'This is not your post.' );
+            return;
+        }
+        this.api.postDelete(this.post.idx).subscribe(res => {
+            console.log('postDelete: ', res);
+            this.api.setDelete( this.post );
+        }, e => alert(e.message));
+    }
 
     onPostWriteSuccess(post) {
         // this.listComponent.write(post);

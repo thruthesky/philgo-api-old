@@ -1,6 +1,6 @@
 <div class="comment" [attr.depth]=" comment.depth ">
   <div class="comment-view" *ngIf=" show.comment ">
-    <div class="meta">
+    <div class="meta" *ngIf=" comment.deleted == '0' ">
       글쓴이: {{ comment.member.nickname }} 날짜: {{ comment['date'] }} 글번호: {{ comment.idx }}
     </div>
     <div class="content" [innerHTML]=" comment.content ">
@@ -16,7 +16,7 @@
       <button>쪽지</button>
       <button>작성자의 글 목록</button>
       <button (click)=" onClickEdit() ">수정</button>
-      <button>삭제</button>
+      <button (click)=" onClickCommentDelete() ">삭제</button>
       <button>신고</button>
     </div>
   </div>

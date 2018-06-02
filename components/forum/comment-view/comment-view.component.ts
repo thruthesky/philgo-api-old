@@ -37,6 +37,17 @@ export class CommentViewComponent implements OnInit, OnChanges {
         this.show.buttons = false;
         this.editComponent.activateEdit();
     }
+
+    onClickCommentDelete() {
+        if ( this.comment.member.idx !== this.api.getIdxMember() ) {
+            alert( 'This is not your comment.' );
+            return;
+        }
+        this.api.postDelete(this.comment.idx).subscribe(res => {
+            console.log('onClickCommentDelete: ', res);
+            this.api.setDelete( this.comment );
+        }, e => alert(e.message));
+    }
     onClickReply() {
         // this.mode = 'reply';
         this.show.buttons = false;
