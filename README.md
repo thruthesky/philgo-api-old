@@ -7,7 +7,6 @@
 
 * capsulate locations of Philipines.
   * Make it class.
-
 * Message functionality.
 
 ## Document
