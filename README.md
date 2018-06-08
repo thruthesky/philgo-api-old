@@ -8,6 +8,13 @@
 * capsulate locations of Philipines.
   * Make it class.
 
+* Message functionality.
+
+## Document
+
+* [PhilGo API](https://docs.google.com/document/d/1DbGXezNIVoOgFmjhnnZBZjrsx9vEwSVv-BzSJHB3C2s/edit#heading=h.wuw5os21mdy)
+* [PhilGo Family Github](https://github.com/thruthesky/philgo-family) which uses this project.
+
 ## Work Environment
 
 * To see PhilGo Api log file on Macbook
