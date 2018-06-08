@@ -88,7 +88,7 @@ interface ApiThumbnailOption {
 
 interface ApiVersion2Request {
     module?: string;
-    action: string;
+    action?: string;
     submit?: number;
     id?: string;
     idx?: number;
@@ -110,6 +110,15 @@ interface ApiVersion2Response {
     };
 }
 
+interface ApiVoteRequest extends ApiVersion2Request {
+    for: 'G' | 'B';     // G for good. up vote. B for Bad. Down vote.
+    idx: any;        // idx of post or comment
+}
+interface ApiVoteResponse extends ApiVersion2Response {
+    idx: string;
+    good: string;
+    bad: string;
+}
 
 export interface ApiFileUploadResponse {
     idx: number;
@@ -197,6 +206,7 @@ export interface ApiComment {
 
 /**
  * Post data structure for create/update
+ * @deprecated. Do not use this. Use ApiPost
  */
 export interface ApiPostData {
     module?: string; // for crate/update
@@ -301,6 +311,12 @@ export interface ApiPostData {
     config_subject: string; // forum name. 게시판 이름.
 }
 
+/**
+ * Rename ApiPostData
+ */
+export interface ApiPost extends ApiPostData {
+    idx?: string;
+}
 
 interface ApiBanner {
     src: string; // banner image url
@@ -1059,5 +1075,20 @@ export class PhilGoApiService {
 
         return text;
     }
+
+
+    vote(req: ApiVoteRequest): Observable<ApiVoteResponse> {
+        req.action = 'post_vote_submit';
+        return this.queryVersion2(req);
+    }
+
+    report(idx: any): Observable<ApiVersion2Response> {
+        const req = {
+            action: 'post_report_submit',
+            idx: idx
+        };
+        return this.queryVersion2(req);
+    }
+
 }
 

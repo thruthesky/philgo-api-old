@@ -11,13 +11,12 @@
 
     <div class="buttons" *ngIf=" show.buttons ">
       <button (click)=" onClickReply() ">답변</button>
-      <button>추천</button>
-      <button>비추천</button>
+      <button (click)="onClickGood(comment)">추천 {{ comment.good }}</button>
+      <button (click)="onClickBad(comment)">비추천 {{ comment.bad }}</button>
       <button>쪽지</button>
-      <button>작성자의 글 목록</button>
       <button (click)=" onClickEdit() ">수정</button>
       <button (click)=" onClickCommentDelete() ">삭제</button>
-      <button>신고</button>
+      <button (click)="onClickReport(comment)">신고</button>
     </div>
   </div>
 

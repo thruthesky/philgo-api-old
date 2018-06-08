@@ -12,13 +12,14 @@
 
     <app-data-component [files]=" post.photos "></app-data-component>
 
-    <button>추천</button>
-    <button>비추천</button>
+
+    <button (click)="onClickGood(post)">추천 {{ post.good }}</button>
+    <button (click)="onClickBad(post)">비추천 {{ post.bad }}</button>
     <button>쪽지</button>
     <!-- <button>작성자의 글 목록</button> -->
     <button (click)=" onClickPostEdit() ">수정</button>
     <button (click)=" onClickPostDelete() ">삭제</button>
-    <button>신고</button>
+      <button (click)="onClickReport(post)">신고</button>
     <button (click)=" onPostViewClose() " *ngIf=" showClose ">닫기</button>
   </div>
 

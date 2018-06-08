@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, ViewChild } from '@angular/core';
-import { ApiPostData, PhilGoApiService, ApiComment } from '../../../providers/philgo-api.service';
+import { PhilGoApiService, ApiComment, ApiPost } from '../../../providers/philgo-api.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CommentEditComponent } from '../comment-edit/comment-edit.component';
 
@@ -11,7 +11,7 @@ export class PostViewComponent implements OnChanges {
 
 
     @ViewChild('commentEditComponent') commentEditComponent: CommentEditComponent;
-    @Input() post: ApiPostData = null;
+    @Input() post: ApiPost = null;
     @Input() showClose = false;
     @Input() mode: 'edit' | 'view' = 'view';
 
@@ -33,21 +33,21 @@ export class PostViewComponent implements OnChanges {
     onClickPostEdit() {
         console.log('post: ', this.post);
         console.log('my idx:', this.api.getIdxMember());
-        if ( this.post.member.idx !== this.api.getIdxMember() ) {
-            alert( 'This is not your post.' );
+        if (this.post.member.idx !== this.api.getIdxMember()) {
+            alert('This is not your post.');
             return;
         }
         this.mode = 'edit';
     }
 
     onClickPostDelete() {
-        if ( this.post.member.idx !== this.api.getIdxMember() ) {
-            alert( 'This is not your post.' );
+        if (this.post.member.idx !== this.api.getIdxMember()) {
+            alert('This is not your post.');
             return;
         }
         this.api.postDelete(this.post.idx).subscribe(res => {
             console.log('postDelete: ', res);
-            this.api.setDelete( this.post );
+            this.api.setDelete(this.post);
         }, e => alert(e.message));
     }
 
@@ -75,6 +75,31 @@ export class PostViewComponent implements OnChanges {
     }
     onCommentWriteSuccess(comment: ApiComment) {
         this.commentEditComponent.display = true;
+    }
+
+    onClickGood(post: ApiPost) {
+        this.api.vote({
+            idx: post.idx,
+            for: 'G'
+        }).subscribe( res => {
+            console.log('vode good: ', res);
+            this.post.good = res.good;
+        }, e => alert(e.message));
+    }
+    onClickBad(post: ApiPost) {
+        this.api.vote({
+            idx: post.idx,
+            for: 'B'
+        }).subscribe( res => {
+            console.log('vode good: ', res);
+            this.post.bad = res.bad;
+        }, e => alert(e.message));
+    }
+
+    onClickReport(post: ApiPost) {
+        this.api.report(post.idx).subscribe( res => {
+            alert('This post has been reported to admin.');
+        }, e => alert(e.message));
     }
 }
 

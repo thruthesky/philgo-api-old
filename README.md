@@ -8,9 +8,13 @@
 * capsulate locations of Philipines.
   * Make it class.
 
-## Notes
+## Work Environment
 
-* Do not use Wysiwyg editor since everything is possible without it and it only makes trouble.
+* To see PhilGo Api log file on Macbook
+
+```` sh
+tail -f ~/tmp/sapcms_debug.log
+````
 
 ## Install
 

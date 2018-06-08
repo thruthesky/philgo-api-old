@@ -72,5 +72,30 @@ export class CommentViewComponent implements OnInit, OnChanges {
         this.show.buttons = true;
         // this.mode = 'view';
     }
+
+
+    onClickGood(comment: ApiComment) {
+        this.api.vote({
+            idx: comment.idx,
+            for: 'G'
+        }).subscribe( res => {
+            console.log('vode good: ', res);
+            this.comment.good = res.good;
+        }, e => alert(e.message));
+    }
+    onClickBad(comment: ApiComment) {
+        this.api.vote({
+            idx: comment.idx,
+            for: 'B'
+        }).subscribe( res => {
+            console.log('vode good: ', res);
+            this.comment.bad = res.bad;
+        }, e => alert(e.message));
+    }
+    onClickReport(comment: ApiComment) {
+        this.api.report(comment.idx).subscribe( res => {
+            alert('This comment has been reported to admin.');
+        }, e => alert(e.message));
+    }
 }
 
