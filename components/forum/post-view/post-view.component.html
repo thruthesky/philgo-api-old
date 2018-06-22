@@ -1,13 +1,13 @@
-<div class="post-view" *ngIf=" mode == 'view' && post " class="p-1">
-  <div class="post-root">
-    <div class="subject p-3 bg-secondary text-white">{{ post.subject }}</div>
+<div class="post-view" *ngIf=" mode == 'view' && post ">
+  <div class="post-parent">
+    <div class="post-subject">{{ post.subject }}</div>
 
-    <div class="meta p-3 bg-light" *ngIf=" post.deleted == '0' ">
+    <div class="post-meta" *ngIf=" post.deleted == '0' ">
       글쓴이: {{ post.member.nickname }}
       날짜: {{ post['date'] }}
       조회 {{ post.no_of_view | number }} {{ post.config_subject }}
       글번호 {{ post.idx }}</div>
-    <div [innerHTML]=" post.content " class="content p-3 bg-light">
+    <div class="post-content" [innerHTML]=" post.content ">
     </div>
 
     <app-data-component [files]=" post.photos "></app-data-component>

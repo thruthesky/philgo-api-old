@@ -10,7 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
     templateUrl: 'data.component.html',
     styles: [`
     .files { display: flex; flex-wrap: wrap; }
-    .files .file { position: relative; width: 33.33%; max-width: 150px; max-height: 150px; overflow: hidden; }
+    .files .file { position: relative; max-width: 64px; max-height: 64px; overflow: hidden; }
     .files .file img { width: 100%; height: auto; }
     .files .file .delete {
         position: absolute;

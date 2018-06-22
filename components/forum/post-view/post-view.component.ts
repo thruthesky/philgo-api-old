@@ -5,7 +5,27 @@ import { CommentEditComponent } from '../comment-edit/comment-edit.component';
 
 @Component({
     selector: 'app-post-view-component',
-    templateUrl: 'post-view.component.html'
+    templateUrl: 'post-view.component.html',
+    styles: [`
+    .post-view {
+        padding: .25em;
+    }
+    .post-parent {}
+    .post-subject {
+        padding: .75em;
+        background-color: grey;
+        color: white;
+    }
+    .post-meta {
+        padding: .75em;
+        background-color: #eee;
+    }
+    .post-content {
+        padding: .75em;
+        line-height: 160%;
+        background-color: #e8e8e8;
+    }
+    `]
 })
 export class PostViewComponent implements OnChanges {
 

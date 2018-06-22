@@ -4,7 +4,7 @@ import {
     ApiFileUploadOptions, ApiPhoto
 } from '../../../providers/philgo-api.service';
 import { EditorComponent } from '../../../../angular-wysiwyg-editor/components/editor/editor.component';
-import { HttpErrorResponse } from '@angular/common/http';
+// import { HttpErrorResponse } from '@angular/common/http';
 import { DataComponent } from '../data/data.component';
 
 
@@ -14,6 +14,10 @@ import { DataComponent } from '../data/data.component';
     styles: [`
         .post-edit {
             background-color: white;
+        }
+        .post-edit .buttons {
+            display: flex;
+            justify-content: space-between;
         }
         .file-upload-button {
             position: relative;
@@ -31,7 +35,7 @@ import { DataComponent } from '../data/data.component';
             top: 0;
             right: 0;
             height: 36px;
-            opacity: 0.01;
+            opacity: 0.501;
             cursor: pointer;
         }
     `]

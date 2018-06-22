@@ -4,7 +4,7 @@ import { ApiPostData, ApiForumPageRequest, ApiForumPageResponse } from '../../..
 import { ActivatedRoute } from '@angular/router';
 import { InfiniteScrollService } from '../../../providers/infinite-scroll.service';
 import { Subscription } from 'rxjs';
-import { PostViewComponent } from '../post-view/post-view.component';
+// import { PostViewComponent } from '../post-view/post-view.component';
 
 interface Result {
     idxes: Array<string>;
@@ -12,7 +12,18 @@ interface Result {
 }
 @Component({
     selector: 'app-post-list-component',
-    templateUrl: 'post-list.component.html'
+    templateUrl: 'post-list.component.html',
+    styles: [`
+    .post-list .post {
+        margin-bottom: .25em;
+        background-color: grey;
+    }
+    .post-list .post .title {
+        display: block;
+        padding: .75em .5em;
+        color: white;
+    }
+    `]
 })
 export class PostListComponent implements AfterViewInit, OnDestroy {
 
