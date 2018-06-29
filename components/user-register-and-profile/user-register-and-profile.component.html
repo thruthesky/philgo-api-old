@@ -1,11 +1,11 @@
-<div id="#register-and-profile" [ngClass]="{ registered: api.isLoggedOut(), 'not-registered': api.isLoggedIn() }">
+<div id="#register-and-profile" [ngClass]="{ 'not-registered': api.isLoggedOut(), 'registered': api.isLoggedIn() }">
   <div class="loader" *ngIf=" loader.profile ">{{ text.loadingProfile }}</div>
   <section id="profile-photo-update" *ngIf=" api.isLoggedIn() ">
 
     <div *ngIf=" form.url_profile_photo ">
       <img src="{{ api.thumbnailUrl({ width: 100, height: 120, path: form.url_profile_photo }) }}" *ngIf=" form.url_profile_photo ">
       <div>
-        <button (click)=" onClickDeletePrimaryPhoto() ">Delete Primary Photo</button>
+        <button (click)=" onClickDeletePrimaryPhoto() ">{{ text.deletePrimaryPhoto }}</button>
       </div>
     </div>
     <input type="file" name="file" (change)="onChangePrimaryPhoto($event)">
@@ -15,54 +15,59 @@
 
   <section class="form-wrapper">
     <form class="register profile" (ngSubmit)="onSubmit( $event )">
-      <div class="set email" *ngIf=" api.isLoggedOut() ">
-        <span class="caption">Email</span>
-        <span class="text">
+      <div class="set email">
+        <span class="caption">{{ text.email }}</span>
+        <span class="text" *ngIf=" api.isLoggedOut() ">
           <input type="text" name="email" [(ngModel)]=" form.email " autocomplete="off">
         </span>
-      </div>
-      <div class="set email" *ngIf=" api.isLoggedIn() ">
-        <span class="caption">{{ text.email }}</span>
-        <span class="text">
+        <span class="text" *ngIf=" api.isLoggedIn() ">
           {{ form.email }}
         </span>
       </div>
       <div class="set password" *ngIf=" api.isLoggedOut() ">
-        <span class="caption">Password</span>
+        <span class="caption">{{ text.password }}</span>
         <span class="text">
           <input type="password" name="password" [(ngModel)]=" form.password " autocomplete="off">
         </span>
       </div>
       <div class="set nickname">
-        <span class="caption">Nickname</span>
-        <span class="text">
+        <span class="caption">{{ text.nickname }}</span>
+        <span class="text" *ngIf=" api.isLoggedOut() ">
           <input type="text" name="nickname" [(ngModel)]=" form.nickname ">
+        </span>
+        <span class="text" *ngIf=" api.isLoggedIn() ">
+          {{ form.nickname }}
         </span>
       </div>
       <div class="set name" *ngIf=" api.isLoggedIn() ">
-        <span class="caption">Name</span>
+        <span class="caption">{{ text.name }}</span>
         <span class="text">
           <input type="text" name="name" [(ngModel)]=" form.name ">
         </span>
       </div>
       <div class="set mobile" *ngIf=" api.isLoggedIn() ">
-        <span class="caption">Mobile Phone Number</span>
+        <span class="caption">{{ text.mobile }}</span>
         <span class="text">
           <input type="text" name="mobile" [(ngModel)]=" form.mobile ">
         </span>
       </div>
-      <div class="set api-error" [attr.code]=" error.code " *ngIf=" error ">
-          <span class="caption">Error</span>
-          <span class="text">
-              <span class="code">{{ error.code }}</span>
-              <span class="message">{{ error.message }}</span>
-            </span>
+      <div class="set api-error" [attr.code]=" apiError.code " *ngIf=" displayError && apiError ">
+        <span class="caption">{{ text.error }}</span>
+        <span class="text">
+          <span class="code">{{ apiError.code }}</span>
+          <span class="message">{{ apiError.message }}</span>
+        </span>
+      </div>
+      <div class="set submitting" *ngIf=" loader.submit ">
+        <span class="caption"></span>
+        <span class="text">
+          <span class="loader">{{ text.submitting }}</span>
+        </span>
       </div>
       <div class="set submit">
         <span class="caption"></span>
         <span class="text">
-          <button type="submit">Register</button>
-          <div class="loader" *ngIf=" loader.submit ">서버로 전송중입니다.</div>
+          <button type="submit">{{ text.register }}</button>
         </span>
       </div>
     </form>

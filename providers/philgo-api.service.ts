@@ -39,7 +39,7 @@ interface ApiResponse {
     message?: string;
     data: any;
 }
-interface ApiErrorResponse {
+export interface ApiErrorResponse {
     code: number;
     message?: string;
 }

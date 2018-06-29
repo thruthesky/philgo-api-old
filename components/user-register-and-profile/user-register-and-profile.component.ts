@@ -1,7 +1,7 @@
-import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { Component, Output, EventEmitter, Input, AfterViewInit, OnChanges } from '@angular/core';
 import {
     PhilGoApiService, ApiErrorFileNotSelected, ApiErrorFileUploadError,
-    ApiRegisterRequest, ApiProfileUpdateRequest, ApiRegisterResponse
+    ApiRegisterRequest, ApiProfileUpdateRequest, ApiRegisterResponse, ApiProfileResponse, ApiErrorResponse
 } from '../../providers/philgo-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -9,20 +9,28 @@ import { HttpErrorResponse } from '@angular/common/http';
     selector: 'app-user-register-and-profile-component',
     templateUrl: 'user-register-and-profile.component.html',
     styles: [`
-    .set .caption {
-        display: inline-block;
-        width: 100px;
-    }
     `]
 })
-export class UserRegisterAndProfileComponent {
+export class UserRegisterAndProfileComponent implements AfterViewInit, OnChanges {
 
-    @Input() text = {
-        loadingProfile: 'LOADING...',
-        email: 'Email'
-    };
+    @Input() displayError = true;
+    @Input() text: any = {};
     @Output() register: EventEmitter<ApiRegisterResponse> = new EventEmitter();
-    error = null;
+    @Output() update: EventEmitter<ApiProfileResponse> = new EventEmitter();
+    @Output() error: EventEmitter<ApiErrorResponse> = new EventEmitter();
+    defaultText = {
+        email: 'Email',
+        password: 'Password',
+        nickname: 'Nickname',
+        name: 'Name',
+        mobile: 'Mobile No.',
+        error: 'Error',
+        register: 'Register',
+        loadingProfile: 'LOADING...',
+        submitting: 'Submitting to server...',
+        deletePrimaryPhoto: 'Delete Primary Photo'
+    };
+    apiError = null;
     form: ApiRegisterRequest = {
         email: '',
         password: '',
@@ -49,6 +57,15 @@ export class UserRegisterAndProfileComponent {
             }, e => alert(e.message));
         }
     }
+    ngAfterViewInit() {
+        setTimeout(() => {
+            this.text = Object.assign({}, this.defaultText, this.text);
+        }, 100);
+    }
+
+    ngOnChanges() {
+    }
+
     onChangePrimaryPhoto(event: Event) {
         this.api.uploadPrimaryPhotoWeb(event.target['files']).subscribe(re => {
             // console.log(event);
@@ -82,7 +99,7 @@ export class UserRegisterAndProfileComponent {
     }
     onSubmit(event: Event) {
         event.preventDefault();
-        this.error = null;
+        this.apiError = null;
         console.log('onSubmit()', this.form);
         this.loader.submit = true;
         if (this.api.isLoggedIn()) {
@@ -90,22 +107,23 @@ export class UserRegisterAndProfileComponent {
                 name: this.form.name,
                 mobile: this.form.mobile
             };
-            this.api.profileUpdate(data).subscribe( user => {
+            this.api.profileUpdate(data).subscribe(user => {
                 this.loader.submit = false;
                 console.log('profile update success: ', user);
+                this.update.emit(user);
             }, e => {
                 this.loader.submit = false;
-                alert(e.message);
+                this.apiError = e;
+                this.error.emit(e);
             });
         } else {
             this.api.register(this.form).subscribe(user => {
-                this.register.emit( user );
+                this.register.emit(user);
                 this.loader.submit = false;
-                // this.justRegistered = true;
             }, e => {
                 this.loader.submit = false;
-                // alert('Failed: ' + e.message);
-                this.error = e;
+                this.apiError = e;
+                this.error.emit(e);
             });
         }
         return false;
@@ -113,7 +131,7 @@ export class UserRegisterAndProfileComponent {
 
     onClickDeletePrimaryPhoto() {
         const idx = this.form.url_profile_photo.split('/').pop();
-        this.api.deleteFile(parseInt(idx, 10)).subscribe( res => {
+        this.api.deleteFile(parseInt(idx, 10)).subscribe(res => {
             console.log('res: ', res);
             this.form.url_profile_photo = '';
         }, e => alert(e.message));
