@@ -1,15 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
 import {
-    PhilGoApiService, ApiErrorFileNotSelected, ApiErrorFileUploadError, ApiFileUploadResponse, ApiRegisterRequest, ApiProfileUpdateRequest
+    PhilGoApiService, ApiErrorFileNotSelected, ApiErrorFileUploadError,
+    ApiRegisterRequest, ApiProfileUpdateRequest, ApiRegisterResponse
 } from '../../providers/philgo-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-user-register-and-profile-component',
-    templateUrl: 'user-register-and-profile.component.html'
+    templateUrl: 'user-register-and-profile.component.html',
+    styles: [`
+    .set .caption {
+        display: inline-block;
+        width: 100px;
+    }
+    `]
 })
 export class UserRegisterAndProfileComponent {
 
+    @Input() text = {
+        loadingProfile: 'LOADING...',
+        email: 'Email'
+    };
+    @Output() register: EventEmitter<ApiRegisterResponse> = new EventEmitter();
+    error = null;
     form: ApiRegisterRequest = {
         email: '',
         password: '',
@@ -19,7 +32,7 @@ export class UserRegisterAndProfileComponent {
     };
     percentage = 0;
     // photo: ApiFileUploadResponse = null;
-    justRegistered = false;
+    // justRegistered = false;
     loader = {
         profile: false,
         submit: false
@@ -69,6 +82,7 @@ export class UserRegisterAndProfileComponent {
     }
     onSubmit(event: Event) {
         event.preventDefault();
+        this.error = null;
         console.log('onSubmit()', this.form);
         this.loader.submit = true;
         if (this.api.isLoggedIn()) {
@@ -85,11 +99,13 @@ export class UserRegisterAndProfileComponent {
             });
         } else {
             this.api.register(this.form).subscribe(user => {
+                this.register.emit( user );
                 this.loader.submit = false;
-                this.justRegistered = true;
+                // this.justRegistered = true;
             }, e => {
                 this.loader.submit = false;
-                alert('Failed: ' + e.message);
+                // alert('Failed: ' + e.message);
+                this.error = e;
             });
         }
         return false;

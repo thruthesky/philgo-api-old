@@ -115,11 +115,7 @@ export class AppModule {
 
 ````
 
-
-
-
-
-# Locations of Philippines
+## Locations of Philippines
 
 You can get provinces and cities of province like below.
 
@@ -136,12 +132,15 @@ You can get provinces and cities of province like below.
       });
 ````
 
+## Reusable Components
+
+* All components display error on its compment templates Unless `[displayError]` is set to false.
+  * Errors are displayed in classes of `.api-error`, `.code`, `.message`.
+* All components have output property of `(error)` when an error occurs.
+* All components have `@Input() text = { ... default texts in English ... }` for the text of the templates.
 
 
-
-# Components
-
-## latest-component
+### latest-component
 
 This component shows latest component.
 
@@ -151,16 +150,11 @@ This shows in three format.
 2. text with thumbnail.
 3. thumbnail only.
 
-
-
-
-## view component
+### view component
 
 ### Event
 
 * view component will emit 'edit' event if edit button clicked.
-
-
 
 ### broken image
 

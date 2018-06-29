@@ -55,7 +55,7 @@ export interface ApiCurrencyResponse {
     php: string;
     usd: string;
 }
-interface ApiProfileResponse {
+export interface ApiProfileResponse {
     idx: string;
     id: string;
     email: string;
@@ -67,13 +67,13 @@ interface ApiProfileResponse {
     session_id: string;
 }
 
-interface ApiRegisterResponse extends ApiProfileResponse {
+export interface ApiRegisterResponse extends ApiProfileResponse {
     session_id: string;
 }
-interface ApiLoginResponse extends ApiRegisterResponse {
+export interface ApiLoginResponse extends ApiRegisterResponse {
     session_id: string;
 }
-interface ApiUserInformation extends ApiRegisterResponse {
+export interface ApiUserInformation extends ApiRegisterResponse {
     session_id: string;
 }
 
@@ -611,7 +611,7 @@ export class PhilGoApiService {
      * @param data User registration data
      * @example see test file in 'philgo-api-test-service.ts'
      */
-    register(data: ApiRegisterRequest) {
+    register(data: ApiRegisterRequest): Observable<ApiRegisterResponse> {
         return this.query<ApiRegisterRequest, ApiRegisterResponse>('register', data)
             .pipe(
                 map(res => {
