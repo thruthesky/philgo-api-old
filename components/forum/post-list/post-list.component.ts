@@ -15,13 +15,15 @@ interface Result {
     templateUrl: 'post-list.component.html',
     styles: [`
     .post-list .post {
-        margin-bottom: .25em;
-        background-color: grey;
+        background-color: #f3f3f3;
+    }
+    .post-list .post:nth-child(even) {
+        background-color: #ddd;
     }
     .post-list .post .title {
         display: block;
         padding: .75em .5em;
-        color: white;
+        color: #222;
     }
     `]
 })

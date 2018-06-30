@@ -10,7 +10,8 @@ import { CommentEditComponent } from '../comment-edit/comment-edit.component';
     .post-view {
         padding: .25em;
     }
-    .post-parent {}
+    .post-display {
+    }
     .post-subject {
         padding: .75em;
         background-color: grey;
@@ -24,6 +25,9 @@ import { CommentEditComponent } from '../comment-edit/comment-edit.component';
         padding: .75em;
         line-height: 160%;
         background-color: #e8e8e8;
+    }
+    .post-content img {
+        width: auto;
     }
     `]
 })

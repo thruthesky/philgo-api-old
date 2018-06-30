@@ -282,3 +282,86 @@ export class HomePage {
 >
 </app-user-register-and-profile-component>
 ````
+
+### Forum components
+
+#### Post list component
+
+* This component is highly resusable.
+* The DOM layout of posts has two shape.
+
+* when it is collapsed to show only summary of post.
+
+```` html
+.post-list
+  .posts
+    .post
+      <a>
+````
+
+* When it is opened to show the full content of the post.
+
+```` html
+  .post-list
+    .posts
+      .post
+        <app-post-view-component>
+          .post-view
+            .post-display
+              .post-subject
+              .post-meta
+              .post-content
+              <app-data-component>
+                  .files
+                    .file
+              nav.post-buttons
+                <button class="post-good">
+                <button class="post-bad">
+                <button class="post-edit">
+                <button class="post-delete">
+                <button class="post-report">
+                <button class="post-close">
+            <app-comment-edit-component>
+            <app-comment-list-component>
+          <app-post-edit-component>
+````
+
+#### Layout and Design for forum coponents
+
+* When post has image which is very wide, the layout may look urgly.
+  You can adjust the layout by limiting the max width like below.
+  Remember to do it on global css since there is no layout css code in forum components.
+
+* Example of limiting the width
+
+```` scss
+$post-content-width: $page-width - ( $sidebar-width * 2 );
+.post-edit, .post-list {
+    max-width: $post-content-width;
+    overflow: hidden;
+}
+````
+
+* Or if you are using flex based layout, try below.
+
+```` scss
+main {
+  margin: 0 auto;
+  max-width: $page-width;
+  min-height: $lg-main-min-height;
+  .body {
+    display: flex;
+    .left {
+      flex-basis: $sidebar-width;
+    }
+    .center {
+      flex-grow: 1;
+        max-width: $center-width;
+        overflow: hidden;
+    }
+    .right {
+      flex-basis: $sidebar-width;
+    }
+  }
+}
+````

@@ -1,33 +1,29 @@
 <div class="post-view" *ngIf=" mode == 'view' && post ">
-  <div class="post-parent">
+  <div class="post-display">
     <div class="post-subject">{{ post.subject }}</div>
 
     <div class="post-meta" *ngIf=" post.deleted == '0' ">
-      글쓴이: {{ post.member.nickname }}
-      날짜: {{ post['date'] }}
-      조회 {{ post.no_of_view | number }} {{ post.config_subject }}
-      글번호 {{ post.idx }}</div>
+      글쓴이: {{ post.member.nickname }} 날짜: {{ post['date'] }} 조회 {{ post.no_of_view | number }} {{ post.config_subject }} 글번호 {{
+      post.idx }}</div>
     <div class="post-content" [innerHTML]=" post.content ">
     </div>
 
     <app-data-component [files]=" post.photos "></app-data-component>
 
 
-    <button (click)="onClickGood(post)">추천 {{ post.good }}</button>
-    <button (click)="onClickBad(post)">비추천 {{ post.bad }}</button>
-    <button>쪽지</button>
-    <!-- <button>작성자의 글 목록</button> -->
-    <button (click)=" onClickPostEdit() ">수정</button>
-    <button (click)=" onClickPostDelete() ">삭제</button>
-      <button (click)="onClickReport(post)">신고</button>
-    <button (click)=" onPostViewClose() " *ngIf=" showClose ">닫기</button>
+    <nav class="post-buttons">
+      <button class="post-good" (click)="onClickGood(post)">추천 {{ post.good }}</button>
+      <button class="post-bad" (click)="onClickBad(post)">비추천 {{ post.bad }}</button>
+      <button>쪽지</button>
+      <!-- <button>작성자의 글 목록</button> -->
+      <button class="post-edit"  (click)=" onClickPostEdit() ">수정</button>
+      <button class="post-delete"  (click)=" onClickPostDelete() ">삭제</button>
+      <button class="post-report"  (click)="onClickReport(post)">신고</button>
+      <button class="post-close"  (click)=" onPostViewClose() " *ngIf=" showClose ">닫기</button>
+    </nav>
   </div>
 
-  <app-comment-edit-component #commentEditComponent
-    [post]=" post "
-    [parent]=" post "
-    [display]=" true "
-    (write)=" onCommentWriteSuccess( $event ); ">
+  <app-comment-edit-component #commentEditComponent [post]=" post " [parent]=" post " [display]=" true " (write)=" onCommentWriteSuccess( $event ); ">
   </app-comment-edit-component>
 
   <app-comment-list-component [post]=" post "></app-comment-list-component>
@@ -35,8 +31,5 @@
 </div>
 
 
-<app-post-edit-component *ngIf=" mode == 'edit' "
-  [post]=" post "
-  (write)=" onPostWriteSuccess( $event ) "
-  (edit)=" onPostEditSuccess( $event ) "
+<app-post-edit-component *ngIf=" mode == 'edit' " [post]=" post " (write)=" onPostWriteSuccess( $event ) " (edit)=" onPostEditSuccess( $event ) "
   (cancel)=" onPostFormCancel() "></app-post-edit-component>
