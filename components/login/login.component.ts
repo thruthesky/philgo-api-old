@@ -13,15 +13,14 @@ import { ApiLoginRequest, ApiLoginResponse, ApiErrorResponse } from '../../provi
 export class UserLogin implements AfterViewInit {
 
     @Input() displayError = true;
-    @Input() text: any = {};
-    @Output() login: EventEmitter<ApiLoginResponse> = new EventEmitter();
-    @Output() error: EventEmitter<ApiErrorResponse> = new EventEmitter();
-    defaultText = {
+    @Input() text = {
         email: 'Email',
         password: 'Password',
         login: 'Login',
         submitting: 'Connecting to server...'
     };
+    @Output() login: EventEmitter<ApiLoginResponse> = new EventEmitter();
+    @Output() error: EventEmitter<ApiErrorResponse> = new EventEmitter();
     apiError = null;
     loader = {
         submit: false
@@ -37,9 +36,9 @@ export class UserLogin implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        setTimeout(() => {
-            this.text = Object.assign({}, this.defaultText, this.text);
-        }, 100);
+        // setTimeout(() => {
+        //     this.text = Object.assign({}, this.defaultText, this.text);
+        // }, 100);
     }
 
     onSubmit(event: Event) {

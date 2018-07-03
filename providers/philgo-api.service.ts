@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpRequest, HttpResponse, HttpHeaderResponse, HttpEventType } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpResponse, HttpHeaderResponse, HttpEventType } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -8,6 +8,7 @@ export const ID = 'id';
 export const SESSION_ID = 'session_id';
 export const NICKNAME = 'nickname';
 export const IDX_MEMBER = 'idx_member';
+export const DELETED = 'Deleted';
 
 
 interface ApiOptionalRequest {
@@ -368,15 +369,6 @@ export class PhilGoApiService {
     static serverUrl = '';
     static fileServerUrl = '';
 
-    /**
-     * Language for localization
-     *
-     * @todo improve language translation. try to make a external library module like
-     *          https://github.com/thruthesky/site/blob/master/src/app/providers/language.service.ts
-     */
-    t = {
-        deleted: 'Deleted ... !'
-    };
 
     constructor(
         private sanitizer: DomSanitizer,
@@ -494,6 +486,8 @@ export class PhilGoApiService {
      *
      * @return response data from server if successful.
      *      Or else, throws an error.
+     *
+     * @deprecated
      */
     // private checkResult(responseData, requestData) {
     //     if (responseData['code'] !== void 0 && responseData['code'] === 0) {
@@ -506,30 +500,36 @@ export class PhilGoApiService {
      * @todo 클라이언트 인터넷 에러인지, 서버에 에러인지 구분이 필요하다. 공식 문서에 나오는데로 해도 잘 안된다.
      * @param error error response
      */
-    private handleError(error: HttpErrorResponse) {
-        console.log('handleError() : ', error);
-        /**
-         * Is it error response from PHP?
-         */
-        if (this.isApiError(error)) {
-            return throwError(error);
-        }
-        /**
-         * Or else, It is an error related with internet or server, php script error.
-         */
-        const re: ApiErrorResponse = {
-            code: -400,
-            message: ApiErrorMessageInternetOrServer
-        };
-        return throwError(re);
-    }
-    private isApiError(e) {
-        if (e['code'] !== void 0 && e['code'] < 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+    // private handleError(error: HttpErrorResponse) {
+    //     console.log('handleError() : ', error);
+    //     /**
+    //      * Is it error response from PHP?
+    //      */
+    //     if (this.isApiError(error)) {
+    //         return throwError(error);
+    //     }
+    //     /**
+    //      * Or else, It is an error related with internet or server, php script error.
+    //      */
+    //     const re: ApiErrorResponse = {
+    //         code: -400,
+    //         message: ApiErrorMessageInternetOrServer
+    //     };
+    //     return throwError(re);
+    // }
+    /**
+     * return true if it is an eror
+     * @param e error
+     *
+     * @deprecated
+     */
+    // private isApiError(e) {
+    //     if (e['code'] !== void 0 && e['code'] < 0) {
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // }
 
     version(): Observable<ApiVersionResponse> {
         return this.post({ method: 'version' });
@@ -980,10 +980,10 @@ export class PhilGoApiService {
     setDelete(post: ApiPostData) {
         post.bad = '0';
         post.good = '0';
-        post.subject = this.t.deleted;
-        post.content = this.t.deleted;
-        post.content_stripped = this.t.deleted;
-        post.content_original = this.t.deleted;
+        post.subject = DELETED;
+        post.content = DELETED;
+        post.content_stripped = DELETED;
+        post.content_original = DELETED;
         post.deleted = '1';
     }
     commentWrite(req: ApiCommentEditRequest): Observable<ApiCommentEditResponse> {
@@ -993,7 +993,9 @@ export class PhilGoApiService {
 
     /**
      * PHP strip_tags() from locutus.
+     *
      * @note this is not the latest version since latest version use some dependency, I use old version.
+     *
      * @see https://github.com/kvz/locutus/blob/16e78de555fc9e845f5c25919eb0193a95c41068/src/php/strings/strip_tags.js
      * @param input HTML string
      * @param allowed allowed HTML tags

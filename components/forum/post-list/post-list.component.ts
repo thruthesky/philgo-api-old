@@ -45,7 +45,7 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
      * list options
      */
     option: ApiForumPageRequest = {
-        limit: 10, // how many posts to show in one page.
+        limit: 20, // how many posts to show in one page.
         page_no: 1, // page no
         post_id: '' // post id
     };

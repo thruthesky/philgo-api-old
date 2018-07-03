@@ -244,7 +244,14 @@ export class HomePage {
 * All components display error on its compment templates Unless `[displayError]` is set to false.
   * Errors are displayed in classes of `.api-error`, `.code`, `.message`.
 * All components have output property of `(error)` when an error occurs.
-* All components have `@Input() text = { ... default texts in English ... }` for changing texts of the templates.
+
+### Text translation for components
+
+* All texts are customizable via `[text]` property.
+  You can change it the text by giving new JSON object into [text] property.
+* Texts are
+  * email, password, nickname, name, mobile, error, submitting, register, loadingProfile, deletePrimaryPhoto
+  * email, password, submitting, login
 
 ### Cypress e2e test
 
@@ -302,7 +309,7 @@ export class HomePage {
 * When it is opened to show the full content of the post.
 
 ```` html
-  .post-list
+  .post-list[post_id="post id"]
     .posts
       .post
         <app-post-view-component>

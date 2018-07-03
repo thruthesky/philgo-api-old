@@ -14,11 +14,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class UserRegisterAndProfileComponent implements AfterViewInit, OnChanges {
 
     @Input() displayError = true;
-    @Input() text: any = {};
-    @Output() register: EventEmitter<ApiRegisterResponse> = new EventEmitter();
-    @Output() update: EventEmitter<ApiProfileResponse> = new EventEmitter();
-    @Output() error: EventEmitter<ApiErrorResponse> = new EventEmitter();
-    defaultText = {
+    @Input() text = {
         email: 'Email',
         password: 'Password',
         nickname: 'Nickname',
@@ -30,6 +26,9 @@ export class UserRegisterAndProfileComponent implements AfterViewInit, OnChanges
         submitting: 'Submitting to server...',
         deletePrimaryPhoto: 'Delete Primary Photo'
     };
+    @Output() register: EventEmitter<ApiRegisterResponse> = new EventEmitter();
+    @Output() update: EventEmitter<ApiProfileResponse> = new EventEmitter();
+    @Output() error: EventEmitter<ApiErrorResponse> = new EventEmitter();
     apiError = null;
     form: ApiRegisterRequest = {
         email: '',
@@ -58,9 +57,9 @@ export class UserRegisterAndProfileComponent implements AfterViewInit, OnChanges
         }
     }
     ngAfterViewInit() {
-        setTimeout(() => {
-            this.text = Object.assign({}, this.defaultText, this.text);
-        }, 100);
+        // setTimeout(() => {
+        //     this.text = Object.assign({}, this.defaultText, this.text);
+        // }, 100);
     }
 
     ngOnChanges() {
