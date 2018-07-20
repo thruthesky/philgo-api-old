@@ -30,7 +30,19 @@ interface Result {
 export class PostListComponent implements AfterViewInit, OnDestroy {
 
     // @Input() post_id: string;
+
+    /**
+     * If 'display' is true, then it shows post list.
+     * If it is false, then it doe show post lists.
+     *
+     * @example set it false when you need to hide like posting a new ariticle.
+     */
     @Input('display') display = true; // true for show, false for hide.
+
+    /**
+     * 'view' is the post which is being opened to view now.
+     * So, you should not show this post on the post list.
+     */
     @Input() view: ApiPostData;
     config_subject = '';
     show = {
@@ -149,19 +161,27 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
         this.re.posts[idx]['mode'] = 'view';
         return false;
     }
-    write(post: ApiPostData) {
-        console.log('post update: ', post);
-        this.addPostOnTop(post);
-    }
+    // write(post: ApiPostData) {
+    //     console.log('post update: ', post);
+    //     this.addPostOnTop(post);
+    // }
     edit(post: ApiPostData) {
         console.log('post edit:', post);
         this.editPost(post);
     }
+    /**
+     * Adds a post at the end of post list
+     * @param post post
+     */
     addPost(post: ApiPostData) {
         this.re.idxes.push(post.idx);
         this.re.posts[post.idx] = post;
         // console.log('post:', post);
     }
+    /**
+     * Adds a post on tpo of post list
+     * @param post post
+     */
     addPostOnTop(post: ApiPostData) {
         this.re.idxes.unshift(post.idx);
         this.re.posts[post.idx] = post;
