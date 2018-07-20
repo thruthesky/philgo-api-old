@@ -78,6 +78,7 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
         public api: PhilGoApiService,
         public scroll: InfiniteScrollService
     ) {
+        console.log('PostListComponent::constructor()');
 
         // activated.paramMap.subscribe(params => {
         //     if (params.get('post_id')) {
@@ -91,6 +92,7 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
         this.subscription = this.scroll.watch('body', 400).subscribe(e => this.loadPage());
     }
     ngOnDestroy() {
+        console.log('PostListComponent::destory()');
         if (this.subscription) {
             this.subscription.unsubscribe();
             this.subscription = null;
@@ -116,7 +118,7 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
      */
     loadPage(callback?: (res: ApiForumPageResponse) => void) {
         // console.log('loadPage()', this.option);
-        if ( ! this.option.post_id ) {
+        if (!this.option.post_id) {
             return;
         }
         /**
@@ -125,6 +127,9 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
         if (!this.display) {
             return;
         }
+        /**
+         * If it is already in loading, don't load multiple times.
+         */
         if (this.loader.page) {
             return;
         }
@@ -165,10 +170,10 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
     //     console.log('post update: ', post);
     //     this.addPostOnTop(post);
     // }
-    edit(post: ApiPostData) {
-        console.log('post edit:', post);
-        this.editPost(post);
-    }
+    // edit(post: ApiPostData) {
+    //     console.log('post edit:', post);
+    //     this.editPost(post);
+    // }
     /**
      * Adds a post at the end of post list
      * @param post post
@@ -186,6 +191,11 @@ export class PostListComponent implements AfterViewInit, OnDestroy {
         this.re.idxes.unshift(post.idx);
         this.re.posts[post.idx] = post;
     }
+    /**
+     * Replace the input post with the existing post in 'this.re.posts' object.
+     * @description Use this to show the edited post into vew after you have updated one.
+     * @param post post
+     */
     editPost(post: ApiPostData) {
         this.re.posts[post.idx] = post;
     }

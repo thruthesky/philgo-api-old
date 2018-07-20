@@ -1,4 +1,4 @@
-<section class="post-list" [ngClass]="[ option.post_id ]" *ngIf=" display && re.idxes.length ">
+<section class="post-list" [ngClass]="[ option.post_id ]" *ngIf=" re.idxes.length ">
   <h1>Post list</h1>
   <div class="posts">
     <div class="post" *ngFor=" let idx of re.idxes " class="post">
@@ -15,5 +15,4 @@
     <b>더 이상 글이 없습니다.</b>
   </div>
 </section>
-
 
