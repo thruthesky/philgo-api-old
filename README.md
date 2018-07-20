@@ -138,7 +138,6 @@ You can get provinces and cities of province like below.
       });
 ````
 
-
 ### latest-component
 
 This component shows latest component.
@@ -242,6 +241,12 @@ export class HomePage {
   }
 }
 ````
+
+## Pages
+
+### Forum List Page
+
+* see [philgo-family main project page list](https://github.com/thruthesky/philgo-family/blob/master/projects/main/src/app/pages/forum/list/list.page.ts) for best example.
 
 ## Components
 
