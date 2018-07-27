@@ -1,5 +1,11 @@
 # PhilGo Restful API
 
+* [Philgo API v3](https://github.com/thruthesky/philgo-api-v3)
+  * 기존 버전에서 Philgo API 부분(컴포넌트 제외)만 사용하려는데, 그럴 수가 없다.
+  * 왜냐하면 여러가지가 한데 묶여 있기 때문이다.
+  * 따라서, v3 에서, Philgo API 부분만 완전히 분리를 한다.
+  * 이 후, 모든 정보는 [Philgo API v3](https://github.com/thruthesky/philgo-api-v3) 에 기록을 한다.
+
 * New Version of Philgo Restful API - v201805
 * Old version of [PhilGo API v2](https://github.com/thruthesky/philgo-api/tree/8bcd9b53d06e6acec2bb80f2aa0bfbe59f61b881)
 
